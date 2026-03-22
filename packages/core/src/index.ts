@@ -1,1 +1,1 @@
-export { FeatureFlagManager } from "./feature-flag-manager.js";
+export { FeatureFlagProvider } from "./provider.js";

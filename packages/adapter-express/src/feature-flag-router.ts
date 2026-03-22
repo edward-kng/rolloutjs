@@ -1,12 +1,10 @@
+import type { FeatureFlagProvider } from "@feature-flags/core";
 import { Router } from "express";
 import type { Request, Response } from "express";
-import type { FeatureFlagManager } from "@feature-flags/core";
 
 const PATH_PREFIX = "/ofrep/v1";
 
-export function createFeatureFlagRouter(
-  featureFlagManager: FeatureFlagManager,
-): Router {
+export function createFeatureFlagRouter(provider: FeatureFlagProvider): Router {
   const router = Router();
 
   router.post(
@@ -14,9 +12,7 @@ export function createFeatureFlagRouter(
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
-      const { status, body } = await featureFlagManager.evaluate(
-        flagKey as string,
-      );
+      const { status, body } = await provider.evaluate(flagKey as string);
 
       res.status(status).json(body);
     },
@@ -25,7 +21,7 @@ export function createFeatureFlagRouter(
   router.post(
     `${PATH_PREFIX}/evaluate/flags/`,
     async (req: Request, res: Response) => {
-      const { status, body } = await featureFlagManager.evaluateAll(req.body);
+      const { status, body } = await provider.evaluateAll(req.body);
 
       res.status(status).json(body);
     },
