@@ -7,6 +7,7 @@ import {
   MIGRATIONS_SCHEMA,
   MIGRATIONS_TABLE,
 } from "./db/constant.js";
+import { migrateDb } from "./db/utils.js";
 
 type FeatureFlagValue = boolean | string | number | object;
 
@@ -37,12 +38,7 @@ export class FeatureFlagManager {
 
   constructor(db_url: string) {
     this.db = drizzle(db_url);
-
-    migrate(this.db, {
-      migrationsFolder: MIGRATIONS_DIR,
-      migrationsSchema: MIGRATIONS_SCHEMA,
-      migrationsTable: MIGRATIONS_TABLE,
-    });
+    migrateDb(this.db);
   }
 
   async evaluate(key: string, _context?: object): Promise<EvaluationResponse> {

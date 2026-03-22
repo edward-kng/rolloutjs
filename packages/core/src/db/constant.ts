@@ -6,3 +6,4 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const MIGRATIONS_DIR = path.join(__dirname, "..", "..", "drizzle");
 export const MIGRATIONS_SCHEMA = "feature_flags";
 export const MIGRATIONS_TABLE = "__feature_flags_migrations";
+export const ADVISORY_LOCK_ID = 9182;
