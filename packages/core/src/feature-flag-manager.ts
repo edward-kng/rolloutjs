@@ -1,18 +1,28 @@
-type FeatureFlagValue = boolean | string | number | object;
+import { eq } from "drizzle-orm";
+import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { flagsTable } from "./db/schema.js";
+import {
+  MIGRATIONS_DIR,
+  MIGRATIONS_SCHEMA,
+  MIGRATIONS_TABLE,
+} from "./db/constant.js";
 
-const DUMMY_FLAGS: Record<string, FeatureFlagValue> = {
-  flag_1: true,
-  flag_2: false,
-};
+type FeatureFlagValue = boolean | string | number | object;
 
 type FeatureFlagResult = {
   key: string;
   value: FeatureFlagValue;
 };
 
+type FeatureFlagError = {
+  key: string;
+  errorCode: string;
+};
+
 type EvaluationResponse = {
   status: number;
-  body: FeatureFlagResult;
+  body: FeatureFlagResult | FeatureFlagError;
 };
 
 type BulkEvaluationResponse = {
@@ -23,13 +33,30 @@ type BulkEvaluationResponse = {
 };
 
 export class FeatureFlagManager {
-  evaluate(key: string, _context?: object): EvaluationResponse {
-    if (key in DUMMY_FLAGS) {
+  db: NodePgDatabase;
+
+  constructor(db_url: string) {
+    this.db = drizzle(db_url);
+
+    migrate(this.db, {
+      migrationsFolder: MIGRATIONS_DIR,
+      migrationsSchema: MIGRATIONS_SCHEMA,
+      migrationsTable: MIGRATIONS_TABLE,
+    });
+  }
+
+  async evaluate(key: string, _context?: object): Promise<EvaluationResponse> {
+    const [flag] = await this.db
+      .select()
+      .from(flagsTable)
+      .where(eq(flagsTable.key, key));
+
+    if (!flag || !flag.default_value) {
       return {
-        status: 200,
+        status: 404,
         body: {
           key,
-          value: DUMMY_FLAGS[key]!,
+          errorCode: "NOT_FOUND",
         },
       };
     }
@@ -38,18 +65,21 @@ export class FeatureFlagManager {
       status: 200,
       body: {
         key,
-        value: false,
+        value: flag.default_value,
       },
     };
   }
 
-  evaluateAll(_context?: object): BulkEvaluationResponse {
+  async evaluateAll(_context?: object): Promise<BulkEvaluationResponse> {
+    const flags = await this.db.select().from(flagsTable);
+
     return {
       status: 200,
       body: {
-        flags: Object.keys(DUMMY_FLAGS)
-          .map((key) => this.evaluate(key))
-          .map((res) => res.body),
+        flags: flags.map((flag) => ({
+          key: flag.key,
+          value: flag.default_value as FeatureFlagValue,
+        })),
       },
     };
   }
