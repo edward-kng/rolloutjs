@@ -1,12 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
-import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { flagsTable } from "./db/schema.js";
-import {
-  MIGRATIONS_DIR,
-  MIGRATIONS_SCHEMA,
-  MIGRATIONS_TABLE,
-} from "./db/constant.js";
 import { migrateDb } from "./db/utils.js";
 
 type FeatureFlagValue = boolean | string | number | object;
@@ -41,6 +35,7 @@ export class FeatureFlagManager {
     migrateDb(this.db);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async evaluate(key: string, _context?: object): Promise<EvaluationResponse> {
     const [flag] = await this.db
       .select()
@@ -66,6 +61,7 @@ export class FeatureFlagManager {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async evaluateAll(_context?: object): Promise<BulkEvaluationResponse> {
     const flags = await this.db.select().from(flagsTable);
 
