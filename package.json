@@ -25,8 +25,5 @@
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": "eslint --fix",
     "**/*": "prettier --write --ignore-unknown"
-  },
-  "dependencies": {
-    "@openfeature/server-sdk": "^1.20.2"
   }
 }
