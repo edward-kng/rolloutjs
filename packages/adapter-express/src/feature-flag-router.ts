@@ -14,7 +14,9 @@ export function createFeatureFlagRouter(
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
-      const { status, body } = featureFlagManager.evaluate(flagKey as string);
+      const { status, body } = await featureFlagManager.evaluate(
+        flagKey as string,
+      );
 
       res.status(status).json(body);
     },
@@ -23,7 +25,7 @@ export function createFeatureFlagRouter(
   router.post(
     `${PATH_PREFIX}/evaluate/flags/`,
     async (req: Request, res: Response) => {
-      const { status, body } = featureFlagManager.evaluateAll(req.body);
+      const { status, body } = await featureFlagManager.evaluateAll(req.body);
 
       res.status(status).json(body);
     },
