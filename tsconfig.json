@@ -1,7 +1,8 @@
 {
   "references": [
     { "path": "packages/core" },
-    { "path": "packages/adapter-express" }
+    { "path": "packages/framework-adapters/express" },
+    { "path": "packages/db-adapters/postgres" }
   ],
   "files": []
 }

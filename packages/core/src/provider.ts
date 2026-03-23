@@ -1,7 +1,3 @@
-import { eq } from "drizzle-orm";
-import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
-import { flagsTable } from "./db/schema.js";
-import { migrateDb } from "./db/utils.js";
 import {
   ErrorCode,
   StandardResolutionReasons,
@@ -16,28 +12,25 @@ import type {
   BulkEvaluationResponse,
   EvaluationResponse,
 } from "./types/ofrep.js";
+import type { FlagStore } from "./types/flag-store.js";
 
 const PROVIDER_NAME = "libreflag-provider";
 
 export class LibreFlag implements Provider {
-  db: NodePgDatabase;
   metadata = {
     name: PROVIDER_NAME,
   };
+  store: FlagStore;
 
-  constructor(db_url: string) {
-    this.db = drizzle(db_url);
-    migrateDb(this.db);
+  constructor(store: FlagStore) {
+    this.store = store;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async evaluate(key: string, _context?: object): Promise<EvaluationResponse> {
-    const [flag] = await this.db
-      .select()
-      .from(flagsTable)
-      .where(eq(flagsTable.key, key));
+    const flag = await this.store.getFlagByKey(key);
 
-    if (!flag || !flag.default_value) {
+    if (!flag || !flag.defaultValue) {
       return {
         status: 404,
         body: {
@@ -51,7 +44,7 @@ export class LibreFlag implements Provider {
       status: 200,
       body: {
         key,
-        value: (flag.default_value as FlagValue) ?? null,
+        value: flag.defaultValue,
         reason: StandardResolutionReasons.STATIC,
       },
     };
@@ -59,14 +52,14 @@ export class LibreFlag implements Provider {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async evaluateAll(_context?: object): Promise<BulkEvaluationResponse> {
-    const flags = await this.db.select().from(flagsTable);
+    const flags = await this.store.getAllFlags();
 
     return {
       status: 200,
       body: {
         flags: flags.map((flag) => ({
           key: flag.key,
-          value: (flag.default_value as FlagValue) ?? null,
+          value: flag.defaultValue,
           reason: StandardResolutionReasons.STATIC,
         })),
       },

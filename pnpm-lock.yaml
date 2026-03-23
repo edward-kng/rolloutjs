@@ -6,6 +6,13 @@ settings:
 
 importers:
   .:
+    dependencies:
+      "@libreflag":
+        specifier: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/@libreflag
+        version: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/@libreflag
+      libreflag:
+        specifier: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/libreflag
+        version: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/libreflag
     devDependencies:
       "@eslint/js":
         specifier: ^10.0.1
@@ -38,20 +45,13 @@ importers:
         specifier: ^8.57.1
         version: 8.57.1(eslint@10.1.0(jiti@2.6.1))(typescript@5.9.3)
 
-  packages/adapter-express:
-    dependencies:
-      express:
-        specifier: ^5.2.1
-        version: 5.2.1
-      libreflag:
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      "@types/express":
-        specifier: ^5.0.6
-        version: 5.0.6
-
   packages/core:
+    dependencies:
+      "@openfeature/server-sdk":
+        specifier: ^1.20.2
+        version: 1.20.2(@openfeature/core@1.9.2)
+
+  packages/db-adapters/postgres:
     dependencies:
       dotenv:
         specifier: ^17.3.1
@@ -59,13 +59,13 @@ importers:
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.1(@types/pg@8.20.0)(pg@8.20.0)
+      libreflag:
+        specifier: workspace:*
+        version: link:../../core
       pg:
         specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
-      "@openfeature/server-sdk":
-        specifier: ^1.20.2
-        version: 1.20.2(@openfeature/core@1.9.2)
       "@types/pg":
         specifier: ^8.20.0
         version: 8.20.0
@@ -75,6 +75,19 @@ importers:
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
+
+  packages/framework-adapters/express:
+    dependencies:
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
+      libreflag:
+        specifier: workspace:*
+        version: link:../../core
+    devDependencies:
+      "@types/express":
+        specifier: ^5.0.6
+        version: 5.0.6
 
 packages:
   "@drizzle-team/brocli@0.10.2":
