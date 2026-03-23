@@ -1,6 +1,6 @@
 {
-  "name": "feature-flags",
-  "version": "1.0.0",
+  "name": "@libreflag/root",
+  "version": "0.0.0",
   "description": "",
   "scripts": {
     "prepare": "husky",

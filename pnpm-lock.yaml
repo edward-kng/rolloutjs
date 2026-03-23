@@ -40,12 +40,12 @@ importers:
 
   packages/adapter-express:
     dependencies:
-      "@feature-flags/core":
-        specifier: workspace:*
-        version: link:../core
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      libreflag:
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       "@types/express":
         specifier: ^5.0.6
@@ -1638,10 +1638,10 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  get-tsconfig@4.13.6:
+  get-tsconfig@4.13.7:
     resolution:
       {
-        integrity: sha512-shZT/QMiSHc/YBLxxOkMtgSid5HFoauqCE3/exfsEcwg1WkeqjG+V40yBbBrsD+jW2HDXcs28xOfcbm2jI8Ddw==,
+        integrity: sha512-7tN6rFgBlMgpBML5j8typ92BKFi2sFQvIdpAqLA2beia5avZDrMs0FLZiM5etShWq5irVyGcGMEA1jcDaK7A/Q==,
       }
 
   glob-parent@6.0.2:
@@ -2456,7 +2456,7 @@ snapshots:
   "@esbuild-kit/esm-loader@2.6.5":
     dependencies:
       "@esbuild-kit/core-utils": 3.3.2
-      get-tsconfig: 4.13.6
+      get-tsconfig: 4.13.7
 
   "@esbuild/aix-ppc64@0.25.12":
     optional: true
@@ -3266,7 +3266,7 @@ snapshots:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
 
-  get-tsconfig@4.13.6:
+  get-tsconfig@4.13.7:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
@@ -3643,7 +3643,7 @@ snapshots:
   tsx@4.21.0:
     dependencies:
       esbuild: 0.27.4
-      get-tsconfig: 4.13.6
+      get-tsconfig: 4.13.7
     optionalDependencies:
       fsevents: 2.3.3
 
