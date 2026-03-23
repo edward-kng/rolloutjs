@@ -25,5 +25,9 @@
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": "eslint --fix",
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "@libreflag": "link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/@libreflag",
+    "libreflag": "link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/libreflag"
   }
 }

@@ -6,7 +6,7 @@ import {
   MIGRATIONS_DIR,
   MIGRATIONS_SCHEMA,
   MIGRATIONS_TABLE,
-} from "./constant.js";
+} from "./constants.js";
 
 export async function migrateDb(db: NodePgDatabase) {
   await db.execute(sql`SELECT pg_advisory_lock(${ADVISORY_LOCK_ID})`);
