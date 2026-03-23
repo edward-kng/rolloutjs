@@ -3,6 +3,7 @@ import type {
   FlagValue,
   ResolutionReason,
 } from "@openfeature/server-sdk";
+import type { APIResponse } from "./api.js";
 
 type EvaluationResult = {
   key: string;
@@ -11,13 +12,11 @@ type EvaluationResult = {
   errorCode?: ErrorCode;
 };
 
-export type EvaluationResponse = {
-  status: number;
+export type EvaluationResponse = APIResponse & {
   body: EvaluationResult;
 };
 
-export type BulkEvaluationResponse = {
-  status: number;
+export type BulkEvaluationResponse = APIResponse & {
   body: {
     flags: EvaluationResult[];
   };
