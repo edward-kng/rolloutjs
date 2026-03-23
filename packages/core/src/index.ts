@@ -1,1 +1,1 @@
-export { FeatureFlagProvider } from "./provider.js";
+export { LibreFlag } from "./provider.js";

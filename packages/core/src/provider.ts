@@ -17,9 +17,9 @@ import type {
   EvaluationResponse,
 } from "./types/ofrep.js";
 
-const PROVIDER_NAME = "feature-flags-provider";
+const PROVIDER_NAME = "libreflag-provider";
 
-export class FeatureFlagProvider implements Provider {
+export class LibreFlag implements Provider {
   db: NodePgDatabase;
   metadata = {
     name: PROVIDER_NAME,

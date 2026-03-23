@@ -1,6 +1,6 @@
 {
-  "name": "@feature-flags/express",
-  "version": "1.0.0",
+  "name": "@libreflag/express",
+  "version": "0.0.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,11 +21,9 @@
   "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
-  "dependencies": {
-    "@feature-flags/core": "workspace:*"
-  },
   "peerDependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "libreflag": "workspace:*"
   },
   "devDependencies": {
     "@types/express": "^5.0.6"

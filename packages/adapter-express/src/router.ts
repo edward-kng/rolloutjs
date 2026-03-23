@@ -1,14 +1,15 @@
-import type { FeatureFlagProvider } from "@feature-flags/core";
+import type { LibreFlag } from "libreflag";
 import { Router } from "express";
 import type { Request, Response } from "express";
 
-const PATH_PREFIX = "/ofrep/v1";
+const PATH_PREFIX = "feature-flags";
+const OFREP_PREFIX = `${PATH_PREFIX}/ofrep/v1`;
 
-export function createFeatureFlagRouter(provider: FeatureFlagProvider): Router {
+export function LibreFlagExpress(provider: LibreFlag): Router {
   const router = Router();
 
   router.post(
-    `${PATH_PREFIX}/evaluate/flags/:flagKey`,
+    `${OFREP_PREFIX}/evaluate/flags/:flagKey`,
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
@@ -19,7 +20,7 @@ export function createFeatureFlagRouter(provider: FeatureFlagProvider): Router {
   );
 
   router.post(
-    `${PATH_PREFIX}/evaluate/flags/`,
+    `${OFREP_PREFIX}/evaluate/flags/`,
     async (req: Request, res: Response) => {
       const { status, body } = await provider.evaluateAll(req.body);
 
