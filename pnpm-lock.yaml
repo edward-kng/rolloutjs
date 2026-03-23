@@ -89,6 +89,15 @@ importers:
         specifier: ^5.0.6
         version: 5.0.6
 
+  packages/openfeature-provider-server:
+    dependencies:
+      "@openfeature/server-sdk":
+        specifier: ^1.20.2
+        version: 1.20.2(@openfeature/core@1.9.2)
+      libreflag:
+        specifier: workspace:*
+        version: link:../core
+
 packages:
   "@drizzle-team/brocli@0.10.2":
     resolution:

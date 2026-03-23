@@ -1,5 +1,5 @@
+import type { LibreFlag } from "libreflag";
 import {
-  ErrorCode,
   StandardResolutionReasons,
   type EvaluationContext,
   type FlagValue,
@@ -8,62 +8,18 @@ import {
   type Provider,
   type ResolutionDetails,
 } from "@openfeature/server-sdk";
-import type {
-  BulkEvaluationResponse,
-  EvaluationResponse,
-} from "./types/ofrep.js";
-import type { FlagStore } from "./types/flag-store.js";
 
 const PROVIDER_NAME = "libreflag-provider";
 
-export class LibreFlag implements Provider {
+export class LibreFlagProvider implements Provider {
   metadata = {
     name: PROVIDER_NAME,
   };
-  store: FlagStore;
 
-  constructor(store: FlagStore) {
-    this.store = store;
-  }
+  private libreflag: LibreFlag;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async evaluate(key: string, _context?: object): Promise<EvaluationResponse> {
-    const flag = await this.store.getFlagByKey(key);
-
-    if (!flag || !flag.defaultValue) {
-      return {
-        status: 404,
-        body: {
-          key,
-          errorCode: ErrorCode.FLAG_NOT_FOUND,
-        },
-      };
-    }
-
-    return {
-      status: 200,
-      body: {
-        key,
-        value: flag.defaultValue,
-        reason: StandardResolutionReasons.STATIC,
-      },
-    };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async evaluateAll(_context?: object): Promise<BulkEvaluationResponse> {
-    const flags = await this.store.getAllFlags();
-
-    return {
-      status: 200,
-      body: {
-        flags: flags.map((flag) => ({
-          key: flag.key,
-          value: flag.defaultValue,
-          reason: StandardResolutionReasons.STATIC,
-        })),
-      },
-    };
+  constructor(libreflag: LibreFlag) {
+    this.libreflag = libreflag;
   }
 
   private async resolveTypedEvaluation<T extends FlagValue>(
@@ -74,7 +30,7 @@ export class LibreFlag implements Provider {
   ) {
     const {
       body: { value, reason },
-    } = await this.evaluate(flagKey, context);
+    } = await this.libreflag.evaluate(flagKey, context);
 
     if (!value || (typeGuard && !typeGuard(value))) {
       return {
