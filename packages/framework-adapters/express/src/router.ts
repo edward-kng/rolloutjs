@@ -3,6 +3,7 @@ import { Router } from "express";
 import type { RequestHandler } from "express";
 import { OFREPRouter } from "./routes/ofrep.js";
 import { FlagsRouter } from "./routes/flags.js";
+import { AdminRouter } from "./routes/admin.js";
 import { ROUTES } from "./constants/routes.js";
 
 export interface LibreFlagExpressOptions {
@@ -21,6 +22,7 @@ export function LibreFlagExpress(
 
   router.use(ROUTES.OFREP, OFREPRouter(provider));
   router.use(ROUTES.FLAGS, adminAuthMiddleware, FlagsRouter(provider));
+  router.use(ROUTES.ADMIN, adminAuthMiddleware, AdminRouter());
 
   return router;
 }

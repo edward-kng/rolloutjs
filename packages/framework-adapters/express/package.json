@@ -21,6 +21,9 @@
   "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@libreflag/admin": "workspace:*"
+  },
   "peerDependencies": {
     "express": "^5.2.1",
     "libreflag": "workspace:*"
