@@ -3,7 +3,8 @@
     { "path": "packages/core" },
     { "path": "packages/framework-adapters/express" },
     { "path": "packages/db-adapters/postgres" },
-    { "path": "packages/openfeature-provider-server" }
+    { "path": "packages/openfeature-provider-server" },
+    { "path": "packages/admin" }
   ],
   "files": []
 }
