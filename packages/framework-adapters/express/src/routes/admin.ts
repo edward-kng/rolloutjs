@@ -14,7 +14,7 @@ export function AdminRouter(): Router {
 
   router.use(express.static(staticPath));
 
-  router.get("/", (_req, res) => {
+  router.get("/*path", (_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
