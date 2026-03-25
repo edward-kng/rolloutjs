@@ -1,3 +1,24 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ROUTES } from "./constants/routes";
+import { ThemeProvider } from "./components/theme-provider";
+import Root from "./pages/Root";
+
+const queryClient = new QueryClient();
+
 export default function App() {
-  return <div>Admin dashboard placeholder</div>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter basename={ROUTES.BASE}>
+        <ThemeProvider>
+          <TooltipProvider>
+            <Routes>
+              <Route path={ROUTES.ROOT} element={<Root />}></Route>
+            </Routes>
+          </TooltipProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 }

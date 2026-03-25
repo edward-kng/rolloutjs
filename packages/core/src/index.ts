@@ -3,3 +3,4 @@ export { FlagAlreadyExistsError } from "./errors.js";
 export type { FlagStore } from "./types/flag-store.js";
 export type { StoredFlag } from "./types/db.js";
 export type { FlagValue } from "@openfeature/server-sdk";
+export type { APIResponse, Flag } from "./types/api.js";
