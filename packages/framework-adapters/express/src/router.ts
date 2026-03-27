@@ -5,6 +5,7 @@ import { OFREPRouter } from "./routes/ofrep.js";
 import { FlagsRouter } from "./routes/flags.js";
 import { AdminRouter } from "./routes/admin.js";
 import { ROUTES } from "./constants/routes.js";
+import express from "express";
 
 export interface LibreFlagExpressOptions {
   adminAuthMiddleware?: RequestHandler;
@@ -20,6 +21,7 @@ export function LibreFlagExpress(
 ): Router {
   const router = Router();
 
+  router.use(express.json());
   router.use(ROUTES.OFREP, OFREPRouter(provider));
   router.use(ROUTES.FLAGS, adminAuthMiddleware, FlagsRouter(provider));
   router.use(ROUTES.ADMIN, adminAuthMiddleware, AdminRouter());
