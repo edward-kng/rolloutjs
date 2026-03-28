@@ -1,6 +1,6 @@
 import { integer, json, pgSchema, text } from "drizzle-orm/pg-core";
 
-export const flagsSchema = pgSchema("feature_flags");
+export const flagsSchema = pgSchema("libreflag");
 
 export const flagsTable = flagsSchema.table("flags", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

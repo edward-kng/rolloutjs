@@ -6,7 +6,7 @@
       "idx": 0,
       "version": "7",
       "when": 1774176476347,
-      "tag": "0000_create_table_feature_flags",
+      "tag": "0000_create_table_flags",
       "breakpoints": true
     }
   ]
