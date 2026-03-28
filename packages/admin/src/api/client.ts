@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const APIClient = axios.create({
-  baseURL: `${window.location.origin}/feature-flags`,
+  baseURL: `${window.location.origin}/libreflag`,
   headers: { "Content-Type": "application/json" },
 });
 

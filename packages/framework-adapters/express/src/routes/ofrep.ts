@@ -12,7 +12,7 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
 
       const { status, body } = await httpMethods.evaluate(
         flagKey as string,
-        req.body.context,
+        req.body,
       );
 
       res.status(status).json(body);
@@ -20,7 +20,7 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
   );
 
   router.post("/evaluate/flags", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.evaluateAll(req.body.context);
+    const { status, body } = await httpMethods.evaluateAll(req.body);
 
     res.status(status).json(body);
   });

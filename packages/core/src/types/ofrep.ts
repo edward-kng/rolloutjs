@@ -1,5 +1,6 @@
 import type {
   ErrorCode,
+  EvaluationContext,
   FlagValue,
   ResolutionReason,
 } from "@openfeature/server-sdk";
@@ -17,3 +18,7 @@ export type EvaluationResponse = ApiResponse<EvaluationResult>;
 export type BulkEvaluationResponse = ApiResponse<{
   flags: EvaluationResult[];
 }>;
+
+export interface EvaluationBody {
+  context: EvaluationContext;
+}
