@@ -1,6 +1,7 @@
 export { LibreFlag } from "./libreflag.js";
-export { FlagAlreadyExistsError } from "./errors.js";
-export type { FlagStore } from "./types/flag-store.js";
+export { FlagAlreadyExistsError, FlagNotFoundError } from "./errors.js";
+export type { LibreFlagStore } from "./types/store.js";
 export type { StoredFlag } from "./types/db.js";
 export type { FlagValue } from "@openfeature/server-sdk";
-export type { APIResponse, Flag } from "./types/api.js";
+export type { ApiResponse, Flag } from "./types/api.js";
+export type { LibreFlagServer, LibreFlagHttpMethods } from "./types/server.js";

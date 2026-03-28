@@ -1,8 +1,8 @@
-import type { LibreFlag } from "libreflag";
+import type { LibreFlagHttpMethods } from "libreflag";
 import { Router } from "express";
 import type { Request, Response } from "express";
 
-export function OFREPRouter(provider: LibreFlag): Router {
+export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
   const router = Router();
 
   router.post(
@@ -10,14 +10,14 @@ export function OFREPRouter(provider: LibreFlag): Router {
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
-      const { status, body } = await provider.evaluate(flagKey as string);
+      const { status, body } = await httpMethods.evaluate(flagKey as string);
 
       res.status(status).json(body);
     },
   );
 
   router.post("/evaluate/flags", async (req: Request, res: Response) => {
-    const { status, body } = await provider.evaluateAll(req.body);
+    const { status, body } = await httpMethods.evaluateAll(req.body);
 
     res.status(status).json(body);
   });

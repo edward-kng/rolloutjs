@@ -1,18 +1,18 @@
-import type { LibreFlag } from "libreflag";
+import type { LibreFlagHttpMethods } from "libreflag";
 import { Router } from "express";
 import type { Request, Response } from "express";
 
-export function FlagsRouter(provider: LibreFlag): Router {
+export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
   const router = Router();
 
   router.get("/", async (_req: Request, res: Response) => {
-    const { status, body } = await provider.getAllFlags();
+    const { status, body } = await httpMethods.getAllFlags();
 
     res.status(status).json(body);
   });
 
   router.get("/:flagKey", async (req: Request, res: Response) => {
-    const { status, body } = await provider.getFlag(
+    const { status, body } = await httpMethods.getFlag(
       req.params.flagKey as string,
     );
 
@@ -25,7 +25,7 @@ export function FlagsRouter(provider: LibreFlag): Router {
   });
 
   router.post("/", async (req: Request, res: Response) => {
-    const { status, body } = await provider.createFlag(req.body);
+    const { status, body } = await httpMethods.createFlag(req.body);
 
     if (!body) {
       res.sendStatus(status);
@@ -37,7 +37,7 @@ export function FlagsRouter(provider: LibreFlag): Router {
 
   router.put("/:flagKey", async (req: Request, res: Response) => {
     const flagKey = req.params.flagKey as string;
-    const { status, body } = await provider.updateFlag(flagKey, req.body);
+    const { status, body } = await httpMethods.updateFlag(flagKey, req.body);
 
     if (!body) {
       res.sendStatus(status);
@@ -48,7 +48,9 @@ export function FlagsRouter(provider: LibreFlag): Router {
   });
 
   router.delete("/:flagKey", async (req: Request, res: Response) => {
-    const { status } = await provider.deleteFlag(req.params.flagKey as string);
+    const { status } = await httpMethods.deleteFlag(
+      req.params.flagKey as string,
+    );
 
     res.sendStatus(status);
   });

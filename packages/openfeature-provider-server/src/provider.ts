@@ -1,4 +1,3 @@
-import type { LibreFlag } from "libreflag";
 import {
   StandardResolutionReasons,
   type EvaluationContext,
@@ -8,6 +7,7 @@ import {
   type Provider,
   type ResolutionDetails,
 } from "@openfeature/server-sdk";
+import type { LibreFlagServer } from "libreflag";
 
 const PROVIDER_NAME = "libreflag-provider";
 
@@ -16,9 +16,9 @@ export class LibreFlagProvider implements Provider {
     name: PROVIDER_NAME,
   };
 
-  private libreflag: LibreFlag;
+  private libreflag: LibreFlagServer;
 
-  constructor(libreflag: LibreFlag) {
+  constructor(libreflag: LibreFlagServer) {
     this.libreflag = libreflag;
   }
 
@@ -28,9 +28,7 @@ export class LibreFlagProvider implements Provider {
     context: EvaluationContext,
     typeGuard?: (v: unknown) => v is T,
   ) {
-    const {
-      body: { value, reason },
-    } = await this.libreflag.evaluate(flagKey, context);
+    const { value, reason } = await this.libreflag.evaluate(flagKey, context);
 
     if (!value || (typeGuard && !typeGuard(value))) {
       return {

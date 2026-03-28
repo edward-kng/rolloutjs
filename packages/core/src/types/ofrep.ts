@@ -3,21 +3,19 @@ import type {
   FlagValue,
   ResolutionReason,
 } from "@openfeature/server-sdk";
-import type { APIResponse } from "./api.js";
+import type { ApiResponse } from "./api.js";
 
-type EvaluationResult = {
+export interface EvaluationResult {
   key: string;
   value?: FlagValue;
   reason?: ResolutionReason;
   errorCode?: ErrorCode;
-};
+}
 
-export type EvaluationResponse = APIResponse & {
-  body: EvaluationResult;
-};
+export type EvaluationResponse = ApiResponse<EvaluationResult>;
 
-export type BulkEvaluationResponse = APIResponse & {
+export type BulkEvaluationResponse = ApiResponse<{
   body: {
     flags: EvaluationResult[];
   };
-};
+}>;
