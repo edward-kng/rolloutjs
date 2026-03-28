@@ -10,14 +10,17 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
-      const { status, body } = await httpMethods.evaluate(flagKey as string);
+      const { status, body } = await httpMethods.evaluate(
+        flagKey as string,
+        req.body.context,
+      );
 
       res.status(status).json(body);
     },
   );
 
   router.post("/evaluate/flags", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.evaluateAll(req.body);
+    const { status, body } = await httpMethods.evaluateAll(req.body.context);
 
     res.status(status).json(body);
   });

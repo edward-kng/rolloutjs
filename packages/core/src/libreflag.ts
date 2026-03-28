@@ -1,12 +1,7 @@
-import type { FlagValue } from "@openfeature/server-sdk";
+import type { EvaluationContext, FlagValue } from "@openfeature/server-sdk";
 import { StandardResolutionReasons } from "@openfeature/server-sdk";
 import type { EvaluationResult } from "./types/ofrep.js";
-import type {
-  EvaluationContext,
-  Flag,
-  User,
-  UserOverride,
-} from "./types/api.js";
+import type { Flag, User, UserOverride } from "./types/api.js";
 import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { FlagNotFoundError, UserNotFoundError } from "./errors.js";
@@ -18,16 +13,17 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     context?: EvaluationContext,
   ): Promise<EvaluationResult> {
     const flag = await store.getFlag(key);
+    const { targetingKey, ...attributes } = context ?? {};
 
     if (!flag) throw new FlagNotFoundError(key);
 
-    if (context?.key) {
+    if (targetingKey) {
       await store.upsertUser({
-        key: context.key,
-        attributes: context.attributes ?? {},
+        key: targetingKey,
+        attributes,
       });
 
-      const override = await store.getUserOverride(context.key, flag.key);
+      const override = await store.getUserOverride(targetingKey, flag.key);
 
       if (override) {
         return {
@@ -49,14 +45,15 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     context?: EvaluationContext,
   ): Promise<EvaluationResult[]> {
     const flags = await store.getAllFlags();
+    const { targetingKey, ...attributes } = context ?? {};
 
-    if (context?.key) {
+    if (targetingKey) {
       await store.upsertUser({
-        key: context.key,
-        attributes: context.attributes ?? {},
+        key: targetingKey,
+        attributes,
       });
 
-      const overrides = await store.getUserOverrides(context.key);
+      const overrides = await store.getUserOverrides(targetingKey);
       const overrideMap = new Map(overrides.map((o) => [o.flagKey, o.value]));
 
       return flags.map((flag) => {
@@ -200,7 +197,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       evaluateAll: async (context) => {
         try {
           const results = await evaluateAll(context);
-          return { status: 200, body: { body: { flags: results } } };
+          return { status: 200, body: { flags: results } };
         } catch (e) {
           return handleError(e);
         }

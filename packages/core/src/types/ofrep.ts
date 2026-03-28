@@ -15,7 +15,5 @@ export interface EvaluationResult {
 export type EvaluationResponse = ApiResponse<EvaluationResult>;
 
 export type BulkEvaluationResponse = ApiResponse<{
-  body: {
-    flags: EvaluationResult[];
-  };
+  flags: EvaluationResult[];
 }>;
