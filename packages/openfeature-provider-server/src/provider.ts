@@ -28,7 +28,15 @@ export class LibreFlagProvider implements Provider {
     context: EvaluationContext,
     typeGuard?: (v: unknown) => v is T,
   ) {
-    const { value, reason } = await this.libreflag.evaluate(flagKey, context);
+    const { value, reason } = await this.libreflag.evaluate(
+      flagKey,
+      context.targetingKey
+        ? {
+            key: context.targetingKey,
+            ...context,
+          }
+        : undefined,
+    );
 
     if (!value || (typeGuard && !typeGuard(value))) {
       return {

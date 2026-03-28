@@ -1,4 +1,5 @@
 import { Flag, Users, PieChart } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import { useNavigate, useLocation } from "react-router";
 
 import {
@@ -15,9 +16,9 @@ import {
 } from "@/components/ui/sidebar";
 
 const NAV_ITEMS = [
-  { title: "Flags", icon: Flag, path: "/" },
+  { title: "Flags", icon: Flag, path: ROUTES.FLAGS },
   { title: "Segments", icon: PieChart, path: null },
-  { title: "Users", icon: Users, path: null },
+  { title: "Users", icon: Users, path: ROUTES.USERS },
 ] as const;
 
 export function AppSidebar() {

@@ -7,37 +7,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FlagValueCell } from "@/components/FlagValueCell";
-import type { Flag } from "@/types/api";
+import type { User } from "@/types/api";
 import { useState } from "react";
-import FlagEditView from "./FlagEditView";
+import UserEditView from "./UserEditView";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-interface FlagsTableProps {
-  flags: Flag[];
+interface UsersTableProps {
+  users: User[];
 }
 
-export default function FlagsTable({ flags }: FlagsTableProps) {
+export default function UsersTable({ users }: UsersTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [flagToEdit, setFlagToEdit] = useState<Flag | null>(null);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const filtered = flags.filter((flag) =>
-    flag.key.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filtered = users.filter((user) =>
+    user.key.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <SearchInput
-          placeholder="Search flags..."
+          placeholder="Search users..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Button onClick={() => setIsCreating(true)}>
           <Plus />
-          Create flag
+          Create user
         </Button>
       </div>
 
@@ -46,45 +45,41 @@ export default function FlagsTable({ flags }: FlagsTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Key</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Value</TableHead>
+              <TableHead>Attributes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length > 0 ? (
-              filtered.map((flag) => (
-                <TableRow key={flag.key}>
+              filtered.map((user) => (
+                <TableRow key={user.key}>
                   <TableCell
                     className="font-mono font-medium px-4 py-3 text-white hover:underline cursor-pointer"
-                    onClick={() => setFlagToEdit(flag)}
+                    onClick={() => setUserToEdit(user)}
                   >
-                    {flag.key}
+                    {user.key}
                   </TableCell>
                   <TableCell className="font-mono text-muted-foreground px-4 py-3">
-                    {typeof flag.defaultValue}
-                  </TableCell>
-                  <TableCell className="px-4 py-3">
-                    <FlagValueCell flag={flag} value={flag.defaultValue} />
+                    {JSON.stringify(user.attributes)}
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3}>No flags found.</TableCell>
+                <TableCell colSpan={2}>No users found.</TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
 
-      <FlagEditView
-        flag={flagToEdit ?? undefined}
-        open={flagToEdit !== null || isCreating}
+      <UserEditView
+        user={userToEdit ?? undefined}
+        open={userToEdit !== null || isCreating}
         onOpenChange={(open) => {
-          if (!open) setFlagToEdit(null);
+          if (!open) setUserToEdit(null);
           setIsCreating(false);
         }}
-        key={flagToEdit?.key}
+        key={userToEdit?.key}
       />
     </div>
   );
