@@ -1,11 +1,12 @@
 import type { FlagValue } from "@openfeature/server-sdk";
 
-export type APIResponse = {
+export interface ApiResponse<T extends object | undefined = undefined> {
   status: number;
-  body?: object;
-};
+  body?: T | undefined;
+  errorCode?: string;
+}
 
-export type Flag = {
+export interface Flag {
   key: string;
   defaultValue: FlagValue;
-};
+}

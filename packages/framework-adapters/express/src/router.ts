@@ -1,4 +1,4 @@
-import type { LibreFlag } from "libreflag";
+import type { LibreFlagServer } from "libreflag";
 import { Router } from "express";
 import type { RequestHandler } from "express";
 import { OFREPRouter } from "./routes/ofrep.js";
@@ -12,7 +12,7 @@ export interface LibreFlagExpressOptions {
 }
 
 export function LibreFlagExpress(
-  provider: LibreFlag,
+  server: LibreFlagServer,
   {
     adminAuthMiddleware = (_req, res) => {
       res.status(403).send();
@@ -20,10 +20,11 @@ export function LibreFlagExpress(
   }: LibreFlagExpressOptions = {},
 ): Router {
   const router = Router();
+  const httpMethods = server.getHttpMethods();
 
   router.use(express.json());
-  router.use(ROUTES.OFREP, OFREPRouter(provider));
-  router.use(ROUTES.FLAGS, adminAuthMiddleware, FlagsRouter(provider));
+  router.use(ROUTES.OFREP, OFREPRouter(httpMethods));
+  router.use(ROUTES.FLAGS, adminAuthMiddleware, FlagsRouter(httpMethods));
   router.use(ROUTES.ADMIN, adminAuthMiddleware, AdminRouter());
 
   return router;

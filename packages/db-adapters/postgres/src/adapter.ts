@@ -1,5 +1,5 @@
 import { FlagAlreadyExistsError } from "libreflag";
-import type { FlagStore, FlagValue, StoredFlag } from "libreflag";
+import type { FlagValue, LibreFlagStore, StoredFlag } from "libreflag";
 import { flagsTable } from "./db/schema.js";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -11,7 +11,7 @@ function toStoredFlag(flag: typeof flagsTable.$inferSelect): StoredFlag {
   };
 }
 
-export function PostgresAdapter(dbUrl: string): FlagStore {
+export function PostgresAdapter(dbUrl: string): LibreFlagStore {
   const db = drizzle(dbUrl);
 
   return {
