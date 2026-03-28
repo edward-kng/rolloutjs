@@ -18,6 +18,9 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
+import FlagEditView from "./FlagEditView";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 type FlagRow = {
   key: string;
@@ -46,6 +49,8 @@ interface FlagsTableProps {
 
 export default function FlagsTable({ flags }: FlagsTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [flagToEdit, setFlagToEdit] = useState<Flag | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const flagRows: FlagRow[] = useMemo(
     () =>
@@ -67,11 +72,17 @@ export default function FlagsTable({ flags }: FlagsTableProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <SearchInput
-        placeholder="Search flags..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <div className="flex justify-between">
+        <SearchInput
+          placeholder="Search flags..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <Button onClick={() => setIsCreating(true)}>
+          <Plus />
+          Create flag
+        </Button>
+      </div>
 
       <div className="rounded-lg border">
         <Table>
@@ -110,6 +121,16 @@ export default function FlagsTable({ flags }: FlagsTableProps) {
                             cell.column.id === "key",
                         },
                       )}
+                      onClick={
+                        cell.column.id === "key"
+                          ? () =>
+                              setFlagToEdit(
+                                flags.find(
+                                  (f) => f.key === row.getValue("key"),
+                                ) ?? null,
+                              )
+                          : undefined
+                      }
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -129,6 +150,16 @@ export default function FlagsTable({ flags }: FlagsTableProps) {
           </TableBody>
         </Table>
       </div>
+
+      <FlagEditView
+        flag={flagToEdit ?? undefined}
+        open={flagToEdit !== null || isCreating}
+        onOpenChange={(open) => {
+          if (!open) setFlagToEdit(null);
+          setIsCreating(false);
+        }}
+        key={flagToEdit?.key}
+      />
     </div>
   );
 }
