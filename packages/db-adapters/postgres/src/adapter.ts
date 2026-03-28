@@ -1,8 +1,15 @@
 import { FlagAlreadyExistsError } from "libreflag";
 import type { FlagValue, LibreFlagStore, StoredFlag } from "libreflag";
 import { flagsTable } from "./db/schema.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
+import {
+  ADVISORY_LOCK_ID,
+  MIGRATIONS_DIR,
+  MIGRATIONS_SCHEMA,
+  MIGRATIONS_TABLE,
+} from "./db/constants.js";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 
 function toStoredFlag(flag: typeof flagsTable.$inferSelect): StoredFlag {
   return {
@@ -69,6 +76,18 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .returning();
 
       return result.length > 0;
+    },
+    migrate: async () => {
+      await db.execute(sql`SELECT pg_advisory_lock(${ADVISORY_LOCK_ID})`);
+      try {
+        await migrate(db, {
+          migrationsFolder: MIGRATIONS_DIR,
+          migrationsSchema: MIGRATIONS_SCHEMA,
+          migrationsTable: MIGRATIONS_TABLE,
+        });
+      } finally {
+        await db.execute(sql`SELECT pg_advisory_unlock(${ADVISORY_LOCK_ID})`);
+      }
     },
   };
 }
