@@ -10,3 +10,18 @@ export interface Flag {
   key: string;
   defaultValue: FlagValue;
 }
+
+export interface User {
+  key: string;
+  attributes: Record<string, unknown>;
+}
+
+export interface UserOverride {
+  flagKey: string;
+  value: FlagValue;
+}
+
+export interface EvaluationContext {
+  key: string;
+  attributes?: Record<string, unknown>;
+}

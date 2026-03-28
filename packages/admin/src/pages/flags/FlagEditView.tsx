@@ -31,28 +31,10 @@ import { Switch } from "@/components/ui/switch";
 import { useUpdateFlag } from "@/hooks/api/useUpdateFlag";
 import { useCreateFlag } from "@/hooks/api/useCreateFlag";
 import { useDeleteFlag } from "@/hooks/api/useDeleteFlag";
-import type { Flag, FlagValue } from "@/types/api";
-import { serializeValue } from "@/utils/flags";
-
-type ValueType = "boolean" | "string" | "number" | "object";
-
-function inferType(value: FlagValue): ValueType {
-  if (typeof value === "object") return "object";
-  return typeof value as ValueType;
-}
-
-function coerceValue(raw: string, type: ValueType): FlagValue {
-  switch (type) {
-    case "boolean":
-      return raw === "true";
-    case "number":
-      return Number(raw);
-    case "object":
-      return JSON.parse(raw) as object;
-    default:
-      return raw;
-  }
-}
+import type { Flag } from "@/types/api";
+import { coerceValue, inferType, serializeValue } from "@/utils/flags";
+import { KeyValueEditor } from "@/components/KeyValueEditor";
+import type { ValueType } from "@/types/flags";
 
 function getPlaceholder(type: ValueType) {
   if (type == "number") {
@@ -77,13 +59,19 @@ export default function FlagEditView({
   open,
   onOpenChange,
 }: FlagEditViewProps) {
+  const initialType = flag ? inferType(flag.defaultValue) : "boolean";
+  const initialObj =
+    flag && initialType === "object"
+      ? (flag.defaultValue as Record<string, unknown>)
+      : {};
+
   const [key, setKey] = useState("");
-  const [valueType, setValueType] = useState<ValueType>(
-    flag ? inferType(flag.defaultValue) : "boolean",
-  );
+  const [valueType, setValueType] = useState<ValueType>(initialType);
   const [value, setValue] = useState(
     flag ? serializeValue(flag.defaultValue) : "false",
   );
+  const [objectValue, setObjectValue] =
+    useState<Record<string, unknown>>(initialObj);
 
   const { mutate: updateFlag, isPending: isUpdating } = useUpdateFlag();
   const { mutate: createFlag, isPending: isCreating } = useCreateFlag();
@@ -95,10 +83,14 @@ export default function FlagEditView({
   function handleTypeChange(type: ValueType) {
     setValueType(type);
     setValue("");
+    if (type === "object") {
+      setObjectValue({});
+    }
   }
 
   function handleSave() {
-    const coerced = coerceValue(value, valueType);
+    const coerced =
+      valueType === "object" ? objectValue : coerceValue(value, valueType);
 
     if (isCreate) {
       createFlag(
@@ -166,6 +158,12 @@ export default function FlagEditView({
                 onCheckedChange={(checked) => setValue(String(checked))}
               />
             </div>
+          ) : valueType === "object" ? (
+            <KeyValueEditor
+              label="Value"
+              value={initialObj}
+              onChange={setObjectValue}
+            />
           ) : (
             <label className="flex flex-col gap-1.5">
               <span className="text-sm font-medium">Value</span>
@@ -216,7 +214,11 @@ export default function FlagEditView({
           )}
           <Button
             onClick={handleSave}
-            disabled={isPending || (isCreate && !key.trim()) || !value.trim()}
+            disabled={
+              isPending ||
+              (isCreate && !key.trim()) ||
+              (valueType !== "object" && !value.trim())
+            }
           >
             {isCreating || isUpdating
               ? "Saving..."
