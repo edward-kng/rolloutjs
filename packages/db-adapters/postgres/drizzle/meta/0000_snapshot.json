@@ -4,9 +4,9 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "feature_flags.flags": {
+    "libreflag.flags": {
       "name": "flags",
-      "schema": "feature_flags",
+      "schema": "libreflag",
       "columns": {
         "id": {
           "name": "id",
@@ -16,7 +16,7 @@
           "identity": {
             "type": "always",
             "name": "flags_id_seq",
-            "schema": "feature_flags",
+            "schema": "libreflag",
             "increment": "1",
             "startWith": "1",
             "minValue": "1",
@@ -56,7 +56,7 @@
   },
   "enums": {},
   "schemas": {
-    "feature_flags": "feature_flags"
+    "libreflag": "libreflag"
   },
   "sequences": {},
   "roles": {},
