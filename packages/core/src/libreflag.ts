@@ -186,17 +186,17 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
 
   function getHttpMethods(): LibreFlagHttpMethods {
     return {
-      evaluate: async (key, context) => {
+      evaluate: async (key, body) => {
         try {
-          const result = await evaluate(key, context);
+          const result = await evaluate(key, body?.context);
           return { status: 200, body: result };
         } catch (e) {
           return handleError(e);
         }
       },
-      evaluateAll: async (context) => {
+      evaluateAll: async (body) => {
         try {
-          const results = await evaluateAll(context);
+          const results = await evaluateAll(body?.context);
           return { status: 200, body: { flags: results } };
         } catch (e) {
           return handleError(e);

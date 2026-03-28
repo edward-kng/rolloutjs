@@ -2,6 +2,7 @@ import type { EvaluationContext, FlagValue } from "@openfeature/server-sdk";
 import type { ApiResponse, Flag, User, UserOverride } from "./api.js";
 import type {
   BulkEvaluationResponse,
+  EvaluationBody,
   EvaluationResponse,
   EvaluationResult,
 } from "./ofrep.js";
@@ -9,9 +10,9 @@ import type {
 export interface LibreFlagHttpMethods {
   evaluate: (
     key: string,
-    context?: EvaluationContext,
+    context?: EvaluationBody,
   ) => Promise<EvaluationResponse>;
-  evaluateAll: (context?: EvaluationContext) => Promise<BulkEvaluationResponse>;
+  evaluateAll: (context?: EvaluationBody) => Promise<BulkEvaluationResponse>;
 
   getFlag(key: string): Promise<ApiResponse<Flag>>;
   getAllFlags(): Promise<ApiResponse<Flag[]>>;

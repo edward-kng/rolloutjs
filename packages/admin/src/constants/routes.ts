@@ -1,5 +1,5 @@
 export const ROUTES = {
-  BASE: "feature-flags/admin",
+  BASE: "libreflag/admin",
   ROOT: "/*",
   FLAGS: "/",
   USERS: "/users",
