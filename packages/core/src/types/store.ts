@@ -3,6 +3,9 @@ import type { StoredFlag, StoredUser, StoredUserOverride } from "./db.js";
 export interface LibreFlagStore {
   migrate: () => Promise<void>;
 
+  getVersion: () => Promise<number>;
+  incrementVersion: () => Promise<number>;
+
   getAllFlags: () => Promise<StoredFlag[]>;
   getFlag: (key: string) => Promise<StoredFlag | null>;
   createFlag: (flag: StoredFlag) => Promise<StoredFlag>;

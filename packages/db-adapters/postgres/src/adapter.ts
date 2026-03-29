@@ -6,7 +6,12 @@ import type {
   StoredUser,
   StoredUserOverride,
 } from "libreflag";
-import { flagsTable, userOverridesTable, usersTable } from "./db/schema.js";
+import {
+  configTable,
+  flagsTable,
+  userOverridesTable,
+  usersTable,
+} from "./db/schema.js";
 import { and, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import {
@@ -45,6 +50,24 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
   const db = drizzle(dbUrl);
 
   return {
+    getVersion: async () => {
+      const [row] = await db
+        .select()
+        .from(configTable)
+        .where(eq(configTable.id, 1));
+
+      return row?.version ?? 0;
+    },
+    incrementVersion: async () => {
+      const [row] = await db
+        .update(configTable)
+        .set({ version: sql`${configTable.version} + 1` })
+        .where(eq(configTable.id, 1))
+        .returning({ version: configTable.version });
+
+      return row.version;
+    },
+
     getAllFlags: async () => {
       const flags = await db.select().from(flagsTable);
 

@@ -22,13 +22,15 @@
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@libreflag/admin": "workspace:*"
+    "@libreflag/admin": "workspace:*",
+    "cors": "^2.8.6"
   },
   "peerDependencies": {
     "express": "^5.2.1",
     "libreflag": "workspace:*"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6"
   }
 }

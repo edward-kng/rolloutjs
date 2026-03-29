@@ -4,6 +4,7 @@ export interface ApiResponse<T extends object | undefined = undefined> {
   status: number;
   body?: T | undefined;
   errorCode?: string;
+  etag?: string;
 }
 
 export interface Flag {

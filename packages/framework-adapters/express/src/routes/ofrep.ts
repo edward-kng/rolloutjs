@@ -20,9 +20,19 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
   );
 
   router.post("/evaluate/flags", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.evaluateAll(req.body);
+    const ifNoneMatch = req.headers["if-none-match"] as string | undefined;
+    const { status, body, etag } = await httpMethods.evaluateAll(
+      req.body,
+      ifNoneMatch,
+    );
 
-    res.status(status).json(body);
+    if (etag) res.set("ETag", etag);
+
+    if (status === 304) {
+      res.status(304).end();
+    } else {
+      res.status(status).json(body);
+    }
   });
 
   return router;

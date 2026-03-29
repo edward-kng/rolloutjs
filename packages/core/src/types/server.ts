@@ -12,7 +12,10 @@ export interface LibreFlagHttpMethods {
     key: string,
     context?: EvaluationBody,
   ) => Promise<EvaluationResponse>;
-  evaluateAll: (context?: EvaluationBody) => Promise<BulkEvaluationResponse>;
+  evaluateAll: (
+    context?: EvaluationBody,
+    ifNoneMatch?: string,
+  ) => Promise<BulkEvaluationResponse>;
 
   getFlag(key: string): Promise<ApiResponse<Flag>>;
   getAllFlags(): Promise<ApiResponse<Flag[]>>;
