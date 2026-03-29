@@ -21,6 +21,11 @@ export const usersTable = schema.table("users", {
   attributes: json().default({}),
 });
 
+export const configTable = schema.table("config", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  version: integer().notNull().default(0),
+});
+
 export const userOverridesTable = schema.table(
   "user_overrides",
   {

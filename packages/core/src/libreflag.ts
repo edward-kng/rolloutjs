@@ -6,6 +6,7 @@ import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { FlagNotFoundError, UserNotFoundError } from "./errors.js";
 import { handleError } from "./utils/api.js";
+import { hashContext } from "./utils/hash.js";
 
 export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function evaluate(
@@ -114,18 +115,21 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
 
   async function createFlag(flag: Flag): Promise<void> {
     await store.createFlag(flag);
+    await store.incrementVersion();
   }
 
   async function updateFlag(key: string, flag: Partial<Flag>): Promise<void> {
     const updated = await store.updateFlag(key, flag);
 
     if (!updated) throw new FlagNotFoundError(key);
+    await store.incrementVersion();
   }
 
   async function deleteFlag(key: string): Promise<void> {
     const deleted = await store.deleteFlag(key);
 
     if (!deleted) throw new FlagNotFoundError(key);
+    await store.incrementVersion();
   }
 
   async function getUser(key: string): Promise<User> {
@@ -153,12 +157,14 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     const updated = await store.updateUser(key, user);
 
     if (!updated) throw new UserNotFoundError(key);
+    await store.incrementVersion();
   }
 
   async function deleteUser(key: string): Promise<void> {
     const deleted = await store.deleteUser(key);
 
     if (!deleted) throw new UserNotFoundError(key);
+    await store.incrementVersion();
   }
 
   async function getUserOverrides(userKey: string): Promise<UserOverride[]> {
@@ -173,6 +179,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     value: FlagValue,
   ): Promise<void> {
     await store.setUserOverride({ userKey, flagKey, value });
+    await store.incrementVersion();
   }
 
   async function deleteUserOverride(
@@ -182,6 +189,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     const deleted = await store.deleteUserOverride(userKey, flagKey);
 
     if (!deleted) throw new UserNotFoundError(userKey);
+    await store.incrementVersion();
   }
 
   function getHttpMethods(): LibreFlagHttpMethods {
@@ -194,10 +202,17 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
           return handleError(e);
         }
       },
-      evaluateAll: async (body) => {
+      evaluateAll: async (body, ifNoneMatch) => {
         try {
+          const version = await store.getVersion();
+          const etag = hashContext(body?.context, version);
+
+          if (ifNoneMatch === etag) {
+            return { status: 304, etag };
+          }
+
           const results = await evaluateAll(body?.context);
-          return { status: 200, body: { flags: results } };
+          return { status: 200, body: { flags: results }, etag };
         } catch (e) {
           return handleError(e);
         }

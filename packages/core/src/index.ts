@@ -1,4 +1,5 @@
 export { LibreFlag } from "./libreflag.js";
+export { hashContext } from "./utils/hash.js";
 export {
   FlagAlreadyExistsError,
   FlagNotFoundError,

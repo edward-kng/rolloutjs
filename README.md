@@ -54,7 +54,7 @@ app.use(cookieParser());
 
 app.use(
   LibreFlagExpress(libreFlag, {
-    adminAuthMiddleware: (req, res, next) => {
+    adminMiddleware: (req, res, next) => {
       // Add your custom admin auth here
       if (req.cookies["secretAdminToken"] == "1234") {
         next();

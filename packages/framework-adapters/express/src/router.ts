@@ -7,27 +7,30 @@ import { UsersRouter } from "./routes/users.js";
 import { AdminRouter } from "./routes/admin.js";
 import { ROUTES } from "./constants/routes.js";
 import express from "express";
+import cors from "cors";
 
 export interface LibreFlagExpressOptions {
-  adminAuthMiddleware?: RequestHandler;
+  adminMiddleware?: RequestHandler;
+  evalMiddleware?: RequestHandler;
 }
 
 export function LibreFlagExpress(
   server: LibreFlagServer,
   {
-    adminAuthMiddleware = (_req, res) => {
+    adminMiddleware = (_req, res) => {
       res.status(403).send();
     },
+    evalMiddleware = cors({ origin: true, exposedHeaders: ["ETag"] }),
   }: LibreFlagExpressOptions = {},
 ): Router {
   const router = Router();
   const httpMethods = server.getHttpMethods();
 
   router.use(express.json());
-  router.use(ROUTES.OFREP, OFREPRouter(httpMethods));
-  router.use(ROUTES.FLAGS, adminAuthMiddleware, FlagsRouter(httpMethods));
-  router.use(ROUTES.USERS, adminAuthMiddleware, UsersRouter(httpMethods));
-  router.use(ROUTES.ADMIN, adminAuthMiddleware, AdminRouter());
+  router.use(ROUTES.OFREP, evalMiddleware, OFREPRouter(httpMethods));
+  router.use(ROUTES.FLAGS, adminMiddleware, FlagsRouter(httpMethods));
+  router.use(ROUTES.USERS, adminMiddleware, UsersRouter(httpMethods));
+  router.use(ROUTES.ADMIN, adminMiddleware, AdminRouter());
 
   return router;
 }
