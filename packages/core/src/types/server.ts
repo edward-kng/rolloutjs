@@ -1,4 +1,4 @@
-import type { EvaluationContext, FlagValue } from "@openfeature/server-sdk";
+import type { EvaluationContext, FlagValue } from "@openfeature/core";
 import type { ApiResponse, Flag, User, UserOverride } from "./api.js";
 import type {
   BulkEvaluationResponse,

@@ -1,4 +1,4 @@
-import type { FlagValue } from "@openfeature/server-sdk";
+import type { FlagValue } from "@openfeature/core";
 
 export interface ApiResponse<T extends object | undefined = undefined> {
   status: number;
