@@ -6,13 +6,6 @@ settings:
 
 importers:
   .:
-    dependencies:
-      "@libreflag":
-        specifier: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/@libreflag
-        version: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/@libreflag
-      libreflag:
-        specifier: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/libreflag
-        version: link:../../../../home/edward/.local/share/pnpm/global/5/node_modules/libreflag
     devDependencies:
       "@eslint/js":
         specifier: ^10.0.1
