@@ -3,7 +3,7 @@ import type {
   EvaluationContext,
   FlagValue,
   ResolutionReason,
-} from "@openfeature/server-sdk";
+} from "@openfeature/core";
 import type { ApiResponse } from "./api.js";
 
 export interface EvaluationResult {

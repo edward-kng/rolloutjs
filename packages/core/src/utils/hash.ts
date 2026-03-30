@@ -1,4 +1,4 @@
-import type { EvaluationContext } from "@openfeature/server-sdk";
+import type { EvaluationContext } from "@openfeature/core";
 
 export function hashContext(
   context: EvaluationContext | undefined,

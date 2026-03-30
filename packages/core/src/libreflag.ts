@@ -1,5 +1,5 @@
-import type { EvaluationContext, FlagValue } from "@openfeature/server-sdk";
-import { StandardResolutionReasons } from "@openfeature/server-sdk";
+import type { EvaluationContext, FlagValue } from "@openfeature/core";
+import { StandardResolutionReasons } from "@openfeature/core";
 import type { EvaluationResult } from "./types/ofrep.js";
 import type { Flag, User, UserOverride } from "./types/api.js";
 import type { LibreFlagStore } from "./types/store.js";
