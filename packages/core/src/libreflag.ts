@@ -122,6 +122,10 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     await store.incrementConfigVersion();
   }
 
+  async function listOverrides(): Promise<Override[]> {
+    return store.listOverrides();
+  }
+
   async function getFlagOverrides(flagKey: string) {
     return store.getFlagOverrides(flagKey);
   }
@@ -232,6 +236,15 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
         }
       },
 
+      listOverrides: async () => {
+        try {
+          const overrides = await listOverrides();
+
+          return { status: 200, body: overrides };
+        } catch (e) {
+          return handleError(e);
+        }
+      },
       getFlagOverrides: async (flagKey) => {
         try {
           const overrides = await getFlagOverrides(flagKey);
@@ -280,6 +293,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     createFlag,
     updateFlag,
     deleteFlag,
+    listOverrides,
     getFlagOverrides,
     getUserOverrides,
     getUserOverride,

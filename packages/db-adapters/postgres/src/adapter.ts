@@ -70,6 +70,11 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
       return result.length > 0;
     },
 
+    listOverrides: async () => {
+      const overrides = await db.select().from(overridesTable);
+
+      return overrides.map(toStoredOverride);
+    },
     getFlagOverrides: async (flagKey: string) => {
       const overrides = await db
         .select()

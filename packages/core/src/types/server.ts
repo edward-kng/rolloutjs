@@ -23,6 +23,7 @@ export interface LibreFlagHttpMethods {
   updateFlag(key: string, flag: UpdateFlagParams): Promise<ApiResponse>;
   deleteFlag(key: string): Promise<ApiResponse>;
 
+  listOverrides(): Promise<ApiResponse<Override[]>>;
   getFlagOverrides(flagKey: string): Promise<ApiResponse<Override[]>>;
   getUserOverrides(targetingKey: string): Promise<ApiResponse<Override[]>>;
   setUserOverride(
@@ -54,6 +55,7 @@ export interface LibreFlagServer {
   updateFlag(key: string, flag: UpdateFlagParams): Promise<void>;
   deleteFlag(key: string): Promise<void>;
 
+  listOverrides: () => Promise<Override[]>;
   getFlagOverrides: (flagKey: string) => Promise<Override[]>;
   getUserOverrides: (targetingKey: string) => Promise<Override[]>;
   getUserOverride: (flagKey: string, targetingKey: string) => Promise<Override>;

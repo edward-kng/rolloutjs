@@ -1,6 +1,10 @@
 import type { FlagValue, Override } from "../types/api";
 import APIClient from "./client";
 
+export async function listOverrides() {
+  return APIClient.get<Override[]>("/overrides");
+}
+
 export async function getUserOverrides(targetingKey: string) {
   return APIClient.get<Override[]>(
     `/overrides/${encodeURIComponent(targetingKey)}`,
