@@ -34,16 +34,11 @@ function keyValuesToObj(pairs: KeyValuePair[]): Record<string, unknown> {
 }
 
 interface KeyValueEditorProps {
-  label: string;
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;
 }
 
-export function KeyValueEditor({
-  label,
-  value,
-  onChange,
-}: KeyValueEditorProps) {
+export function KeyValueEditor({ value, onChange }: KeyValueEditorProps) {
   const [editMode, setEditMode] = useState<EditMode>("key-value");
   const [jsonValue, setJsonValue] = useState(JSON.stringify(value, null, 2));
   const [pairs, setPairs] = useState<KeyValuePair[]>(objToKeyValues(value));
@@ -103,7 +98,6 @@ export function KeyValueEditor({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">{label}</span>
         <div className="flex gap-1 rounded-md border p-0.5">
           <button
             type="button"
@@ -156,16 +150,19 @@ export function KeyValueEditor({
                 className="font-mono"
               />
               <Button
+                type="button"
                 variant="ghost"
                 size="icon"
                 className="shrink-0"
                 onClick={() => removePair(index)}
+                disabled={pairs.length === 1}
               >
                 <Trash2 className="size-4" />
               </Button>
             </div>
           ))}
           <Button
+            type="button"
             variant="outline"
             size="sm"
             className="self-start"

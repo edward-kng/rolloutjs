@@ -20,7 +20,7 @@ export function coerceValue(raw: string, type: ValueType): FlagValue {
       return raw === "true";
     case "number":
       return Number(raw);
-    case "object":
+    case "json":
       return JSON.parse(raw) as object;
     default:
       return raw;
@@ -28,6 +28,6 @@ export function coerceValue(raw: string, type: ValueType): FlagValue {
 }
 
 export function inferType(value: FlagValue): ValueType {
-  if (typeof value === "object") return "object";
+  if (typeof value === "object") return "json";
   return typeof value as ValueType;
 }

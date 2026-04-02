@@ -1,16 +1,33 @@
-import { useFlags } from "@/hooks/api/useFlags";
 import FlagsTable from "./FlagsTable";
+import PageLayout from "@/components/PageLayout";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
+import FlagEditor from "./editor/FlagEditor";
+import { useState } from "react";
 
 export default function FlagsPage() {
-  const { data: flags } = useFlags();
+  const [isCreating, setIsCreating] = useState(false);
+
+  if (isCreating) {
+    return (
+      <PageLayout title="Create Flag" description="Create a new feature flag">
+        <FlagEditor onClose={() => setIsCreating(false)} />
+      </PageLayout>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Flags</h1>
-      </div>
-
-      <FlagsTable flags={flags ?? []} />
-    </div>
+    <PageLayout
+      title="Flags"
+      description="Manage your feature flags"
+      actions={
+        <Button onClick={() => setIsCreating(true)}>
+          <PlusIcon />
+          Create Flag
+        </Button>
+      }
+    >
+      <FlagsTable />
+    </PageLayout>
   );
 }
