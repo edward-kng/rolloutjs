@@ -1,18 +1,23 @@
-import type { LibreFlagHttpMethods } from "libreflag";
+import type { LibreFlagServer } from "libreflag";
 import { Router } from "express";
 import type { Request, Response } from "express";
 
-export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
+export function FlagsRouter(libreflag: LibreFlagServer): Router {
   const router = Router();
 
   router.get("/", async (_req: Request, res: Response) => {
-    const { status, body } = await httpMethods.getFlags();
+    const { status, body } = await libreflag.http.listFlags();
+
+    if (!body) {
+      res.sendStatus(status);
+      return;
+    }
 
     res.status(status).json(body);
   });
 
   router.get("/:flagKey", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.getFlag(
+    const { status, body } = await libreflag.http.getFlag(
       req.params.flagKey as string,
     );
 
@@ -25,7 +30,7 @@ export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
   });
 
   router.post("/", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.createFlag(req.body);
+    const { status, body } = await libreflag.http.createFlag(req.body);
 
     if (!body) {
       res.sendStatus(status);
@@ -37,7 +42,7 @@ export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
 
   router.put("/:flagKey", async (req: Request, res: Response) => {
     const flagKey = req.params.flagKey as string;
-    const { status, body } = await httpMethods.updateFlag(flagKey, req.body);
+    const { status, body } = await libreflag.http.updateFlag(flagKey, req.body);
 
     if (!body) {
       res.sendStatus(status);
@@ -48,17 +53,27 @@ export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
   });
 
   router.delete("/:flagKey", async (req: Request, res: Response) => {
-    const { status } = await httpMethods.deleteFlag(
+    const { status, body } = await libreflag.http.deleteFlag(
       req.params.flagKey as string,
     );
 
-    res.sendStatus(status);
+    if (!body) {
+      res.sendStatus(status);
+      return;
+    }
+
+    res.status(status).json(body);
   });
 
   router.get("/:flagKey/overrides", async (req: Request, res: Response) => {
-    const { status, body } = await httpMethods.getFlagOverrides(
+    const { status, body } = await libreflag.http.getFlagOverrides(
       req.params.flagKey as string,
     );
+
+    if (!body) {
+      res.sendStatus(status);
+      return;
+    }
 
     res.status(status).json(body);
   });

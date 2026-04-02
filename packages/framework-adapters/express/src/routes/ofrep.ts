@@ -1,8 +1,8 @@
-import type { LibreFlagHttpMethods } from "libreflag";
+import type { LibreFlagServer } from "libreflag";
 import { Router } from "express";
 import type { Request, Response } from "express";
 
-export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
+export function OFREPRouter(libreflag: LibreFlagServer): Router {
   const router = Router();
 
   router.post(
@@ -10,10 +10,15 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
     async (req: Request, res: Response) => {
       const { flagKey } = req.params;
 
-      const { status, body } = await httpMethods.evaluate(
+      const { status, body } = await libreflag.http.evaluate(
         flagKey as string,
         req.body,
       );
+
+      if (!body) {
+        res.sendStatus(status);
+        return;
+      }
 
       res.status(status).json(body);
     },
@@ -21,7 +26,7 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
 
   router.post("/evaluate/flags", async (req: Request, res: Response) => {
     const ifNoneMatch = req.headers["if-none-match"] as string | undefined;
-    const { status, body, etag } = await httpMethods.evaluateAll(
+    const { status, body, etag } = await libreflag.http.evaluateAll(
       req.body,
       ifNoneMatch,
     );
@@ -30,9 +35,15 @@ export function OFREPRouter(httpMethods: LibreFlagHttpMethods): Router {
 
     if (status === 304) {
       res.status(304).end();
-    } else {
-      res.status(status).json(body);
+      return;
     }
+
+    if (!body) {
+      res.sendStatus(status);
+      return;
+    }
+
+    res.status(status).json(body);
   });
 
   return router;

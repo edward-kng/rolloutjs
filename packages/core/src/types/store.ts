@@ -11,7 +11,7 @@ export interface LibreFlagStore {
   getConfigVersion: () => Promise<number>;
   incrementConfigVersion: () => Promise<void>;
 
-  getFlags: () => Promise<StoredFlag[]>;
+  listFlags: () => Promise<StoredFlag[]>;
   getFlag: (key: string) => Promise<StoredFlag | null>;
   createFlag: (flag: StoredFlag) => Promise<void>;
   updateFlag: (key: string, flag: UpdatedStoredFlagParams) => Promise<boolean>;

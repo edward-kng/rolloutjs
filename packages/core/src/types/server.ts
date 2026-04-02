@@ -17,7 +17,7 @@ export interface LibreFlagHttpMethods {
     ifNoneMatch?: string,
   ) => Promise<BulkEvaluationResponse>;
 
-  getFlags(): Promise<ApiResponse<Flag[]>>;
+  listFlags(): Promise<ApiResponse<Flag[]>>;
   getFlag(key: string): Promise<ApiResponse<Flag>>;
   createFlag(flag: Flag): Promise<ApiResponse>;
   updateFlag(key: string, flag: UpdateFlagParams): Promise<ApiResponse>;
@@ -49,7 +49,7 @@ export interface LibreFlagServer {
     context?: EvaluationContext,
   ) => Promise<FlagValue>;
 
-  getFlags(): Promise<Flag[]>;
+  listFlags(): Promise<Flag[]>;
   getFlag(key: string): Promise<Flag>;
   createFlag(flag: Flag): Promise<void>;
   updateFlag(key: string, flag: UpdateFlagParams): Promise<void>;
@@ -66,5 +66,5 @@ export interface LibreFlagServer {
   ) => Promise<void>;
   deleteUserOverride: (flagkey: string, targetingKey: string) => Promise<void>;
 
-  getHttpMethods(): LibreFlagHttpMethods;
+  http: LibreFlagHttpMethods;
 }
