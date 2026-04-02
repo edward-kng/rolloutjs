@@ -1,4 +1,4 @@
-import { Flag, Users, PieChart } from "lucide-react";
+import { Flag, PieChart, LayoutDashboard } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { useNavigate, useLocation } from "react-router";
 
@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/sidebar";
 
 const NAV_ITEMS = [
+  { title: "Dashboard", icon: LayoutDashboard, path: ROUTES.DASHBOARD },
   { title: "Flags", icon: Flag, path: ROUTES.FLAGS },
   { title: "Segments", icon: PieChart, path: null },
-  { title: "Users", icon: Users, path: ROUTES.USERS },
 ] as const;
 
 export function AppSidebar() {
@@ -30,14 +30,12 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-2 h-16">
+          <SidebarMenuItem className="flex items-center gap-2 h-[77px] border-b">
             <SidebarTrigger />
             {state === "expanded" && (
-              <SidebarMenuItem>
-                <span className="px-2 text-lg font-semibold tracking-tight">
-                  LibreFlag.js
-                </span>
-              </SidebarMenuItem>
+              <span className="px-2 text-lg font-semibold tracking-tight">
+                LibreFlag.js
+              </span>
             )}
           </SidebarMenuItem>
         </SidebarMenu>

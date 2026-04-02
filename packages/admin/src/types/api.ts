@@ -5,12 +5,8 @@ export type Flag = {
   defaultValue: FlagValue;
 };
 
-export type User = {
-  key: string;
-  attributes: Record<string, unknown>;
-};
-
-export type UserOverride = {
+export type Override = {
   flagKey: string;
+  targetingKey: string;
   value: FlagValue;
 };

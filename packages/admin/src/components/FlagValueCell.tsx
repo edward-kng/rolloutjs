@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import type { Flag, FlagValue } from "@/types/api";
+import type { FlagValue } from "@/types/api";
 import {
   coerceValue,
   formatValue,
@@ -10,22 +9,15 @@ import {
   serializeValue,
 } from "@/utils/flags";
 import { cn } from "@/utils/ui";
-import { Undo2 } from "lucide-react";
 
 interface FlagValueCellProps {
-  flag: Flag;
   value: FlagValue;
   onChange?: (value: FlagValue) => void;
-  onReset?: () => void;
 }
 
-export function FlagValueCell({
-  flag,
-  value,
-  onChange,
-  onReset,
-}: FlagValueCellProps) {
-  const isBoolean = typeof flag.defaultValue === "boolean";
+export function FlagValueCell({ value, onChange }: FlagValueCellProps) {
+  const isBoolean = typeof value === "boolean";
+  const isNumber = typeof value === "number";
   const editable = !!onChange;
 
   const [editing, setEditing] = useState(false);
@@ -40,7 +32,7 @@ export function FlagValueCell({
   function handleSubmit() {
     setEditing(false);
     try {
-      onChange?.(coerceValue(draft, inferType(flag.defaultValue)));
+      onChange?.(coerceValue(draft, inferType(value)));
     } catch {
       // invalid input — discard
     }
@@ -56,17 +48,6 @@ export function FlagValueCell({
           }
           disabled={!editable}
         />
-        {onReset && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-7"
-            onClick={onReset}
-            title="Reset to default"
-          >
-            <Undo2 className="size-3.5" />
-          </Button>
-        )}
       </div>
     );
   }
@@ -83,6 +64,7 @@ export function FlagValueCell({
           if (e.key === "Escape") setEditing(false);
         }}
         className="font-mono h-7 text-sm"
+        type={isNumber ? "number" : "text"}
       />
     );
   }
@@ -93,23 +75,11 @@ export function FlagValueCell({
         className={cn(
           "font-mono rounded px-1.5 py-0.5",
           editable && "cursor-pointer hover:bg-accent",
-          onReset ? "text-primary font-medium" : "text-muted-foreground",
         )}
         onClick={handleEdit}
       >
         {formatValue(value)}
       </span>
-      {onReset && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7"
-          onClick={onReset}
-          title="Reset to default"
-        >
-          <Undo2 className="size-3.5" />
-        </Button>
-      )}
     </div>
   );
 }

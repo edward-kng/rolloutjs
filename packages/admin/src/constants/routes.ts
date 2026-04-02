@@ -1,6 +1,7 @@
 export const ROUTES = {
   BASE: "libreflag/admin",
   ROOT: "/*",
-  FLAGS: "/",
-  USERS: "/users",
+  DASHBOARD: "/",
+  FLAGS: "/flags",
+  FLAGS_FLAG_KEY: "/flags/:flagKey",
 };

@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserOverrides } from "../../api/users";
+import { getUserOverrides } from "../../api/overrides";
 
-export function useUserOverrides(userKey: string | undefined) {
+export function useUserOverrides(targetingKey: string) {
   return useQuery({
-    queryKey: ["overrides", userKey],
+    queryKey: ["overrides", targetingKey],
     queryFn: async () => {
-      const response = await getUserOverrides(userKey!);
+      const response = await getUserOverrides(targetingKey!);
 
       return response.data;
     },
-    enabled: !!userKey,
   });
 }

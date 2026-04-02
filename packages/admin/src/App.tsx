@@ -14,7 +14,7 @@ export default function App() {
         <ThemeProvider>
           <TooltipProvider>
             <Routes>
-              <Route path={ROUTES.ROOT} element={<Root />}></Route>
+              <Route path={ROUTES.ROOT} element={<Root />} />
             </Routes>
           </TooltipProvider>
         </ThemeProvider>
