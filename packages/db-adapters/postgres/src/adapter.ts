@@ -31,7 +31,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .where(eq(configTable.id, 1));
     },
 
-    getFlags: async () => {
+    listFlags: async () => {
       const flags = await db.select().from(flagsTable);
 
       return flags.map(toStoredFlag);

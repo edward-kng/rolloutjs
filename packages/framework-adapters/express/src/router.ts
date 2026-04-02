@@ -15,7 +15,7 @@ export interface LibreFlagExpressOptions {
 }
 
 export function LibreFlagExpress(
-  server: LibreFlagServer,
+  libreflag: LibreFlagServer,
   {
     adminMiddleware = (_req, res) => {
       res.status(403).send();
@@ -24,12 +24,11 @@ export function LibreFlagExpress(
   }: LibreFlagExpressOptions = {},
 ): Router {
   const router = Router();
-  const httpMethods = server.getHttpMethods();
 
   router.use(express.json());
-  router.use(ROUTES.OFREP, evalMiddleware, OFREPRouter(httpMethods));
-  router.use(ROUTES.FLAGS, adminMiddleware, FlagsRouter(httpMethods));
-  router.use(ROUTES.OVERRIDES, adminMiddleware, OverridesRouter(httpMethods));
+  router.use(ROUTES.OFREP, evalMiddleware, OFREPRouter(libreflag));
+  router.use(ROUTES.FLAGS, adminMiddleware, FlagsRouter(libreflag));
+  router.use(ROUTES.OVERRIDES, adminMiddleware, OverridesRouter(libreflag));
   router.use(ROUTES.ADMIN, adminMiddleware, AdminRouter());
 
   return router;

@@ -6,6 +6,8 @@ export function handleError<T extends object | undefined = undefined>(
   error: Error | unknown,
   metadata?: Record<string, unknown>,
 ): ApiResponse<T> {
+  console.log(error);
+
   if (error instanceof FlagNotFoundError && metadata?.key) {
     return {
       status: 404,
