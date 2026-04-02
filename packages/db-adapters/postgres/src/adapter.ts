@@ -1,4 +1,5 @@
 import type { FlagValue, LibreFlagStore, StoredFlag } from "libreflag";
+import { ConflictError } from "libreflag";
 import { configTable, flagsTable, overridesTable } from "./db/schema.js";
 import { and, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -44,9 +45,16 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
       return row ? toStoredFlag(row) : null;
     },
     createFlag: async (flag: StoredFlag) => {
-      await db
-        .insert(flagsTable)
-        .values({ key: flag.key, default_value: flag.defaultValue });
+      try {
+        await db
+          .insert(flagsTable)
+          .values({ key: flag.key, default_value: flag.defaultValue });
+      } catch (e) {
+        if (e instanceof Error && "code" in e && e.code === "23505") {
+          throw new ConflictError(`Flag '${flag.key}' already exists`);
+        }
+        throw e;
+      }
     },
     updateFlag: async (key, params) => {
       const result = await db
