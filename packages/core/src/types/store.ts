@@ -20,16 +20,16 @@ export interface LibreFlagStore {
   getFlagOverrides: (flagKey: string) => Promise<StoredOverride[]>;
   getUserOverrides: (targetingKey: string) => Promise<StoredOverride[]>;
   getUserOverride: (
-    flagKey: string,
     targetingKey: string,
+    flagKey: string,
   ) => Promise<StoredOverride | null>;
   setUserOverride: (
-    flagKey: string,
     targetingKey: string,
+    flagKey: string,
     value: FlagValue,
   ) => Promise<void>;
   deleteUserOverride: (
-    flagkey: string,
     targetingKey: string,
+    flagkey: string,
   ) => Promise<boolean>;
 }

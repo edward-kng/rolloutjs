@@ -130,8 +130,8 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     return store.getUserOverrides(targetingKey);
   }
 
-  async function getUserOverride(flagKey: string, targetingKey: string) {
-    const override = await store.getUserOverride(flagKey, targetingKey);
+  async function getUserOverride(targetingKey: string, flagKey: string) {
+    const override = await store.getUserOverride(targetingKey, flagKey);
 
     if (!override) throw new NotFoundError();
 
