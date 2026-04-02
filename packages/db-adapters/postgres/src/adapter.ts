@@ -86,7 +86,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
 
       return overrides.map(toStoredOverride);
     },
-    getUserOverride: async (flagKey: string, targetingKey: string) => {
+    getUserOverride: async (targetingKey: string, flagKey: string) => {
       const [override] = await db
         .select()
         .from(overridesTable)
@@ -116,7 +116,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
           set: { value },
         });
     },
-    deleteUserOverride: async (flagKey: string, targetingKey: string) => {
+    deleteUserOverride: async (targetingKey: string, flagKey: string) => {
       const result = await db
         .delete(overridesTable)
         .where(
