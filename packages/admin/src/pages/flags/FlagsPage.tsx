@@ -6,7 +6,11 @@ import FlagEditor from "./editor/FlagEditor";
 import { useState } from "react";
 
 export default function FlagsPage() {
-  const [isCreating, setIsCreating] = useState(false);
+  const queryParams = new URLSearchParams(window.location.search);
+
+  const [isCreating, setIsCreating] = useState(
+    queryParams.get("create") === "true",
+  );
 
   if (isCreating) {
     return (

@@ -5,6 +5,12 @@ import type { Request, Response } from "express";
 export function OverridesRouter(httpMethods: LibreFlagHttpMethods): Router {
   const router = Router();
 
+  router.get("/", async (_req: Request, res: Response) => {
+    const { status, body } = await httpMethods.listOverrides();
+
+    res.status(status).json(body);
+  });
+
   router.get("/:targetingKey", async (req: Request, res: Response) => {
     const { status, body } = await httpMethods.getUserOverrides(
       req.params.targetingKey as string,

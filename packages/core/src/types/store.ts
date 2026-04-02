@@ -17,6 +17,7 @@ export interface LibreFlagStore {
   updateFlag: (key: string, flag: UpdatedStoredFlagParams) => Promise<boolean>;
   deleteFlag: (key: string) => Promise<boolean>;
 
+  listOverrides: () => Promise<StoredOverride[]>;
   getFlagOverrides: (flagKey: string) => Promise<StoredOverride[]>;
   getUserOverrides: (targetingKey: string) => Promise<StoredOverride[]>;
   getUserOverride: (
