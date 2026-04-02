@@ -1,17 +1,18 @@
 import type { FlagValue } from "@openfeature/core";
 
+export interface StoredConfig {
+  version: number;
+}
+
 export interface StoredFlag {
   key: string;
   defaultValue: FlagValue;
 }
 
-export interface StoredUser {
-  key: string;
-  attributes: Record<string, unknown>;
-}
+export type UpdatedStoredFlagParams = Omit<Partial<StoredFlag>, "key">;
 
-export interface StoredUserOverride {
-  userKey: string;
+export interface StoredOverride {
   flagKey: string;
+  targetingKey: string;
   value: FlagValue;
 }

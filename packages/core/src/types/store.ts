@@ -1,37 +1,35 @@
-import type { StoredFlag, StoredUser, StoredUserOverride } from "./db.js";
+import type { FlagValue } from "@openfeature/core";
+import type {
+  StoredFlag,
+  StoredOverride,
+  UpdatedStoredFlagParams,
+} from "./db.js";
 
 export interface LibreFlagStore {
   migrate: () => Promise<void>;
 
-  getVersion: () => Promise<number>;
-  incrementVersion: () => Promise<number>;
+  getConfigVersion: () => Promise<number>;
+  incrementConfigVersion: () => Promise<void>;
 
-  getAllFlags: () => Promise<StoredFlag[]>;
+  getFlags: () => Promise<StoredFlag[]>;
   getFlag: (key: string) => Promise<StoredFlag | null>;
-  createFlag: (flag: StoredFlag) => Promise<StoredFlag>;
-  updateFlag: (
-    key: string,
-    flag: Partial<StoredFlag>,
-  ) => Promise<StoredFlag | null>;
+  createFlag: (flag: StoredFlag) => Promise<void>;
+  updateFlag: (key: string, flag: UpdatedStoredFlagParams) => Promise<boolean>;
   deleteFlag: (key: string) => Promise<boolean>;
 
-  getAllUsers: () => Promise<StoredUser[]>;
-  getUser: (key: string) => Promise<StoredUser | null>;
-  createUser: (user: StoredUser) => Promise<StoredUser>;
-  updateUser: (
-    key: string,
-    user: Partial<StoredUser>,
-  ) => Promise<StoredUser | null>;
-  deleteUser: (key: string) => Promise<boolean>;
-  upsertUser: (user: StoredUser) => Promise<StoredUser>;
-
-  getUserOverrides: (userKey: string) => Promise<StoredUserOverride[]>;
+  getFlagOverrides: (flagKey: string) => Promise<StoredOverride[]>;
+  getUserOverrides: (targetingKey: string) => Promise<StoredOverride[]>;
   getUserOverride: (
-    userKey: string,
     flagKey: string,
-  ) => Promise<StoredUserOverride | null>;
+    targetingKey: string,
+  ) => Promise<StoredOverride | null>;
   setUserOverride: (
-    override: StoredUserOverride,
-  ) => Promise<StoredUserOverride>;
-  deleteUserOverride: (userKey: string, flagKey: string) => Promise<boolean>;
+    flagKey: string,
+    targetingKey: string,
+    value: FlagValue,
+  ) => Promise<void>;
+  deleteUserOverride: (
+    flagkey: string,
+    targetingKey: string,
+  ) => Promise<boolean>;
 }
