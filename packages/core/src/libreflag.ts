@@ -9,7 +9,7 @@ import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
-import { NotFoundError } from "./errors.js";
+import { NotFoundError, ValidationError } from "./errors.js";
 
 export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function evaluate(
@@ -40,7 +40,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       };
     }
 
-    throw new FlagNotFoundError();
+    throw new FlagNotFoundError(`Flag '${flagKey}' not found`);
   }
 
   async function evaluateAll(
@@ -81,15 +81,16 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       const result = await evaluate(key, context);
 
       return result.value ?? defaultValue;
-    } catch {
-      return defaultValue;
+    } catch (e) {
+      if (e instanceof FlagNotFoundError) return defaultValue;
+      throw e;
     }
   }
 
   async function getFlag(key: string): Promise<Flag> {
     const flag = await store.getFlag(key);
 
-    if (!flag) throw new NotFoundError();
+    if (!flag) throw new NotFoundError(`Flag '${key}' not found`);
 
     return { key: flag.key, defaultValue: flag.defaultValue };
   }
@@ -99,6 +100,14 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   }
 
   async function createFlag(flag: Flag): Promise<void> {
+    if (!flag.key) {
+      throw new ValidationError("Flag key is required");
+    }
+
+    if (flag.defaultValue === undefined) {
+      throw new ValidationError("Flag defaultValue is required");
+    }
+
     await store.createFlag(flag);
     await store.incrementConfigVersion();
   }
@@ -109,7 +118,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   ): Promise<void> {
     const updated = await store.updateFlag(key, flag);
 
-    if (!updated) throw new FlagNotFoundError(key);
+    if (!updated) throw new NotFoundError();
 
     await store.incrementConfigVersion();
   }
@@ -117,7 +126,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function deleteFlag(key: string): Promise<void> {
     const deleted = await store.deleteFlag(key);
 
-    if (!deleted) throw new FlagNotFoundError(key);
+    if (!deleted) throw new NotFoundError();
 
     await store.incrementConfigVersion();
   }
@@ -137,7 +146,10 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function getUserOverride(targetingKey: string, flagKey: string) {
     const override = await store.getUserOverride(targetingKey, flagKey);
 
-    if (!override) throw new NotFoundError();
+    if (!override)
+      throw new NotFoundError(
+        `Override not found for user '${targetingKey}' on flag '${flagKey}'`,
+      );
 
     return override;
   }
@@ -147,6 +159,15 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     flagKey: string,
     value: FlagValue,
   ): Promise<void> {
+    if (!targetingKey) {
+      throw new ValidationError("Targeting key is required");
+    }
+    if (!flagKey) {
+      throw new ValidationError("Flag key is required");
+    }
+    if (value === undefined) {
+      throw new ValidationError("Override value is required");
+    }
     await store.setUserOverride(targetingKey, flagKey, value);
     await store.incrementConfigVersion();
   }
@@ -157,20 +178,23 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   ): Promise<void> {
     const deleted = await store.deleteUserOverride(targetingKey, flagKey);
 
-    if (!deleted) throw new NotFoundError();
+    if (!deleted)
+      throw new NotFoundError(
+        `Override not found for user '${targetingKey}' on flag '${flagKey}'`,
+      );
 
     await store.incrementConfigVersion();
   }
 
   function getHttpMethods(): LibreFlagHttpMethods {
     return {
-      evaluate: async (key, body) => {
+      evaluate: async (flagKey, body) => {
         try {
-          const result = await evaluate(key, body?.context);
+          const result = await evaluate(flagKey, body?.context);
 
           return { status: 200, body: result };
         } catch (e) {
-          return handleError(e);
+          return handleError(e, { key: flagKey });
         }
       },
       evaluateAll: async (body, ifNoneMatch) => {

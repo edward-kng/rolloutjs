@@ -23,7 +23,7 @@ export function OverridesRouter(httpMethods: LibreFlagHttpMethods): Router {
     const { status } = await httpMethods.setUserOverride(
       req.params.targetingKey as string,
       req.params.flagKey as string,
-      req.body.value,
+      req.body?.value,
     );
 
     res.sendStatus(status);
