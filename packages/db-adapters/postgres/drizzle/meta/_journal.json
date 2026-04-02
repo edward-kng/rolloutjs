@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1774176476347,
-      "tag": "0000_create_table_flags",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1774705074132,
-      "tag": "0001_create_table_users_and_overrides",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1774876800000,
-      "tag": "0002_create_table_config",
+      "when": 1775119153617,
+      "tag": "0000_create_tables_and_populate_config",
       "breakpoints": true
     }
   ]

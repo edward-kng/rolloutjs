@@ -12,12 +12,10 @@ export interface Flag {
   defaultValue: FlagValue;
 }
 
-export interface User {
-  key: string;
-  attributes: Record<string, unknown>;
-}
+export type UpdateFlagParams = Omit<Partial<Flag>, "key">;
 
-export interface UserOverride {
+export interface Override {
   flagKey: string;
+  targetingKey: string;
   value: FlagValue;
 }

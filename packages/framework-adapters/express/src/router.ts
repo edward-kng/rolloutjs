@@ -3,7 +3,7 @@ import { Router } from "express";
 import type { RequestHandler } from "express";
 import { OFREPRouter } from "./routes/ofrep.js";
 import { FlagsRouter } from "./routes/flags.js";
-import { UsersRouter } from "./routes/users.js";
+import { OverridesRouter } from "./routes/overrides.js";
 import { AdminRouter } from "./routes/admin.js";
 import { ROUTES } from "./constants/routes.js";
 import express from "express";
@@ -29,7 +29,7 @@ export function LibreFlagExpress(
   router.use(express.json());
   router.use(ROUTES.OFREP, evalMiddleware, OFREPRouter(httpMethods));
   router.use(ROUTES.FLAGS, adminMiddleware, FlagsRouter(httpMethods));
-  router.use(ROUTES.USERS, adminMiddleware, UsersRouter(httpMethods));
+  router.use(ROUTES.OVERRIDES, adminMiddleware, OverridesRouter(httpMethods));
   router.use(ROUTES.ADMIN, adminMiddleware, AdminRouter());
 
   return router;

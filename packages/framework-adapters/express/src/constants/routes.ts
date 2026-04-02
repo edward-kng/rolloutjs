@@ -1,6 +1,6 @@
 export const ROUTES = {
   OFREP: "/ofrep/v1",
   FLAGS: "/libreflag/flags",
-  USERS: "/libreflag/users",
+  OVERRIDES: "/libreflag/overrides",
   ADMIN: "/libreflag/admin",
 };

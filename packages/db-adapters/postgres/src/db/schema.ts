@@ -1,48 +1,27 @@
-import {
-  foreignKey,
-  integer,
-  json,
-  pgSchema,
-  text,
-  unique,
-} from "drizzle-orm/pg-core";
+import { integer, json, pgSchema, primaryKey, text } from "drizzle-orm/pg-core";
 
 export const schema = pgSchema("libreflag");
-
-export const flagsTable = schema.table("flags", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  key: text().notNull().unique(),
-  default_value: json().default("false"),
-});
-
-export const usersTable = schema.table("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  key: text().notNull().unique(),
-  attributes: json().default({}),
-});
 
 export const configTable = schema.table("config", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   version: integer().notNull().default(0),
 });
 
-export const userOverridesTable = schema.table(
-  "user_overrides",
+export const flagsTable = schema.table("flags", {
+  key: text().primaryKey(),
+  default_value: json().notNull(),
+});
+
+export const overridesTable = schema.table(
+  "overrides",
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    user_key: text().notNull(),
-    flag_key: text().notNull(),
+    flag_key: text().references(() => flagsTable.key),
+    targeting_key: text().notNull(),
     value: json().notNull(),
   },
   (table) => [
-    unique().on(table.user_key, table.flag_key),
-    foreignKey({
-      columns: [table.user_key],
-      foreignColumns: [usersTable.key],
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.flag_key],
-      foreignColumns: [flagsTable.key],
-    }).onDelete("cascade"),
+    primaryKey({
+      columns: [table.targeting_key, table.flag_key],
+    }),
   ],
 );

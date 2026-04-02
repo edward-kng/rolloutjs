@@ -1,11 +1,11 @@
 {
-  "id": "5d8b3de4-e317-4fb1-a562-42464306cf3f",
+  "id": "5fd7a4a9-73db-47fe-9bef-ecaa5b5042c3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "libreflag.flags": {
-      "name": "flags",
+    "libreflag.config": {
+      "name": "config",
       "schema": "libreflag",
       "columns": {
         "id": {
@@ -15,7 +15,7 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "flags_id_seq",
+            "name": "config_id_seq",
             "schema": "libreflag",
             "increment": "1",
             "startWith": "1",
@@ -25,30 +25,90 @@
             "cycle": false
           }
         },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "libreflag.flags": {
+      "name": "flags",
+      "schema": "libreflag",
+      "columns": {
         "key": {
           "name": "key",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "default_value": {
           "name": "default_value",
           "type": "json",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'false'"
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "flags_key_unique": {
-          "name": "flags_key_unique",
-          "nullsNotDistinct": false,
-          "columns": ["key"]
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "libreflag.overrides": {
+      "name": "overrides",
+      "schema": "libreflag",
+      "columns": {
+        "flag_key": {
+          "name": "flag_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "targeting_key": {
+          "name": "targeting_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
         }
       },
+      "indexes": {},
+      "foreignKeys": {
+        "overrides_flag_key_flags_key_fk": {
+          "name": "overrides_flag_key_flags_key_fk",
+          "tableFrom": "overrides",
+          "tableTo": "flags",
+          "schemaTo": "libreflag",
+          "columnsFrom": ["flag_key"],
+          "columnsTo": ["key"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "overrides_targeting_key_flag_key_pk": {
+          "name": "overrides_targeting_key_flag_key_pk",
+          "columns": ["targeting_key", "flag_key"]
+        }
+      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

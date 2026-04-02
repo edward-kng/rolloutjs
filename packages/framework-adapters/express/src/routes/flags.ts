@@ -6,7 +6,7 @@ export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
   const router = Router();
 
   router.get("/", async (_req: Request, res: Response) => {
-    const { status, body } = await httpMethods.getAllFlags();
+    const { status, body } = await httpMethods.getFlags();
 
     res.status(status).json(body);
   });
@@ -53,6 +53,14 @@ export function FlagsRouter(httpMethods: LibreFlagHttpMethods): Router {
     );
 
     res.sendStatus(status);
+  });
+
+  router.get("/:flagKey/overrides", async (req: Request, res: Response) => {
+    const { status, body } = await httpMethods.getFlagOverrides(
+      req.params.flagKey as string,
+    );
+
+    res.status(status).json(body);
   });
 
   return router;

@@ -1,5 +1,5 @@
 import type { EvaluationContext, FlagValue } from "@openfeature/core";
-import type { ApiResponse, Flag, User, UserOverride } from "./api.js";
+import type { ApiResponse, Flag, Override, UpdateFlagParams } from "./api.js";
 import type {
   BulkEvaluationResponse,
   EvaluationBody,
@@ -9,7 +9,7 @@ import type {
 
 export interface LibreFlagHttpMethods {
   evaluate: (
-    key: string,
+    flagKey: string,
     context?: EvaluationBody,
   ) => Promise<EvaluationResponse>;
   evaluateAll: (
@@ -17,58 +17,52 @@ export interface LibreFlagHttpMethods {
     ifNoneMatch?: string,
   ) => Promise<BulkEvaluationResponse>;
 
+  getFlags(): Promise<ApiResponse<Flag[]>>;
   getFlag(key: string): Promise<ApiResponse<Flag>>;
-  getAllFlags(): Promise<ApiResponse<Flag[]>>;
   createFlag(flag: Flag): Promise<ApiResponse>;
-  updateFlag(key: string, flag: Partial<Flag>): Promise<ApiResponse>;
+  updateFlag(key: string, flag: UpdateFlagParams): Promise<ApiResponse>;
   deleteFlag(key: string): Promise<ApiResponse>;
 
-  getUser(key: string): Promise<ApiResponse<User>>;
-  getAllUsers(): Promise<ApiResponse<User[]>>;
-  createUser(user: User): Promise<ApiResponse>;
-  updateUser(key: string, user: Partial<User>): Promise<ApiResponse>;
-  deleteUser(key: string): Promise<ApiResponse>;
-
-  getUserOverrides(userKey: string): Promise<ApiResponse<UserOverride[]>>;
+  getFlagOverrides(flagKey: string): Promise<ApiResponse<Override[]>>;
+  getUserOverrides(targetingKey: string): Promise<ApiResponse<Override[]>>;
   setUserOverride(
-    userKey: string,
+    targetingKey: string,
     flagKey: string,
     value: FlagValue,
   ): Promise<ApiResponse>;
-  deleteUserOverride(userKey: string, flagKey: string): Promise<ApiResponse>;
+  deleteUserOverride(
+    targetingKey: string,
+    flagKey: string,
+  ): Promise<ApiResponse>;
 }
 
 export interface LibreFlagServer {
   evaluate: (
-    key: string,
+    flagKey: string,
     context?: EvaluationContext,
   ) => Promise<EvaluationResult>;
   evaluateAll: (context?: EvaluationContext) => Promise<EvaluationResult[]>;
   getFlagValue: (
-    key: string,
+    flagKey: string,
     defaultValue: FlagValue,
     context?: EvaluationContext,
   ) => Promise<FlagValue>;
 
+  getFlags(): Promise<Flag[]>;
   getFlag(key: string): Promise<Flag>;
-  getAllFlags(): Promise<Flag[]>;
   createFlag(flag: Flag): Promise<void>;
-  updateFlag(key: string, flag: Partial<Flag>): Promise<void>;
+  updateFlag(key: string, flag: UpdateFlagParams): Promise<void>;
   deleteFlag(key: string): Promise<void>;
 
-  getUser(key: string): Promise<User>;
-  getAllUsers(): Promise<User[]>;
-  createUser(user: User): Promise<void>;
-  updateUser(key: string, user: Partial<User>): Promise<void>;
-  deleteUser(key: string): Promise<void>;
-
-  getUserOverrides(userKey: string): Promise<UserOverride[]>;
-  setUserOverride(
-    userKey: string,
+  getFlagOverrides: (flagKey: string) => Promise<Override[]>;
+  getUserOverrides: (targetingKey: string) => Promise<Override[]>;
+  getUserOverride: (flagKey: string, targetingKey: string) => Promise<Override>;
+  setUserOverride: (
     flagKey: string,
+    targetingKey: string,
     value: FlagValue,
-  ): Promise<void>;
-  deleteUserOverride(userKey: string, flagKey: string): Promise<void>;
+  ) => Promise<void>;
+  deleteUserOverride: (flagkey: string, targetingKey: string) => Promise<void>;
 
   getHttpMethods(): LibreFlagHttpMethods;
 }
