@@ -1,5 +1,12 @@
 import type { EvaluationContext, FlagValue } from "@openfeature/core";
-import type { ApiResponse, Flag, Override, UpdateFlagParams } from "./api.js";
+import type {
+  ApiResponse,
+  Flag,
+  Override,
+  Segment,
+  UpdateFlagParams,
+  UpdateSegmentParams,
+} from "./api.js";
 import type {
   BulkEvaluationResponse,
   EvaluationBody,
@@ -35,6 +42,24 @@ export interface LibreFlagHttpMethods {
     targetingKey: string,
     flagKey: string,
   ): Promise<ApiResponse>;
+  getSegmentOverrides: (segmentKey: string) => Promise<ApiResponse<Override[]>>;
+  setSegmentOverride: (
+    segmentKey: string,
+    flagKey: string,
+    value: FlagValue,
+  ) => Promise<ApiResponse>;
+  deleteSegmentOverride: (
+    segmentKey: string,
+    flagkey: string,
+  ) => Promise<ApiResponse>;
+
+  listSegments: () => Promise<ApiResponse<Segment[]>>;
+  createSegment: (segment: Segment) => Promise<ApiResponse>;
+  updateSegment: (
+    key: string,
+    segment: UpdateSegmentParams,
+  ) => Promise<ApiResponse>;
+  deleteSegment: (key: string) => Promise<ApiResponse>;
 }
 
 export interface LibreFlagServer {
@@ -65,6 +90,25 @@ export interface LibreFlagServer {
     value: FlagValue,
   ) => Promise<void>;
   deleteUserOverride: (flagkey: string, targetingKey: string) => Promise<void>;
+  listSegmentOverrides: () => Promise<Override[]>;
+  getSegmentOverrides: (segmentKey: string) => Promise<Override[]>;
+  setSegmentOverride: (
+    segmentKey: string,
+    flagKey: string,
+    value: FlagValue,
+  ) => Promise<void>;
+  deleteSegmentOverride: (
+    segmentKey: string,
+    flagkey: string,
+  ) => Promise<boolean>;
+
+  listSegments: () => Promise<Segment[]>;
+  createSegment: (segment: Segment) => Promise<void>;
+  updateSegment: (
+    key: string,
+    segment: UpdateSegmentParams,
+  ) => Promise<boolean>;
+  deleteSegment: (key: string) => Promise<boolean>;
 
   http: LibreFlagHttpMethods;
 }
