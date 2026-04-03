@@ -6,6 +6,8 @@ import { ROUTES } from "@/constants/routes";
 import FlagsPage from "./flags/FlagsPage";
 import FlagEditorPage from "./flags/editor/FlagEditorPage";
 import DashboardPage from "./dashboard/DashboardPage";
+import SegmentsPage from "./segments/SegmentsPage";
+import SegmentEditorPage from "./segments/editor/SegmentEditorPage";
 
 export default function Root() {
   return (
@@ -16,6 +18,11 @@ export default function Root() {
           <Route path={ROUTES.ROOT} element={<DashboardPage />} />
           <Route path={ROUTES.FLAGS} element={<FlagsPage />} />
           <Route path={ROUTES.FLAGS_FLAG_KEY} element={<FlagEditorPage />} />
+          <Route path={ROUTES.SEGMENTS} element={<SegmentsPage />} />
+          <Route
+            path={ROUTES.SEGMENTS_SEGMENT_KEY}
+            element={<SegmentEditorPage />}
+          />
         </Routes>
       </SidebarInset>
     </SidebarProvider>

@@ -18,7 +18,7 @@ import {
 const NAV_ITEMS = [
   { title: "Dashboard", icon: LayoutDashboard, path: ROUTES.DASHBOARD },
   { title: "Flags", icon: Flag, path: ROUTES.FLAGS },
-  { title: "Segments", icon: PieChart, path: null },
+  { title: "Segments", icon: PieChart, path: ROUTES.SEGMENTS },
 ] as const;
 
 export function AppSidebar() {
@@ -49,7 +49,6 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     isActive={item.path === location.pathname}
                     onClick={() => item.path && navigate(item.path)}
-                    disabled={item.path === null}
                     tooltip={item.title}
                     className="h-full group-data-[collapsible=icon]:h-full!"
                   >
