@@ -1,5 +1,5 @@
-import type { Flag, Override } from "../types/api";
 import APIClient from "./client";
+import type { Flag, Override } from "libreflag";
 
 export async function listFlags() {
   return APIClient.get<Flag[]>("/flags");

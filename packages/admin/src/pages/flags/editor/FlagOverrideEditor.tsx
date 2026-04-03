@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { useSetOverride } from "@/hooks/api/useSetOverride";
-import type { Flag, Override } from "@/types/api";
+import type { Flag, FlagValue, Override } from "libreflag";
 import type { ValueType } from "@/types/flags";
 import { coerceValue, inferType, serializeValue } from "@/utils/flags";
 import { useState, type ReactNode } from "react";
@@ -65,7 +65,9 @@ export default function FlagOverrideEditor({
 
   async function handleSave() {
     const coerced =
-      valueType === "json" ? objValue : coerceValue(value, valueType);
+      valueType === "json"
+        ? (objValue as FlagValue)
+        : coerceValue(value, valueType);
 
     await setUserOverride({ targetingKey, value: coerced });
   }

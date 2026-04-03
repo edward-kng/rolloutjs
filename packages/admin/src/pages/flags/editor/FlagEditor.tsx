@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useUpdateFlag } from "@/hooks/api/useUpdateFlag";
 import { useCreateFlag } from "@/hooks/api/useCreateFlag";
-import type { Flag } from "@/types/api";
+import type { Flag, FlagValue } from "libreflag";
 import { coerceValue, inferType, serializeValue } from "@/utils/flags";
 import type { ValueType } from "@/types/flags";
 import { Label } from "@/components/ui/label";
@@ -63,7 +63,9 @@ export default function FlagEditor({ flag, onClose }: FlagEditorProps) {
     e.preventDefault();
 
     const coerced =
-      valueType === "json" ? objValue : coerceValue(value, valueType);
+      valueType === "json"
+        ? (objValue as FlagValue)
+        : coerceValue(value, valueType);
 
     if (isCreate) {
       await createFlag({ key, defaultValue: coerced });

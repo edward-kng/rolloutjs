@@ -1,4 +1,4 @@
-import type { FlagValue, Override } from "../types/api";
+import type { FlagValue, Override } from "libreflag";
 import APIClient from "./client";
 
 export async function listOverrides() {
