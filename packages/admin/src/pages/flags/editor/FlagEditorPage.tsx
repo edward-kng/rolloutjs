@@ -22,7 +22,11 @@ export default function FlagEditorPage() {
       title={`Edit: ${flag.key}`}
       description="Edit this feature flag"
     >
-      <FlagEditor flag={flag} onClose={() => navigate(ROUTES.FLAGS)} />
+      <FlagEditor
+        flag={flag}
+        onClose={() => navigate(ROUTES.FLAGS)}
+        key={flag.key}
+      />
     </PageLayout>
   );
 }
