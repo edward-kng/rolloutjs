@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useFlagOverrides } from "@/hooks/api/useFlagOverrides";
-import { type Flag } from "@/types/api";
+import { type Flag } from "libreflag";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import FlagOverrideEditor from "./FlagOverrideEditor";
@@ -45,7 +45,7 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
   const filtered = (overrides ?? [])
     .filter((override) => !!override.targetingKey)
     .filter((override) =>
-      override.targetingKey.toLowerCase().includes(searchQuery.toLowerCase()),
+      override?.targetingKey?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
   if (isLoadingOverrides || !overrides) {
@@ -91,7 +91,7 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
                   value={override.value}
                   onChange={(value) =>
                     setUserOverride({
-                      targetingKey: override.targetingKey,
+                      targetingKey: override.targetingKey!,
                       value,
                     })
                   }
@@ -133,7 +133,7 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
                           variant="destructive"
                           onClick={() =>
                             deleteOverride({
-                              targetingKey: override.targetingKey,
+                              targetingKey: override.targetingKey!,
                               flagKey: override.flagKey,
                             })
                           }

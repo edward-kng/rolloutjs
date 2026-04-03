@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import type { FlagValue } from "@/types/api";
+import type { FlagValue } from "libreflag";
 import {
   coerceValue,
   formatValue,

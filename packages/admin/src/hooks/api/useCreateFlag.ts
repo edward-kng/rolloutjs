@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFlag } from "@/api/flags";
-import type { Flag } from "@/types/api";
+import type { Flag } from "libreflag";
 
 export function useCreateFlag() {
   const queryClient = useQueryClient();

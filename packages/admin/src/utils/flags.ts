@@ -1,4 +1,4 @@
-import type { FlagValue } from "@/types/api";
+import type { FlagValue } from "libreflag";
 import type { ValueType } from "@/types/flags";
 
 export function formatValue(value: FlagValue): string {
@@ -21,7 +21,7 @@ export function coerceValue(raw: string, type: ValueType): FlagValue {
     case "number":
       return Number(raw);
     case "json":
-      return JSON.parse(raw) as object;
+      return JSON.parse(raw);
     default:
       return raw;
   }

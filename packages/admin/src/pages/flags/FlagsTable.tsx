@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFlags } from "@/hooks/api/useFlags";
 import { useDeleteFlag } from "@/hooks/api/useDeleteFlag";
 import { ROUTES } from "@/constants/routes";
-import type { Flag } from "@/types/api";
+import type { Flag } from "libreflag";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function FlagsTable() {
