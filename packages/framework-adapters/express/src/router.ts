@@ -4,6 +4,7 @@ import type { RequestHandler } from "express";
 import { OFREPRouter } from "./routes/ofrep.js";
 import { FlagsRouter } from "./routes/flags.js";
 import { OverridesRouter } from "./routes/overrides.js";
+import { SegmentsRouter } from "./routes/segments.js";
 import { AdminRouter } from "./routes/admin.js";
 import { ROUTES } from "./constants/routes.js";
 import express from "express";
@@ -29,6 +30,7 @@ export function LibreFlagExpress(
   router.use(ROUTES.OFREP, evalMiddleware, OFREPRouter(libreflag));
   router.use(ROUTES.FLAGS, adminMiddleware, FlagsRouter(libreflag));
   router.use(ROUTES.OVERRIDES, adminMiddleware, OverridesRouter(libreflag));
+  router.use(ROUTES.SEGMENTS, adminMiddleware, SegmentsRouter(libreflag));
   router.use(ROUTES.ADMIN, adminMiddleware, AdminRouter());
 
   return router;

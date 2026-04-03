@@ -4,7 +4,13 @@ import {
   StandardResolutionReasons,
 } from "@openfeature/core";
 import type { EvaluationResult } from "./types/ofrep.js";
-import type { Flag, Override, UpdateFlagParams } from "./types/api.js";
+import type {
+  Flag,
+  Override,
+  Segment,
+  UpdateFlagParams,
+  UpdateSegmentParams,
+} from "./types/api.js";
 import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { handleError } from "./utils/api.js";
@@ -186,6 +192,84 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     await store.incrementConfigVersion();
   }
 
+  async function listSegmentOverrides(): Promise<Override[]> {
+    return store.listSegmentOverrides();
+  }
+
+  async function getSegmentOverrides(segmentKey: string): Promise<Override[]> {
+    return store.getSegmentOverrides(segmentKey);
+  }
+
+  async function setSegmentOverride(
+    segmentKey: string,
+    flagKey: string,
+    value: FlagValue,
+  ): Promise<void> {
+    if (!segmentKey) {
+      throw new ValidationError("Segment key is required");
+    }
+    if (!flagKey) {
+      throw new ValidationError("Flag key is required");
+    }
+    if (value === undefined) {
+      throw new ValidationError("Override value is required");
+    }
+    await store.setSegmentOverride(segmentKey, flagKey, value);
+    await store.incrementConfigVersion();
+  }
+
+  async function deleteSegmentOverride(
+    segmentKey: string,
+    flagKey: string,
+  ): Promise<boolean> {
+    const deleted = await store.deleteSegmentOverride(segmentKey, flagKey);
+
+    if (!deleted)
+      throw new NotFoundError(
+        `Override not found for segment '${segmentKey}' on flag '${flagKey}'`,
+      );
+
+    await store.incrementConfigVersion();
+
+    return deleted;
+  }
+
+  async function listSegments(): Promise<Segment[]> {
+    return store.listSegments();
+  }
+
+  async function createSegment(segment: Segment): Promise<void> {
+    if (!segment.key) {
+      throw new ValidationError("Segment key is required");
+    }
+
+    await store.createSegment(segment);
+    await store.incrementConfigVersion();
+  }
+
+  async function updateSegment(
+    key: string,
+    segment: UpdateSegmentParams,
+  ): Promise<boolean> {
+    const updated = await store.updateSegment(key, segment);
+
+    if (!updated) throw new NotFoundError();
+
+    await store.incrementConfigVersion();
+
+    return updated;
+  }
+
+  async function deleteSegment(key: string): Promise<boolean> {
+    const deleted = await store.deleteSegment(key);
+
+    if (!deleted) throw new NotFoundError();
+
+    await store.incrementConfigVersion();
+
+    return deleted;
+  }
+
   const http: LibreFlagHttpMethods = {
     evaluate: async (flagKey, body) => {
       try {
@@ -304,6 +388,70 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
         return handleError(e);
       }
     },
+    getSegmentOverrides: async (segmentKey) => {
+      try {
+        const overrides = await getSegmentOverrides(segmentKey);
+
+        return { status: 200, body: overrides };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+    setSegmentOverride: async (segmentKey, flagKey, value) => {
+      try {
+        await setSegmentOverride(segmentKey, flagKey, value);
+
+        return { status: 200 };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+    deleteSegmentOverride: async (segmentKey, flagKey) => {
+      try {
+        await deleteSegmentOverride(segmentKey, flagKey);
+
+        return { status: 204 };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+
+    listSegments: async () => {
+      try {
+        const segments = await listSegments();
+
+        return { status: 200, body: segments };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+    createSegment: async (segment) => {
+      try {
+        await createSegment(segment);
+
+        return { status: 201 };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+    updateSegment: async (key, segment) => {
+      try {
+        await updateSegment(key, segment);
+
+        return { status: 200 };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
+    deleteSegment: async (key) => {
+      try {
+        await deleteSegment(key);
+
+        return { status: 204 };
+      } catch (e) {
+        return handleError(e);
+      }
+    },
   };
 
   return {
@@ -321,6 +469,14 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     getUserOverride,
     setUserOverride,
     deleteUserOverride,
+    listSegmentOverrides,
+    getSegmentOverrides,
+    setSegmentOverride,
+    deleteSegmentOverride,
+    listSegments,
+    createSegment,
+    updateSegment,
+    deleteSegment,
     http,
   };
 }

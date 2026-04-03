@@ -2,7 +2,9 @@ import type { FlagValue } from "@openfeature/core";
 import type {
   StoredFlag,
   StoredOverride,
+  StoredSegment,
   UpdatedStoredFlagParams,
+  UpdateStoredSegmentParams,
 } from "./db.js";
 
 export interface LibreFlagStore {
@@ -33,4 +35,23 @@ export interface LibreFlagStore {
     targetingKey: string,
     flagkey: string,
   ) => Promise<boolean>;
+  listSegmentOverrides: () => Promise<StoredOverride[]>;
+  getSegmentOverrides: (segmentKey: string) => Promise<StoredOverride[]>;
+  setSegmentOverride: (
+    segmentKey: string,
+    flagKey: string,
+    value: FlagValue,
+  ) => Promise<void>;
+  deleteSegmentOverride: (
+    segmentKey: string,
+    flagkey: string,
+  ) => Promise<boolean>;
+
+  listSegments: () => Promise<StoredSegment[]>;
+  createSegment: (segment: StoredSegment) => Promise<void>;
+  updateSegment: (
+    key: string,
+    segment: UpdateStoredSegmentParams,
+  ) => Promise<boolean>;
+  deleteSegment: (key: string) => Promise<boolean>;
 }

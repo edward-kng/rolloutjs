@@ -8,6 +8,13 @@
       "when": 1775119153617,
       "tag": "0000_create_tables_and_populate_config",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775225106579,
+      "tag": "0001_add_segments_and_update_overrides",
+      "breakpoints": true
     }
   ]
 }

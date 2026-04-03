@@ -1,7 +1,17 @@
-import type { FlagValue, LibreFlagStore, StoredFlag } from "libreflag";
+import type {
+  FlagValue,
+  LibreFlagStore,
+  StoredFlag,
+  StoredSegment,
+} from "libreflag";
 import { ConflictError } from "libreflag";
-import { configTable, flagsTable, overridesTable } from "./db/schema.js";
-import { and, eq, sql } from "drizzle-orm";
+import {
+  configTable,
+  flagsTable,
+  overridesTable,
+  segmentsTable,
+} from "./db/schema.js";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import {
   ADVISORY_LOCK_ID,
@@ -10,7 +20,7 @@ import {
   MIGRATIONS_TABLE,
 } from "./db/constants.js";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { toStoredFlag, toStoredOverride } from "./utils.js";
+import { toStoredFlag, toStoredOverride, toStoredSegment } from "./utils.js";
 
 export function PostgresAdapter(dbUrl: string): LibreFlagStore {
   const db = drizzle(dbUrl);
@@ -122,6 +132,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .values({
           flag_key: flagKey,
           targeting_key: targetingKey,
+          segment_key: null,
           value,
         })
         .onConflictDoUpdate({
@@ -138,6 +149,90 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
             eq(overridesTable.targeting_key, targetingKey),
           ),
         )
+        .returning();
+
+      return result.length > 0;
+    },
+    listSegmentOverrides: async () => {
+      const overrides = await db
+        .select()
+        .from(overridesTable)
+        .where(isNotNull(overridesTable.segment_key));
+
+      return overrides.map(toStoredOverride);
+    },
+    getSegmentOverrides: async (segmentKey: string) => {
+      const overrides = await db
+        .select()
+        .from(overridesTable)
+        .where(eq(overridesTable.segment_key, segmentKey));
+
+      return overrides.map(toStoredOverride);
+    },
+    setSegmentOverride: async (
+      segmentKey: string,
+      flagKey: string,
+      value: FlagValue,
+    ) => {
+      await db
+        .insert(overridesTable)
+        .values({
+          flag_key: flagKey,
+          targeting_key: null,
+          segment_key: segmentKey,
+          value,
+        })
+        .onConflictDoUpdate({
+          target: [overridesTable.segment_key, overridesTable.flag_key],
+          set: { value },
+        });
+    },
+    deleteSegmentOverride: async (segmentKey: string, flagKey: string) => {
+      const result = await db
+        .delete(overridesTable)
+        .where(
+          and(
+            eq(overridesTable.flag_key, flagKey),
+            eq(overridesTable.segment_key, segmentKey),
+          ),
+        )
+        .returning();
+
+      return result.length > 0;
+    },
+
+    listSegments: async () => {
+      const segments = await db.select().from(segmentsTable);
+
+      return segments.map(toStoredSegment);
+    },
+    createSegment: async (segment: StoredSegment) => {
+      try {
+        await db
+          .insert(segmentsTable)
+          .values({ key: segment.key, rules: segment.rules });
+      } catch (e) {
+        if (e instanceof Error && "code" in e && e.code === "23505") {
+          throw new ConflictError(`Segment '${segment.key}' already exists`);
+        }
+        throw e;
+      }
+    },
+    updateSegment: async (key, params) => {
+      const result = await db
+        .update(segmentsTable)
+        .set({
+          ...(params.rules !== undefined && { rules: params.rules }),
+        })
+        .where(eq(segmentsTable.key, key))
+        .returning();
+
+      return result.length > 0;
+    },
+    deleteSegment: async (key: string) => {
+      const result = await db
+        .delete(segmentsTable)
+        .where(eq(segmentsTable.key, key))
         .returning();
 
       return result.length > 0;

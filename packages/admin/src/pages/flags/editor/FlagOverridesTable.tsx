@@ -42,9 +42,11 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
   const { mutate: setUserOverride } = useSetOverride(flag.key);
   const { mutate: deleteOverride } = useDeleteOverride();
 
-  const filtered = (overrides ?? []).filter((override) =>
-    override.targetingKey.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filtered = (overrides ?? [])
+    .filter((override) => !!override.targetingKey)
+    .filter((override) =>
+      override.targetingKey.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
   if (isLoadingOverrides || !overrides) {
     return <Spinner />;
@@ -75,7 +77,7 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {overrides.map((override) => (
+          {filtered.map((override) => (
             <TableRow key={override.targetingKey}>
               <FlagOverrideEditor override={override} flag={flag}>
                 <TableCell>
