@@ -38,13 +38,14 @@ export default function SegmentEditor({
     const updatedRules = rules
       .map((rule) => ({
         conditions: rule.conditions.filter(
-          (condition) => !!condition.attribute,
+          (condition) =>
+            !!condition.attribute || condition.operator === "percent",
         ),
       }))
       .filter((rule) => rule.conditions.length >= 0);
 
     if (segment) {
-      updateSegment({
+      await updateSegment({
         key,
         segment: {
           name,
@@ -53,7 +54,7 @@ export default function SegmentEditor({
         },
       });
     } else {
-      createSegment({
+      await createSegment({
         key,
         name,
         description,
