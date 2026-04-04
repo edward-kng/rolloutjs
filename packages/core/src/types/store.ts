@@ -37,6 +37,7 @@ export interface LibreFlagStore {
   ) => Promise<boolean>;
   listSegmentOverrides: () => Promise<StoredOverride[]>;
   getSegmentOverrides: (segmentKey: string) => Promise<StoredOverride[]>;
+  getSegmentOverridesForFlag: (flagKey: string) => Promise<StoredOverride[]>;
   setSegmentOverride: (
     segmentKey: string,
     flagKey: string,
