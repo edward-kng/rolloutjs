@@ -19,9 +19,9 @@ export default function SegmentEditor({
   segment,
   onClose,
 }: SegmentEditorProps) {
-  const [name, setName] = useState(segment?.key ?? "");
+  const [name, setName] = useState(segment?.name ?? "");
   const [key, setKey] = useState(segment?.key ?? "");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(segment?.description ?? "");
   const [rules, setRules] = useState(segment?.rules ?? []);
 
   const { data: segments } = useSegments();
@@ -47,12 +47,16 @@ export default function SegmentEditor({
       updateSegment({
         key,
         segment: {
+          name,
+          description,
           rules: updatedRules,
         },
       });
     } else {
       createSegment({
         key,
+        name,
+        description,
         rules: updatedRules,
       });
     }

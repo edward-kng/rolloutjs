@@ -12,6 +12,8 @@ import type { flagsTable, overridesTable, segmentsTable } from "./db/schema.js";
 export function toFlag(row: typeof flagsTable.$inferSelect): Flag {
   return {
     key: row.key,
+    name: row.name ?? undefined,
+    description: row.description ?? undefined,
     defaultValue: row.default_value as FlagValue,
   };
 }
@@ -48,6 +50,8 @@ export function toSegmentOverride(
 export function toSegment(row: typeof segmentsTable.$inferSelect): Segment {
   return {
     key: row.key,
+    name: row.name ?? undefined,
+    description: row.description ?? undefined,
     rules: row.rules as Rule[],
   };
 }
