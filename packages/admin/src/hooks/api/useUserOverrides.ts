@@ -5,7 +5,7 @@ export function useUserOverrides(targetingKey: string) {
   return useQuery({
     queryKey: ["overrides", targetingKey],
     queryFn: async () => {
-      const response = await getUserOverrides(targetingKey!);
+      const response = await getUserOverrides(targetingKey);
 
       return response.data;
     },

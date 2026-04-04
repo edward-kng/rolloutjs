@@ -4,19 +4,19 @@ import {
   StandardResolutionReasons,
 } from "@openfeature/core";
 import type { EvaluationResult } from "./types/ofrep.js";
-import type {
-  Flag,
-  Override,
-  Segment,
-  UpdateFlagParams,
-  UpdateSegmentParams,
-} from "./types/api.js";
 import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import { isMember } from "./utils/segments.js";
+import type { Flag, UpdateFlagParams } from "./types/flags.js";
+import type {
+  Override,
+  SegmentOverride,
+  UserOverride,
+} from "./types/overrides.js";
+import type { Segment, UpdateSegmentParams } from "./types/segments.js";
 
 export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function evaluate(
@@ -45,7 +45,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
         .map((segment) => segment.key),
     );
     const segmentOverride = segmentOverrides.find((override) =>
-      includedSegmentKeys.has(override.segmentKey!),
+      includedSegmentKeys.has(override.segmentKey),
     );
 
     if (segmentOverride) {
@@ -101,7 +101,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       const segmentOverride = segmentOverrides.find(
         (override) =>
           override.flagKey === flag.key &&
-          includedSegmentKeys.has(override.segmentKey!),
+          includedSegmentKeys.has(override.segmentKey),
       );
 
       if (segmentOverride) {
@@ -186,7 +186,9 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     return store.getFlagOverrides(flagKey);
   }
 
-  async function getUserOverrides(targetingKey: string): Promise<Override[]> {
+  async function getUserOverrides(
+    targetingKey: string,
+  ): Promise<UserOverride[]> {
     return store.getUserOverrides(targetingKey);
   }
 
@@ -233,11 +235,13 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     await store.incrementConfigVersion();
   }
 
-  async function listSegmentOverrides(): Promise<Override[]> {
+  async function listSegmentOverrides(): Promise<SegmentOverride[]> {
     return store.listSegmentOverrides();
   }
 
-  async function getSegmentOverrides(segmentKey: string): Promise<Override[]> {
+  async function getSegmentOverrides(
+    segmentKey: string,
+  ): Promise<SegmentOverride[]> {
     return store.getSegmentOverrides(segmentKey);
   }
 
