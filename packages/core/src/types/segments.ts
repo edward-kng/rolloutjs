@@ -24,6 +24,8 @@ export interface Rule {
 
 export interface Segment {
   key: string;
+  name?: string;
+  description?: string;
   rules: Rule[];
 }
 

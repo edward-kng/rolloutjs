@@ -17,6 +17,8 @@ export const configTable = schema.table("config", {
 
 export const flagsTable = schema.table("flags", {
   key: text().primaryKey(),
+  name: text(),
+  description: text(),
   default_value: json().notNull(),
 });
 
@@ -42,5 +44,7 @@ export const overridesTable = schema.table(
 
 export const segmentsTable = schema.table("segments", {
   key: text().primaryKey(),
+  name: text(),
+  description: text(),
   rules: json().notNull(),
 });

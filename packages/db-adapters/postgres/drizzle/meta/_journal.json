@@ -15,6 +15,13 @@
       "when": 1775225106579,
       "tag": "0001_add_segments_and_update_overrides",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775303659672,
+      "tag": "0002_add_name_and_description",
+      "breakpoints": true
     }
   ]
 }

@@ -34,8 +34,8 @@ export default function FlagEditor({ flag, onClose }: FlagEditorProps) {
       : {};
 
   const [key, setKey] = useState(flag?.key ?? "");
-  const [name, setName] = useState(flag?.key ?? "");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState(flag?.name ?? "");
+  const [description, setDescription] = useState(flag?.description ?? "");
   const [valueType, setValueType] = useState<ValueType>(initialType);
   const [value, setValue] = useState(
     flag ? serializeValue(flag.defaultValue) : "false",
@@ -68,9 +68,12 @@ export default function FlagEditor({ flag, onClose }: FlagEditorProps) {
         : coerceValue(value, valueType);
 
     if (isCreate) {
-      await createFlag({ key, defaultValue: coerced });
+      await createFlag({ key, name, description, defaultValue: coerced });
     } else {
-      await updateFlag({ key: flag.key, flag: { defaultValue: coerced } });
+      await updateFlag({
+        key: flag.key,
+        flag: { name, description, defaultValue: coerced },
+      });
     }
 
     onClose();

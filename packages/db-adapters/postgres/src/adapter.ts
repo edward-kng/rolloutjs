@@ -57,9 +57,12 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     },
     createFlag: async (flag: Flag) => {
       try {
-        await db
-          .insert(flagsTable)
-          .values({ key: flag.key, default_value: flag.defaultValue });
+        await db.insert(flagsTable).values({
+          name: flag.name,
+          description: flag.description,
+          key: flag.key,
+          default_value: flag.defaultValue,
+        });
       } catch (e) {
         if (e instanceof Error && "code" in e && e.code === "23505") {
           throw new ConflictError(`Flag '${flag.key}' already exists`);
@@ -71,6 +74,10 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
       const result = await db
         .update(flagsTable)
         .set({
+          ...(params.name !== undefined && { name: params.name }),
+          ...(params.description !== undefined && {
+            description: params.description,
+          }),
           ...(params.defaultValue !== undefined && {
             default_value: params.defaultValue,
           }),
@@ -222,9 +229,12 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     },
     createSegment: async (segment: Segment) => {
       try {
-        await db
-          .insert(segmentsTable)
-          .values({ key: segment.key, rules: segment.rules });
+        await db.insert(segmentsTable).values({
+          key: segment.key,
+          name: segment.name,
+          description: segment.description,
+          rules: segment.rules,
+        });
       } catch (e) {
         if (e instanceof Error && "code" in e && e.code === "23505") {
           throw new ConflictError(`Segment '${segment.key}' already exists`);
@@ -236,6 +246,10 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
       const result = await db
         .update(segmentsTable)
         .set({
+          ...(params.name !== undefined && { name: params.name }),
+          ...(params.description !== undefined && {
+            description: params.description,
+          }),
           ...(params.rules !== undefined && { rules: params.rules }),
         })
         .where(eq(segmentsTable.key, key))

@@ -39,8 +39,10 @@ export default function SegmentsTable() {
   const { data: overrides } = useOverrides();
   const { mutate: deleteSegment } = useDeleteSegment();
 
-  const filtered = (segments ?? []).filter((segment) =>
-    segment.key.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filtered = (segments ?? []).filter(
+    (segment) =>
+      segment.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      segment.name?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   function getOverrideCount(segmentKey: string) {
@@ -80,7 +82,9 @@ export default function SegmentsTable() {
                 className="hover:underline cursor-pointer"
                 onClick={() => handleEdit(segment)}
               >
-                <span className="font-medium">{segment.key}</span>
+                <span className="font-medium">
+                  {segment.name || segment.key}
+                </span>
               </TableCell>
               <TableCell>
                 <span className="text-sm">{segment.key}</span>

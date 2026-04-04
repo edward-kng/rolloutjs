@@ -39,8 +39,10 @@ export default function FlagsTable() {
   const { data: flags, isPending: isLoadingFlags } = useFlags();
   const { mutate: deleteFlag } = useDeleteFlag();
 
-  const filtered = (flags ?? []).filter((flag) =>
-    flag.key.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filtered = (flags ?? []).filter(
+    (flag) =>
+      flag.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      flag.name?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   function handleEdit(flag: Flag) {
@@ -76,7 +78,7 @@ export default function FlagsTable() {
                 className="hover:underline cursor-pointer"
                 onClick={() => handleEdit(flag)}
               >
-                <span className="font-medium">{flag.key}</span>
+                <span className="font-medium">{flag.name || flag.key}</span>
               </TableCell>
               <TableCell>
                 <span className="text-sm">{flag.key}</span>

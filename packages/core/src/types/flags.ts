@@ -2,6 +2,8 @@ import type { FlagValue } from "@openfeature/core";
 
 export interface Flag {
   key: string;
+  name?: string;
+  description?: string;
   defaultValue: FlagValue;
 }
 
