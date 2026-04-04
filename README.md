@@ -115,7 +115,7 @@ if (client.getBooleanValue("new-greeting", false)) {
 
 Authenticate according to your middleware, and visit `http://localhost:3000/libreflag/admin` in your browser to start managing your feature flags.
 
-<img src="./screenshot.png">
+<img src="./screenshots/flags.png" width="50%"><img src="./screenshots/segment-editor.png" width="50%">
 
 ## License
 
