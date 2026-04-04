@@ -1,13 +1,16 @@
 import type { ApiResponse } from "../types/api.js";
 import { ConflictError, NotFoundError, ValidationError } from "../errors.js";
 import { ErrorCode, FlagNotFoundError } from "@openfeature/core";
+import type { ZodError } from "zod";
+
+export function formatZodError(error: ZodError): string {
+  return error.issues.map((i) => i.message).join("; ");
+}
 
 export function handleError<T extends object | undefined = undefined>(
   error: Error | unknown,
   metadata?: Record<string, unknown>,
 ): ApiResponse<T> {
-  console.log(error);
-
   if (error instanceof FlagNotFoundError && metadata?.key) {
     return {
       status: 404,

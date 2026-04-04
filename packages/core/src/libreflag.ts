@@ -6,17 +6,23 @@ import {
 import type { EvaluationResult } from "./types/ofrep.js";
 import type { LibreFlagStore } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
-import { handleError } from "./utils/api.js";
+import { formatZodError, handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import { isMember } from "./utils/segments.js";
-import type { Flag, UpdateFlagParams } from "./types/flags.js";
-import type {
-  Override,
-  SegmentOverride,
-  UserOverride,
+import { type Flag, type UpdateFlagParams } from "./types/flags.js";
+import {
+  type Override,
+  type SegmentOverride,
+  type UserOverride,
 } from "./types/overrides.js";
-import type { Segment, UpdateSegmentParams } from "./types/segments.js";
+import { type Segment, type UpdateSegmentParams } from "./types/segments.js";
+import {
+  flagSchema,
+  flagValueSchema,
+  updateFlagSchema,
+} from "./schemas/flags.js";
+import { segmentSchema, updateSegmentSchema } from "./schemas/segments.js";
 
 export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function evaluate(
@@ -147,15 +153,12 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   }
 
   async function createFlag(flag: Flag): Promise<void> {
-    if (!flag.key) {
-      throw new ValidationError("Flag key is required");
+    const result = flagSchema.safeParse(flag);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
     }
 
-    if (flag.defaultValue === undefined) {
-      throw new ValidationError("Flag defaultValue is required");
-    }
-
-    await store.createFlag(flag);
+    await store.createFlag(result.data as Flag);
     await store.incrementConfigVersion();
   }
 
@@ -163,7 +166,12 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     key: string,
     flag: UpdateFlagParams,
   ): Promise<void> {
-    const updated = await store.updateFlag(key, flag);
+    const result = updateFlagSchema.safeParse(flag);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
+    }
+
+    const updated = await store.updateFlag(key, result.data);
 
     if (!updated) throw new NotFoundError();
 
@@ -214,10 +222,11 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     if (!flagKey) {
       throw new ValidationError("Flag key is required");
     }
-    if (value === undefined) {
-      throw new ValidationError("Override value is required");
+    const result = flagValueSchema.safeParse(value);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
     }
-    await store.setUserOverride(targetingKey, flagKey, value);
+    await store.setUserOverride(targetingKey, flagKey, result.data);
     await store.incrementConfigVersion();
   }
 
@@ -256,10 +265,11 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     if (!flagKey) {
       throw new ValidationError("Flag key is required");
     }
-    if (value === undefined) {
-      throw new ValidationError("Override value is required");
+    const result = flagValueSchema.safeParse(value);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
     }
-    await store.setSegmentOverride(segmentKey, flagKey, value);
+    await store.setSegmentOverride(segmentKey, flagKey, result.data);
     await store.incrementConfigVersion();
   }
 
@@ -284,11 +294,12 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   }
 
   async function createSegment(segment: Segment): Promise<void> {
-    if (!segment.key) {
-      throw new ValidationError("Segment key is required");
+    const result = segmentSchema.safeParse(segment);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
     }
 
-    await store.createSegment(segment);
+    await store.createSegment(result.data);
     await store.incrementConfigVersion();
   }
 
@@ -296,7 +307,12 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     key: string,
     segment: UpdateSegmentParams,
   ): Promise<boolean> {
-    const updated = await store.updateSegment(key, segment);
+    const result = updateSegmentSchema.safeParse(segment);
+    if (!result.success) {
+      throw new ValidationError(formatZodError(result.error));
+    }
+
+    const updated = await store.updateSegment(key, result.data);
 
     if (!updated) throw new NotFoundError();
 
