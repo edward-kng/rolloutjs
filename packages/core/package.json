@@ -22,6 +22,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@openfeature/core": "^1.9.2"
+    "@openfeature/core": "^1.9.2",
+    "zod": "^4.3.6"
   }
 }

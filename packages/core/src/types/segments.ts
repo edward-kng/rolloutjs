@@ -1,15 +1,18 @@
-export type Operator =
-  | "eq"
-  | "starts_with"
-  | "ends_with"
-  | "matches_regex"
-  | "contains"
-  | "gt"
-  | "gte"
-  | "lt"
-  | "lte"
-  | "in"
-  | "exists";
+export const OPERATORS = [
+  "eq",
+  "starts_with",
+  "ends_with",
+  "matches_regex",
+  "contains",
+  "gt",
+  "gte",
+  "lt",
+  "lte",
+  "in",
+  "exists",
+] as const;
+
+export type Operator = (typeof OPERATORS)[number];
 
 export interface Condition {
   attribute: string;
