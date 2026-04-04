@@ -18,7 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { useSetOverride } from "@/hooks/api/useSetOverride";
+import { useSetUserOverride } from "@/hooks/api/useSetUserOverride";
+import { useSetSegmentOverride } from "@/hooks/api/useSetSegmentOverride";
 import type { Flag, FlagValue, Override } from "libreflag";
 import type { ValueType } from "@/types/flags";
 import { coerceValue, inferType, serializeValue } from "@/utils/flags";
@@ -27,12 +28,14 @@ import { useState, type ReactNode } from "react";
 interface FlagOverrideEditorProps {
   override?: Override;
   flag: Flag;
+  mode: "users" | "segments";
   children: ReactNode;
 }
 
 export default function FlagOverrideEditor({
   override,
   flag,
+  mode,
   children,
 }: FlagOverrideEditorProps) {
   const initialType = override ? inferType(override?.value) : "boolean";
@@ -44,16 +47,22 @@ export default function FlagOverrideEditor({
   const [targetingKey, setTargetingKey] = useState(
     override?.targetingKey ?? "",
   );
+  const [segmentKey, setSegmentKey] = useState(override?.segmentKey ?? "");
   const [valueType, setValueType] = useState<ValueType>(initialType);
   const [value, setValue] = useState(
     override ? serializeValue(override.value) : "false",
   );
   const [objValue, setObjValue] = useState(initialObj);
 
-  const { mutateAsync: setUserOverride, isPending } = useSetOverride(flag.key);
+  const { mutateAsync: setUserOverride, isPending: isSettingUser } =
+    useSetUserOverride(flag.key);
+  const { mutateAsync: setSegmentOverride, isPending: isSettingSegment } =
+    useSetSegmentOverride(flag.key);
+
+  const isPending = isSettingUser || isSettingSegment;
 
   const isCreate = !override;
-  const missingFields = !targetingKey || !(value || objValue);
+  const missingFields = !(targetingKey || segmentKey) || !(value || objValue);
 
   function handleTypeChange(type: ValueType) {
     setValueType(type);
@@ -69,7 +78,11 @@ export default function FlagOverrideEditor({
         ? (objValue as FlagValue)
         : coerceValue(value, valueType);
 
-    await setUserOverride({ targetingKey, value: coerced });
+    if (mode === "users") {
+      await setUserOverride({ targetingKey, value: coerced });
+    } else {
+      await setSegmentOverride({ segmentKey, value: coerced });
+    }
   }
 
   return (
@@ -82,16 +95,30 @@ export default function FlagOverrideEditor({
           </DialogTitle>
         </DialogHeader>
         <form className="space-y-4">
-          <div className="space-y-2">
-            <Label>Targeting Key</Label>
-            <Input
-              value={targetingKey}
-              onChange={(e) => setTargetingKey(e.target.value)}
-              placeholder="user-123"
-              className="font-mono"
-              disabled={!!override}
-            />
-          </div>
+          {mode === "users" && (
+            <div className="space-y-2">
+              <Label>Targeting Key</Label>
+              <Input
+                value={targetingKey}
+                onChange={(e) => setTargetingKey(e.target.value)}
+                placeholder="user-123"
+                className="font-mono"
+                disabled={!!override}
+              />
+            </div>
+          )}
+          {mode === "segments" && (
+            <div className="space-y-2">
+              <Label>Segment Key</Label>
+              <Input
+                value={segmentKey}
+                onChange={(e) => setSegmentKey(e.target.value)}
+                placeholder="user-123"
+                className="font-mono"
+                disabled={!!override}
+              />
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">

@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteUserOverride } from "@/api/overrides";
+import { deleteSegmentOverride } from "@/api/segments";
 
-export function useDeleteOverride() {
+export function useDeleteSegmentOverride() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
-      targetingKey,
+      segmentKey,
       flagKey,
     }: {
-      targetingKey: string;
+      segmentKey: string;
       flagKey: string;
-    }) => deleteUserOverride(targetingKey, flagKey),
+    }) => deleteSegmentOverride(segmentKey, flagKey),
     onSuccess: (_, { flagKey }) => {
       queryClient.invalidateQueries({
         queryKey: ["flags", flagKey, "overrides"],

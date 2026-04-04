@@ -15,7 +15,8 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import FlagOverrideEditor from "./FlagOverrideEditor";
 import { FlagValueCell } from "@/components/FlagValueCell";
-import { useSetOverride } from "@/hooks/api/useSetOverride";
+import { useSetUserOverride } from "@/hooks/api/useSetUserOverride";
+import { useSetSegmentOverride } from "@/hooks/api/useSetSegmentOverride";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +28,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useDeleteOverride } from "@/hooks/api/useDeleteOverride";
+import { useDeleteUserOverride } from "@/hooks/api/useDeleteUserOverride";
+import { useDeleteSegmentOverride } from "@/hooks/api/useDeleteSegmentOverride";
+import { cn } from "@/utils/ui";
 
 interface FlagOverridesTableProps {
   flag: Flag;
@@ -35,17 +38,25 @@ interface FlagOverridesTableProps {
 
 export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [mode, setMode] = useState<"users" | "segments">("users");
 
   const { data: overrides, isPending: isLoadingOverrides } = useFlagOverrides(
     flag.key,
   );
-  const { mutate: setUserOverride } = useSetOverride(flag.key);
-  const { mutate: deleteOverride } = useDeleteOverride();
+  const { mutate: setUserOverride } = useSetUserOverride(flag.key);
+  const { mutate: setSegmentOverride } = useSetSegmentOverride(flag.key);
+  const { mutate: deleteUserOverride } = useDeleteUserOverride();
+  const { mutate: deleteSegmentOverride } = useDeleteSegmentOverride();
 
   const filtered = (overrides ?? [])
-    .filter((override) => !!override.targetingKey)
-    .filter((override) =>
-      override?.targetingKey?.toLowerCase().includes(searchQuery.toLowerCase()),
+    .filter((override) => (mode === "users") === !!override.targetingKey)
+    .filter((override) => (mode === "segments") === !!override.segmentKey)
+    .filter(
+      (override) =>
+        override?.targetingKey
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        override?.segmentKey?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
   if (isLoadingOverrides || !overrides) {
@@ -56,18 +67,48 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Overrides</h2>
-        <FlagOverrideEditor flag={flag} key="create">
+        <FlagOverrideEditor flag={flag} key="create" mode={mode}>
           <Button size="sm" variant="outline" type="button">
             <Plus className="mr-1 h-4 w-4" />
             Add Override
           </Button>
         </FlagOverrideEditor>
       </div>
-      <SearchInput
-        placeholder="Search overrides..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <div className="flex items-center justify-between">
+        <SearchInput
+          placeholder="Search overrides..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="flex items-center justify-between">
+          <div className="flex gap-1 rounded-md border p-0.5">
+            <button
+              type="button"
+              className={cn(
+                "rounded p-2 text-xs transition-colors",
+                mode === "users"
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              onClick={() => setMode("users")}
+            >
+              Users
+            </button>
+            <button
+              type="button"
+              className={cn(
+                "rounded p-2 text-xs transition-colors",
+                mode === "segments"
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              onClick={() => setMode("segments")}
+            >
+              Segments
+            </button>
+          </div>
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -79,10 +120,12 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
         <TableBody>
           {filtered.map((override) => (
             <TableRow key={override.targetingKey}>
-              <FlagOverrideEditor override={override} flag={flag}>
+              <FlagOverrideEditor override={override} flag={flag} mode={mode}>
                 <TableCell>
                   <span className="text-sm hover:underline cursor-pointer">
-                    {override.targetingKey}
+                    {mode === "users"
+                      ? override.targetingKey
+                      : override.segmentKey}
                   </span>
                 </TableCell>
               </FlagOverrideEditor>
@@ -90,16 +133,25 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
                 <FlagValueCell
                   value={override.value}
                   onChange={(value) =>
-                    setUserOverride({
-                      targetingKey: override.targetingKey!,
-                      value,
-                    })
+                    override.segmentKey
+                      ? setSegmentOverride({
+                          segmentKey: override.segmentKey,
+                          value,
+                        })
+                      : setUserOverride({
+                          targetingKey: override.targetingKey!,
+                          value,
+                        })
                   }
                 />
               </TableCell>
               <TableCell>
                 <div className="flex gap-1">
-                  <FlagOverrideEditor override={override} flag={flag}>
+                  <FlagOverrideEditor
+                    override={override}
+                    flag={flag}
+                    mode={mode}
+                  >
                     <Button size="icon" variant="ghost" type="button">
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -122,7 +174,7 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
                           </span>
                           <span>{" and "}</span>
                           <span className="font-medium text-foreground">
-                            {override.targetingKey}
+                            {override.targetingKey ?? override.segmentKey}
                           </span>
                           ? This action cannot be undone.
                         </AlertDialogDescription>
@@ -132,10 +184,15 @@ export default function FlagOverridesTable({ flag }: FlagOverridesTableProps) {
                         <AlertDialogAction
                           variant="destructive"
                           onClick={() =>
-                            deleteOverride({
-                              targetingKey: override.targetingKey!,
-                              flagKey: override.flagKey,
-                            })
+                            override.segmentKey
+                              ? deleteSegmentOverride({
+                                  segmentKey: override.segmentKey,
+                                  flagKey: override.flagKey,
+                                })
+                              : deleteUserOverride({
+                                  targetingKey: override.targetingKey!,
+                                  flagKey: override.flagKey,
+                                })
                           }
                         >
                           Delete

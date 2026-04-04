@@ -1,24 +1,44 @@
-import APIClient from "./client";
-import type { Override, Segment } from "libreflag";
+import apiClient from "./client";
+import type { FlagValue, Override, Segment } from "libreflag";
 
 export async function listSegments() {
-  return APIClient.get<Segment[]>("/segments");
+  return apiClient.get<Segment[]>("/segments");
 }
 
 export async function createSegment(segment: Segment) {
-  return APIClient.post("/segments", segment);
+  return apiClient.post("/segments", segment);
 }
 
 export async function updateSegment(key: string, segment: Partial<Segment>) {
-  return APIClient.put(`/segments/${encodeURIComponent(key)}`, segment);
+  return apiClient.put(`/segments/${encodeURIComponent(key)}`, segment);
 }
 
 export async function deleteSegment(key: string) {
-  return APIClient.delete(`/segments/${encodeURIComponent(key)}`);
+  return apiClient.delete(`/segments/${encodeURIComponent(key)}`);
 }
 
 export async function getSegmentOverrides(segmentKey: string) {
-  return APIClient.get<Override[]>(
+  return apiClient.get<Override[]>(
     `/segments/${encodeURIComponent(segmentKey)}/overrides`,
+  );
+}
+
+export async function deleteSegmentOverride(
+  segmentKey: string,
+  flagKey: string,
+) {
+  return apiClient.delete(
+    `/segments/${encodeURIComponent(segmentKey)}/overrides/${encodeURIComponent(flagKey)}`,
+  );
+}
+
+export async function setSegmentOverride(
+  segmentKey: string,
+  flagKey: string,
+  value: FlagValue,
+) {
+  return apiClient.put(
+    `/segments/${encodeURIComponent(segmentKey)}/overrides/${encodeURIComponent(flagKey)}`,
+    { value },
   );
 }
