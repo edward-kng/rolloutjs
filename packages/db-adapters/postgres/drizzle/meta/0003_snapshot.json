@@ -1,0 +1,206 @@
+{
+  "id": "4a776137-0153-49da-b34e-08229b0fa75c",
+  "prevId": "211d7576-d133-4e1b-921a-e3f405e629ad",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "libreflag.config": {
+      "name": "config",
+      "schema": "libreflag",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "config_id_seq",
+            "schema": "libreflag",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "libreflag.flags": {
+      "name": "flags",
+      "schema": "libreflag",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "default_value": {
+          "name": "default_value",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "libreflag.overrides": {
+      "name": "overrides",
+      "schema": "libreflag",
+      "columns": {
+        "flag_key": {
+          "name": "flag_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targeting_key": {
+          "name": "targeting_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "segment_key": {
+          "name": "segment_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value": {
+          "name": "value",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "overrides_flag_key_flags_key_fk": {
+          "name": "overrides_flag_key_flags_key_fk",
+          "tableFrom": "overrides",
+          "tableTo": "flags",
+          "schemaTo": "libreflag",
+          "columnsFrom": ["flag_key"],
+          "columnsTo": ["key"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "overrides_segment_key_segments_key_fk": {
+          "name": "overrides_segment_key_segments_key_fk",
+          "tableFrom": "overrides",
+          "tableTo": "segments",
+          "schemaTo": "libreflag",
+          "columnsFrom": ["segment_key"],
+          "columnsTo": ["key"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "overrides_targeting_key_flag_key_unique": {
+          "name": "overrides_targeting_key_flag_key_unique",
+          "nullsNotDistinct": false,
+          "columns": ["targeting_key", "flag_key"]
+        },
+        "overrides_segment_key_flag_key_unique": {
+          "name": "overrides_segment_key_flag_key_unique",
+          "nullsNotDistinct": false,
+          "columns": ["segment_key", "flag_key"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "targeting_or_segment_key": {
+          "name": "targeting_or_segment_key",
+          "value": "(targeting_key IS NOT NULL AND segment_key IS NULL) OR (targeting_key IS NULL AND segment_key IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "libreflag.segments": {
+      "name": "segments",
+      "schema": "libreflag",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rules": {
+          "name": "rules",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "libreflag": "libreflag"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
