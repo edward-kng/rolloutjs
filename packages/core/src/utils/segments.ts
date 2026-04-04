@@ -1,11 +1,12 @@
 import type { EvaluationContext } from "@openfeature/core";
 import type { Condition, Segment } from "../types/segments.js";
+import { getRolloutHash } from "./hash.js";
 
 export function isMember(context: EvaluationContext, segment: Segment) {
   for (const rule of segment.rules) {
     if (
       rule.conditions.reduce(
-        (prev, curr) => prev && evaluateCondition(context, curr),
+        (prev, curr) => prev && evaluateCondition(context, curr, segment.key),
         true,
       )
     ) {
@@ -14,24 +15,25 @@ export function isMember(context: EvaluationContext, segment: Segment) {
   }
 }
 
-function evaluateCondition(context: EvaluationContext, condition: Condition) {
+function evaluateCondition(
+  context: EvaluationContext,
+  condition: Condition,
+  segmentKey: string,
+) {
   let match = false;
   const contextValue = context[condition.attribute];
   const ruleValue = condition.value;
 
-  if (contextValue === null || contextValue === undefined) {
-    return (condition.operator === "exists") !== condition.negated;
-  }
-
   switch (condition.operator) {
     case "eq":
-      match = contextValue.toString() === ruleValue.toString();
+      match = contextValue?.toString() === ruleValue.toString();
       break;
     case "starts_with":
-      match = contextValue.toString().startsWith(ruleValue.toString());
+      match =
+        contextValue?.toString().startsWith(ruleValue.toString()) ?? false;
       break;
     case "ends_with":
-      match = contextValue.toString().endsWith(ruleValue.toString());
+      match = contextValue?.toString().endsWith(ruleValue.toString()) ?? false;
       break;
     case "matches_regex":
       match =
@@ -39,7 +41,7 @@ function evaluateCondition(context: EvaluationContext, condition: Condition) {
         new RegExp(ruleValue.toString()).test(contextValue);
       break;
     case "contains":
-      match = contextValue.toString().includes(ruleValue.toString());
+      match = contextValue?.toString().includes(ruleValue.toString()) ?? false;
       break;
     case "gt":
       match = Number(contextValue) > Number(ruleValue);
@@ -55,11 +57,17 @@ function evaluateCondition(context: EvaluationContext, condition: Condition) {
       break;
     case "in": {
       const arr = ruleValue.toString().split(",");
-      match = arr.includes(contextValue.toString());
+      match =
+        !!contextValue?.toString() && arr.includes(contextValue.toString());
       break;
     }
     case "exists":
-      match = true;
+      match = contextValue !== null && contextValue !== undefined;
+      break;
+    case "percent":
+      match =
+        !!context.targetingKey &&
+        getRolloutHash(context.targetingKey, segmentKey) <= Number(ruleValue);
   }
 
   return match !== condition.negated;

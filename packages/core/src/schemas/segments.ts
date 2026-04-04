@@ -5,14 +5,27 @@ export const operatorSchema = z.enum(OPERATORS, {
   error: "Invalid condition operator",
 });
 
-export const conditionSchema = z.object({
-  attribute: z
-    .string("Invalid condition attribute")
-    .min(1, "Invalid condition attribute"),
-  operator: operatorSchema,
+const baseCondition = {
   value: z.union([z.string(), z.number()], "Invalid condition value"),
   negated: z.boolean("Invalid condition negated"),
-});
+};
+
+export const conditionSchema = z.discriminatedUnion("operator", [
+  z.object({
+    attribute: z.string("Invalid condition attribute"),
+    operator: z.literal("percent"),
+    ...baseCondition,
+  }),
+  ...OPERATORS.filter((op) => op !== "percent").map((op) =>
+    z.object({
+      attribute: z
+        .string("Invalid condition attribute")
+        .min(1, "Invalid condition attribute"),
+      operator: z.literal(op),
+      ...baseCondition,
+    }),
+  ),
+]);
 
 export const ruleSchema = z.object({
   conditions: z.array(conditionSchema, "Invalid conditions"),

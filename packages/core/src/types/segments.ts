@@ -10,6 +10,7 @@ export const OPERATORS = [
   "lte",
   "in",
   "exists",
+  "percent",
 ] as const;
 
 export type Operator = (typeof OPERATORS)[number];

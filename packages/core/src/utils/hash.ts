@@ -14,3 +14,18 @@ export function hashContext(
 
   return (hash >>> 0).toString(36);
 }
+
+/**
+ * Uses the FNV-1a hash algorithm to determine the rollout probability for a given target
+ */
+export function getRolloutHash(targetingKey: string, segmentKey: string) {
+  const input = `${targetingKey}:${segmentKey}`;
+  let h = 0x811c9dc5;
+
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+
+  return (h >>> 0) % 100;
+}

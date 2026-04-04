@@ -31,8 +31,9 @@ const OPERATORS_MAP: Record<Operator, string> = {
   lte: "<=",
   in: "in",
   exists: "exists",
+  percent: "rollout %",
 };
-const NUMBER_OPERATORS = ["gt", "gte", "lt", "lte"];
+const NUMBER_OPERATORS = ["gt", "gte", "lt", "lte", "percent"];
 
 export default function ConditionsEditor({
   conditions,
@@ -53,6 +54,7 @@ export default function ConditionsEditor({
                   attribute: e.target.value,
                 })
               }
+              disabled={condition.operator === "percent"}
               className="flex-1 font-mono text-sm"
             />
             <div className="flex items-center gap-2 px-2 h-full">
@@ -110,6 +112,8 @@ export default function ConditionsEditor({
                   ? "number"
                   : "text"
               }
+              min={condition.operator === "percent" ? 0 : undefined}
+              max={condition.operator === "percent" ? 100 : undefined}
             />
             <Button
               type="button"
