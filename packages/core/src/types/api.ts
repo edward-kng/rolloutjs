@@ -36,7 +36,7 @@ export type Operator =
 export interface Condition {
   attribute: string;
   operator: Operator;
-  value: boolean | string | number | string[] | number[];
+  value: string | number;
   negated: boolean;
 }
 

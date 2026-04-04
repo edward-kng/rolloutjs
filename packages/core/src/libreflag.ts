@@ -16,6 +16,7 @@ import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
 import { NotFoundError, ValidationError } from "./errors.js";
+import { isMember } from "./utils/segments.js";
 
 export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   async function evaluate(
@@ -36,6 +37,25 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       }
     }
 
+    const segmentOverrides = await store.getSegmentOverridesForFlag(flagKey);
+    const segments = await store.listSegments();
+    const includedSegmentKeys = new Set(
+      segments
+        .filter((segment) => isMember(context, segment))
+        .map((segment) => segment.key),
+    );
+    const segmentOverride = segmentOverrides.find((override) =>
+      includedSegmentKeys.has(override.segmentKey!),
+    );
+
+    if (segmentOverride) {
+      return {
+        key: flagKey,
+        value: segmentOverride.value,
+        reason: StandardResolutionReasons.TARGETING_MATCH,
+      };
+    }
+
     const flag = await store.getFlag(flagKey);
 
     if (flag) {
@@ -54,19 +74,40 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   ): Promise<EvaluationResult[]> {
     const flags = await store.listFlags();
     const { targetingKey } = context;
-    const overrides = targetingKey
+    const userOverrides = targetingKey
       ? await store.getUserOverrides(targetingKey)
       : [];
+    const segmentOverrides = await store.listSegmentOverrides();
+    const segments = await store.listSegments();
+    const includedSegmentKeys = new Set(
+      segments
+        .filter((segment) => isMember(context, segment))
+        .map((segment) => segment.key),
+    );
 
     return flags.map((flag) => {
-      const override = overrides.find(
+      const userOverride = userOverrides.find(
         (override) => override.flagKey === flag.key,
       );
 
-      if (override) {
+      if (userOverride) {
         return {
           key: flag.key,
-          value: override.value,
+          value: userOverride.value,
+          reason: StandardResolutionReasons.TARGETING_MATCH,
+        };
+      }
+
+      const segmentOverride = segmentOverrides.find(
+        (override) =>
+          override.flagKey === flag.key &&
+          includedSegmentKeys.has(override.segmentKey!),
+      );
+
+      if (segmentOverride) {
+        return {
+          key: flag.key,
+          value: segmentOverride.value,
           reason: StandardResolutionReasons.TARGETING_MATCH,
         };
       }

@@ -169,6 +169,19 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
 
       return overrides.map(toStoredOverride);
     },
+    getSegmentOverridesForFlag: async (flagKey: string) => {
+      const overrides = await db
+        .select()
+        .from(overridesTable)
+        .where(
+          and(
+            eq(overridesTable.flag_key, flagKey),
+            isNotNull(overridesTable.segment_key),
+          ),
+        );
+
+      return overrides.map(toStoredOverride);
+    },
     setSegmentOverride: async (
       segmentKey: string,
       flagKey: string,
