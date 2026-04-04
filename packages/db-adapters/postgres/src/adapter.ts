@@ -1,9 +1,4 @@
-import type {
-  FlagValue,
-  LibreFlagStore,
-  StoredFlag,
-  StoredSegment,
-} from "libreflag";
+import type { FlagValue, LibreFlagStore, Flag, Segment } from "libreflag";
 import { ConflictError } from "libreflag";
 import {
   configTable,
@@ -20,7 +15,13 @@ import {
   MIGRATIONS_TABLE,
 } from "./db/constants.js";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { toStoredFlag, toStoredOverride, toStoredSegment } from "./utils.js";
+import {
+  toFlag,
+  toOverride,
+  toSegment,
+  toSegmentOverride,
+  toUserOverride,
+} from "./utils.js";
 
 export function PostgresAdapter(dbUrl: string): LibreFlagStore {
   const db = drizzle(dbUrl);
@@ -44,7 +45,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     listFlags: async () => {
       const flags = await db.select().from(flagsTable);
 
-      return flags.map(toStoredFlag);
+      return flags.map(toFlag);
     },
     getFlag: async (key: string) => {
       const [row] = await db
@@ -52,9 +53,9 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .from(flagsTable)
         .where(eq(flagsTable.key, key));
 
-      return row ? toStoredFlag(row) : null;
+      return row ? toFlag(row) : null;
     },
-    createFlag: async (flag: StoredFlag) => {
+    createFlag: async (flag: Flag) => {
       try {
         await db
           .insert(flagsTable)
@@ -91,7 +92,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     listOverrides: async () => {
       const overrides = await db.select().from(overridesTable);
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toOverride);
     },
     getFlagOverrides: async (flagKey: string) => {
       const overrides = await db
@@ -99,7 +100,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .from(overridesTable)
         .where(eq(overridesTable.flag_key, flagKey));
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toOverride);
     },
     getUserOverrides: async (targetingKey: string) => {
       const overrides = await db
@@ -107,7 +108,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .from(overridesTable)
         .where(eq(overridesTable.targeting_key, targetingKey));
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toUserOverride);
     },
     getUserOverride: async (targetingKey: string, flagKey: string) => {
       const [override] = await db
@@ -120,7 +121,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
           ),
         );
 
-      return override ? toStoredOverride(override) : null;
+      return override ? toUserOverride(override) : null;
     },
     setUserOverride: async (
       targetingKey: string,
@@ -159,7 +160,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .from(overridesTable)
         .where(isNotNull(overridesTable.segment_key));
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toSegmentOverride);
     },
     getSegmentOverrides: async (segmentKey: string) => {
       const overrides = await db
@@ -167,7 +168,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .from(overridesTable)
         .where(eq(overridesTable.segment_key, segmentKey));
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toSegmentOverride);
     },
     getSegmentOverridesForFlag: async (flagKey: string) => {
       const overrides = await db
@@ -180,7 +181,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
           ),
         );
 
-      return overrides.map(toStoredOverride);
+      return overrides.map(toSegmentOverride);
     },
     setSegmentOverride: async (
       segmentKey: string,
@@ -217,9 +218,9 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     listSegments: async () => {
       const segments = await db.select().from(segmentsTable);
 
-      return segments.map(toStoredSegment);
+      return segments.map(toSegment);
     },
-    createSegment: async (segment: StoredSegment) => {
+    createSegment: async (segment: Segment) => {
       try {
         await db
           .insert(segmentsTable)

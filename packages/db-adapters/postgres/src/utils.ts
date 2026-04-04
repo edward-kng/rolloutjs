@@ -1,21 +1,22 @@
 import type {
   FlagValue,
-  StoredFlag,
-  StoredOverride,
-  StoredSegment,
+  Flag,
+  Segment,
+  Override,
+  Rule,
+  UserOverride,
+  SegmentOverride,
 } from "libreflag";
 import type { flagsTable, overridesTable, segmentsTable } from "./db/schema.js";
 
-export function toStoredFlag(row: typeof flagsTable.$inferSelect): StoredFlag {
+export function toFlag(row: typeof flagsTable.$inferSelect): Flag {
   return {
     key: row.key,
     defaultValue: row.default_value as FlagValue,
   };
 }
 
-export function toStoredOverride(
-  row: typeof overridesTable.$inferSelect,
-): StoredOverride {
+export function toOverride(row: typeof overridesTable.$inferSelect): Override {
   return {
     flagKey: row.flag_key,
     targetingKey: row.targeting_key ?? undefined,
@@ -24,11 +25,29 @@ export function toStoredOverride(
   };
 }
 
-export function toStoredSegment(
-  row: typeof segmentsTable.$inferSelect,
-): StoredSegment {
+export function toUserOverride(
+  row: typeof overridesTable.$inferSelect,
+): UserOverride {
+  return {
+    flagKey: row.flag_key,
+    targetingKey: row.targeting_key!,
+    value: row.value as FlagValue,
+  };
+}
+
+export function toSegmentOverride(
+  row: typeof overridesTable.$inferSelect,
+): SegmentOverride {
+  return {
+    flagKey: row.flag_key,
+    segmentKey: row.segment_key!,
+    value: row.value as FlagValue,
+  };
+}
+
+export function toSegment(row: typeof segmentsTable.$inferSelect): Segment {
   return {
     key: row.key,
-    rules: row.rules as StoredSegment["rules"],
+    rules: row.rules as Rule[],
   };
 }

@@ -1,4 +1,4 @@
-import type { FlagValue, Override } from "libreflag";
+import type { FlagValue, Override, UserOverride } from "libreflag";
 import APIClient from "./client";
 
 export async function listOverrides() {
@@ -6,7 +6,7 @@ export async function listOverrides() {
 }
 
 export async function getUserOverrides(targetingKey: string) {
-  return APIClient.get<Override[]>(
+  return APIClient.get<UserOverride[]>(
     `/overrides/${encodeURIComponent(targetingKey)}`,
   );
 }

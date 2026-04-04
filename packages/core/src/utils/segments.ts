@@ -1,5 +1,5 @@
 import type { EvaluationContext } from "@openfeature/core";
-import type { Condition, Segment } from "../types/api.js";
+import type { Condition, Segment } from "../types/segments.js";
 
 export function isMember(context: EvaluationContext, segment: Segment) {
   for (const rule of segment.rules) {

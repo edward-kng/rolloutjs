@@ -1,11 +1,7 @@
 import type { FlagValue } from "@openfeature/core";
-import type {
-  StoredFlag,
-  StoredOverride,
-  StoredSegment,
-  UpdatedStoredFlagParams,
-  UpdateStoredSegmentParams,
-} from "./db.js";
+import type { Flag, UpdateFlagParams } from "./flags.js";
+import type { Override, SegmentOverride, UserOverride } from "./overrides.js";
+import type { Segment, UpdateSegmentParams } from "./segments.js";
 
 export interface LibreFlagStore {
   migrate: () => Promise<void>;
@@ -13,19 +9,19 @@ export interface LibreFlagStore {
   getConfigVersion: () => Promise<number>;
   incrementConfigVersion: () => Promise<void>;
 
-  listFlags: () => Promise<StoredFlag[]>;
-  getFlag: (key: string) => Promise<StoredFlag | null>;
-  createFlag: (flag: StoredFlag) => Promise<void>;
-  updateFlag: (key: string, flag: UpdatedStoredFlagParams) => Promise<boolean>;
+  listFlags: () => Promise<Flag[]>;
+  getFlag: (key: string) => Promise<Flag | null>;
+  createFlag: (flag: Flag) => Promise<void>;
+  updateFlag: (key: string, flag: UpdateFlagParams) => Promise<boolean>;
   deleteFlag: (key: string) => Promise<boolean>;
 
-  listOverrides: () => Promise<StoredOverride[]>;
-  getFlagOverrides: (flagKey: string) => Promise<StoredOverride[]>;
-  getUserOverrides: (targetingKey: string) => Promise<StoredOverride[]>;
+  listOverrides: () => Promise<Override[]>;
+  getFlagOverrides: (flagKey: string) => Promise<Override[]>;
+  getUserOverrides: (targetingKey: string) => Promise<UserOverride[]>;
   getUserOverride: (
     targetingKey: string,
     flagKey: string,
-  ) => Promise<StoredOverride | null>;
+  ) => Promise<UserOverride | null>;
   setUserOverride: (
     targetingKey: string,
     flagKey: string,
@@ -35,9 +31,9 @@ export interface LibreFlagStore {
     targetingKey: string,
     flagkey: string,
   ) => Promise<boolean>;
-  listSegmentOverrides: () => Promise<StoredOverride[]>;
-  getSegmentOverrides: (segmentKey: string) => Promise<StoredOverride[]>;
-  getSegmentOverridesForFlag: (flagKey: string) => Promise<StoredOverride[]>;
+  listSegmentOverrides: () => Promise<SegmentOverride[]>;
+  getSegmentOverrides: (segmentKey: string) => Promise<SegmentOverride[]>;
+  getSegmentOverridesForFlag: (flagKey: string) => Promise<SegmentOverride[]>;
   setSegmentOverride: (
     segmentKey: string,
     flagKey: string,
@@ -48,11 +44,11 @@ export interface LibreFlagStore {
     flagkey: string,
   ) => Promise<boolean>;
 
-  listSegments: () => Promise<StoredSegment[]>;
-  createSegment: (segment: StoredSegment) => Promise<void>;
+  listSegments: () => Promise<Segment[]>;
+  createSegment: (segment: Segment) => Promise<void>;
   updateSegment: (
     key: string,
-    segment: UpdateStoredSegmentParams,
+    segment: UpdateSegmentParams,
   ) => Promise<boolean>;
   deleteSegment: (key: string) => Promise<boolean>;
 }

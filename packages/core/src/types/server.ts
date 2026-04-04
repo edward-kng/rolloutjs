@@ -1,18 +1,14 @@
 import type { EvaluationContext, FlagValue } from "@openfeature/core";
-import type {
-  ApiResponse,
-  Flag,
-  Override,
-  Segment,
-  UpdateFlagParams,
-  UpdateSegmentParams,
-} from "./api.js";
+import type { ApiResponse } from "./api.js";
 import type {
   BulkEvaluationResponse,
   EvaluationBody,
   EvaluationResponse,
   EvaluationResult,
 } from "./ofrep.js";
+import type { Flag, UpdateFlagParams } from "./flags.js";
+import type { Override, SegmentOverride, UserOverride } from "./overrides.js";
+import type { Segment, UpdateSegmentParams } from "./segments.js";
 
 export interface LibreFlagHttpMethods {
   evaluate: (
@@ -32,7 +28,7 @@ export interface LibreFlagHttpMethods {
 
   listOverrides(): Promise<ApiResponse<Override[]>>;
   getFlagOverrides(flagKey: string): Promise<ApiResponse<Override[]>>;
-  getUserOverrides(targetingKey: string): Promise<ApiResponse<Override[]>>;
+  getUserOverrides(targetingKey: string): Promise<ApiResponse<UserOverride[]>>;
   setUserOverride(
     targetingKey: string,
     flagKey: string,
@@ -42,7 +38,9 @@ export interface LibreFlagHttpMethods {
     targetingKey: string,
     flagKey: string,
   ): Promise<ApiResponse>;
-  getSegmentOverrides: (segmentKey: string) => Promise<ApiResponse<Override[]>>;
+  getSegmentOverrides: (
+    segmentKey: string,
+  ) => Promise<ApiResponse<SegmentOverride[]>>;
   setSegmentOverride: (
     segmentKey: string,
     flagKey: string,
@@ -82,16 +80,19 @@ export interface LibreFlagServer {
 
   listOverrides: () => Promise<Override[]>;
   getFlagOverrides: (flagKey: string) => Promise<Override[]>;
-  getUserOverrides: (targetingKey: string) => Promise<Override[]>;
-  getUserOverride: (flagKey: string, targetingKey: string) => Promise<Override>;
+  getUserOverrides: (targetingKey: string) => Promise<UserOverride[]>;
+  getUserOverride: (
+    flagKey: string,
+    targetingKey: string,
+  ) => Promise<UserOverride>;
   setUserOverride: (
     flagKey: string,
     targetingKey: string,
     value: FlagValue,
   ) => Promise<void>;
   deleteUserOverride: (flagkey: string, targetingKey: string) => Promise<void>;
-  listSegmentOverrides: () => Promise<Override[]>;
-  getSegmentOverrides: (segmentKey: string) => Promise<Override[]>;
+  listSegmentOverrides: () => Promise<SegmentOverride[]>;
+  getSegmentOverrides: (segmentKey: string) => Promise<SegmentOverride[]>;
   setSegmentOverride: (
     segmentKey: string,
     flagKey: string,
