@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setUserOverride } from "@/api/overrides";
 import type { FlagValue } from "libreflag";
 
-export function useSetOverride(flagKey: string) {
+export function useSetUserOverride(flagKey: string) {
   const queryClient = useQueryClient();
 
   return useMutation({

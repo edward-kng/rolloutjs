@@ -1,24 +1,24 @@
-import APIClient from "./client";
+import apiClient from "./client";
 import type { Flag, Override } from "libreflag";
 
 export async function listFlags() {
-  return APIClient.get<Flag[]>("/flags");
+  return apiClient.get<Flag[]>("/flags");
 }
 
 export async function createFlag(flag: Flag) {
-  return APIClient.post("/flags", flag);
+  return apiClient.post("/flags", flag);
 }
 
 export async function updateFlag(key: string, flag: Partial<Flag>) {
-  return APIClient.put(`/flags/${encodeURIComponent(key)}`, flag);
+  return apiClient.put(`/flags/${encodeURIComponent(key)}`, flag);
 }
 
 export async function deleteFlag(key: string) {
-  return APIClient.delete(`/flags/${encodeURIComponent(key)}`);
+  return apiClient.delete(`/flags/${encodeURIComponent(key)}`);
 }
 
 export async function getFlagOverrides(flagKey: string) {
-  return APIClient.get<Override[]>(
+  return apiClient.get<Override[]>(
     `/flags/${encodeURIComponent(flagKey)}/overrides`,
   );
 }
