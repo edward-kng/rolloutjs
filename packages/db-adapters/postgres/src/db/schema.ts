@@ -26,10 +26,12 @@ export const overridesTable = schema.table(
   "overrides",
   {
     flag_key: text()
-      .references(() => flagsTable.key)
+      .references(() => flagsTable.key, { onDelete: "cascade" })
       .notNull(),
     targeting_key: text(),
-    segment_key: text().references(() => segmentsTable.key),
+    segment_key: text().references(() => segmentsTable.key, {
+      onDelete: "cascade",
+    }),
     value: json().notNull(),
   },
   (table) => [
