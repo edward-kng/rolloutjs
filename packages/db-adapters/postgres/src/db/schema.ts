@@ -49,4 +49,5 @@ export const segmentsTable = schema.table("segments", {
   name: text(),
   description: text(),
   rules: json().notNull(),
+  priority: integer().notNull(),
 });

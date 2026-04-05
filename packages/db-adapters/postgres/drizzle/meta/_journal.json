@@ -29,6 +29,13 @@
       "when": 1775305708552,
       "tag": "0003_cascade_delete_overrides",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775423407984,
+      "tag": "0004_add_segment_priority",
+      "breakpoints": true
     }
   ]
 }

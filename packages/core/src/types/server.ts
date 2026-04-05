@@ -8,7 +8,11 @@ import type {
 } from "./ofrep.js";
 import type { Flag, UpdateFlagParams } from "./flags.js";
 import type { Override, SegmentOverride, UserOverride } from "./overrides.js";
-import type { Segment, UpdateSegmentParams } from "./segments.js";
+import type {
+  CreateSegmentParams,
+  Segment,
+  UpdateSegmentParams,
+} from "./segments.js";
 
 export interface LibreFlagHttpMethods {
   evaluate: (
@@ -52,7 +56,7 @@ export interface LibreFlagHttpMethods {
   ) => Promise<ApiResponse>;
 
   listSegments: () => Promise<ApiResponse<Segment[]>>;
-  createSegment: (segment: Segment) => Promise<ApiResponse>;
+  createSegment: (params: CreateSegmentParams) => Promise<ApiResponse>;
   updateSegment: (
     key: string,
     segment: UpdateSegmentParams,
@@ -104,7 +108,7 @@ export interface LibreFlagServer {
   ) => Promise<boolean>;
 
   listSegments: () => Promise<Segment[]>;
-  createSegment: (segment: Segment) => Promise<void>;
+  createSegment: (params: CreateSegmentParams) => Promise<void>;
   updateSegment: (
     key: string,
     segment: UpdateSegmentParams,

@@ -31,6 +31,11 @@ export interface Segment {
   name?: string;
   description?: string;
   rules: Rule[];
+  priority: number;
+}
+
+export interface CreateSegmentParams extends Omit<Segment, "priority"> {
+  priority?: number;
 }
 
 export type UpdateSegmentParams = Omit<Partial<Segment>, "key">;
