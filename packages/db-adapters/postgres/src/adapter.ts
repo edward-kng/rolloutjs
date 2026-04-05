@@ -6,7 +6,7 @@ import {
   overridesTable,
   segmentsTable,
 } from "./db/schema.js";
-import { and, eq, isNotNull, sql } from "drizzle-orm";
+import { and, eq, isNotNull, max, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import {
   ADVISORY_LOCK_ID,
@@ -223,7 +223,10 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
     },
 
     listSegments: async () => {
-      const segments = await db.select().from(segmentsTable);
+      const segments = await db
+        .select()
+        .from(segmentsTable)
+        .orderBy(segmentsTable.priority);
 
       return segments.map(toSegment);
     },
@@ -234,6 +237,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
           name: segment.name,
           description: segment.description,
           rules: segment.rules,
+          priority: segment.priority,
         });
       } catch (e) {
         if (e instanceof Error && "code" in e && e.code === "23505") {
@@ -251,6 +255,7 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
             description: params.description,
           }),
           ...(params.rules !== undefined && { rules: params.rules }),
+          ...(params.priority !== undefined && { priority: params.priority }),
         })
         .where(eq(segmentsTable.key, key))
         .returning();
@@ -264,6 +269,27 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
         .returning();
 
       return result.length > 0;
+    },
+    getMaxSegmentPriority: async () => {
+      const result = await db
+        .select({
+          priority: max(segmentsTable.priority),
+        })
+        .from(segmentsTable);
+
+      return result.length > 0 ? result[0].priority : null;
+    },
+    getSegmentPriorityByIndex: async (index: number) => {
+      const result = await db
+        .select({
+          priority: segmentsTable.priority,
+        })
+        .from(segmentsTable)
+        .orderBy(segmentsTable.priority)
+        .offset(index)
+        .limit(1);
+
+      return result.length > 0 ? result[0].priority : null;
     },
 
     migrate: async () => {

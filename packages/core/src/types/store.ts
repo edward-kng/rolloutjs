@@ -51,4 +51,6 @@ export interface LibreFlagStore {
     segment: UpdateSegmentParams,
   ) => Promise<boolean>;
   deleteSegment: (key: string) => Promise<boolean>;
+  getMaxSegmentPriority: () => Promise<number | null>;
+  getSegmentPriorityByIndex: (index: number) => Promise<number | null>;
 }

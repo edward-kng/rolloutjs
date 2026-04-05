@@ -36,6 +36,7 @@ export const segmentSchema = z.object({
   name: z.string("Invalid segment name").optional(),
   description: z.string("Invalid segment description").optional(),
   rules: z.array(ruleSchema, "Invalid rules"),
+  priority: z.number("Invalid priority").optional(),
 });
 
 export const updateSegmentSchema = segmentSchema.omit({ key: true }).partial();

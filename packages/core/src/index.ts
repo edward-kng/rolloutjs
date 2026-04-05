@@ -11,6 +11,7 @@ export type {
   Rule,
   Segment,
   UpdateSegmentParams,
+  CreateSegmentParams,
 } from "./types/segments.js";
 export type {
   Override,

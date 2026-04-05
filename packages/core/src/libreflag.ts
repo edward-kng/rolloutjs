@@ -9,14 +9,18 @@ import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { formatZodError, handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
 import { NotFoundError, ValidationError } from "./errors.js";
-import { isMember } from "./utils/segments.js";
+import { getSegmentPriority, isMember } from "./utils/segments.js";
 import { type Flag, type UpdateFlagParams } from "./types/flags.js";
 import {
   type Override,
   type SegmentOverride,
   type UserOverride,
 } from "./types/overrides.js";
-import { type Segment, type UpdateSegmentParams } from "./types/segments.js";
+import {
+  type CreateSegmentParams,
+  type Segment,
+  type UpdateSegmentParams,
+} from "./types/segments.js";
 import {
   flagSchema,
   flagValueSchema,
@@ -43,16 +47,19 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       }
     }
 
+    let segments = await store.listSegments();
+    segments = segments.filter((segment) => isMember(context, segment));
     const segmentOverrides = await store.getSegmentOverridesForFlag(flagKey);
-    const segments = await store.listSegments();
-    const includedSegmentKeys = new Set(
-      segments
-        .filter((segment) => isMember(context, segment))
-        .map((segment) => segment.key),
-    );
-    const segmentOverride = segmentOverrides.find((override) =>
-      includedSegmentKeys.has(override.segmentKey),
-    );
+    const segmentOverride = segmentOverrides
+      .filter((override) =>
+        segments.find((segment) => segment.key === override.segmentKey),
+      )
+      .sort((a, b) =>
+        segments.findIndex((segment) => segment.key === a.segmentKey) <
+        segments.findIndex((segment) => segment.key === b.segmentKey)
+          ? -1
+          : 1,
+      )[0];
 
     if (segmentOverride) {
       return {
@@ -83,13 +90,19 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     const userOverrides = targetingKey
       ? await store.getUserOverrides(targetingKey)
       : [];
-    const segmentOverrides = await store.listSegmentOverrides();
-    const segments = await store.listSegments();
-    const includedSegmentKeys = new Set(
-      segments
-        .filter((segment) => isMember(context, segment))
-        .map((segment) => segment.key),
-    );
+    let segments = await store.listSegments();
+    segments = segments.filter((segment) => isMember(context, segment));
+    let segmentOverrides = await store.listSegmentOverrides();
+    segmentOverrides = segmentOverrides
+      .filter((override) =>
+        segments.find((segment) => segment.key === override.segmentKey),
+      )
+      .sort((a, b) =>
+        segments.findIndex((segment) => segment.key === a.segmentKey) <
+        segments.findIndex((segment) => segment.key === b.segmentKey)
+          ? -1
+          : 1,
+      );
 
     return flags.map((flag) => {
       const userOverride = userOverrides.find(
@@ -105,9 +118,7 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       }
 
       const segmentOverride = segmentOverrides.find(
-        (override) =>
-          override.flagKey === flag.key &&
-          includedSegmentKeys.has(override.segmentKey),
+        (override) => override.flagKey === flag.key,
       );
 
       if (segmentOverride) {
@@ -290,16 +301,25 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
   }
 
   async function listSegments(): Promise<Segment[]> {
-    return store.listSegments();
+    const segments = await store.listSegments();
+
+    return segments.map((segment, i) => ({
+      ...segment,
+      priority: i,
+    }));
   }
 
-  async function createSegment(segment: Segment): Promise<void> {
-    const result = segmentSchema.safeParse(segment);
+  async function createSegment(params: CreateSegmentParams): Promise<void> {
+    const result = segmentSchema.safeParse(params);
     if (!result.success) {
       throw new ValidationError(formatZodError(result.error));
     }
 
-    await store.createSegment(result.data);
+    await store.createSegment({
+      ...result.data,
+      priority: await getSegmentPriority(store, result.data.priority),
+    });
+
     await store.incrementConfigVersion();
   }
 
@@ -311,8 +331,15 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     if (!result.success) {
       throw new ValidationError(formatZodError(result.error));
     }
+    const payload =
+      result.data.priority !== undefined
+        ? {
+            ...result.data,
+            priority: await getSegmentPriority(store, result.data.priority),
+          }
+        : result.data;
 
-    const updated = await store.updateSegment(key, result.data);
+    const updated = await store.updateSegment(key, payload);
 
     if (!updated) throw new NotFoundError();
 

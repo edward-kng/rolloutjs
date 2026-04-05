@@ -53,5 +53,6 @@ export function toSegment(row: typeof segmentsTable.$inferSelect): Segment {
     name: row.name ?? undefined,
     description: row.description ?? undefined,
     rules: row.rules as Rule[],
+    priority: row.priority,
   };
 }

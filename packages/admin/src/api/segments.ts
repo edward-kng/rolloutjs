@@ -1,11 +1,16 @@
 import apiClient from "./client";
-import type { FlagValue, Override, Segment } from "libreflag";
+import type {
+  CreateSegmentParams,
+  FlagValue,
+  Override,
+  Segment,
+} from "libreflag";
 
 export async function listSegments() {
   return apiClient.get<Segment[]>("/segments");
 }
 
-export async function createSegment(segment: Segment) {
+export async function createSegment(segment: CreateSegmentParams) {
   return apiClient.post("/segments", segment);
 }
 
