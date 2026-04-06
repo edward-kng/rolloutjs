@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
-import { PostgresAdapter } from "./adapter.js";
+import { PostgresStore } from "./store.js";
 
 const commands = ["migrate"] as const;
 type Command = (typeof commands)[number];
@@ -39,7 +39,7 @@ if (!dbUrl) {
 }
 
 if (command === "migrate") {
-  const adapter = PostgresAdapter(dbUrl);
+  const adapter = PostgresStore(dbUrl);
   await adapter.migrate();
   console.log("Migrations applied successfully.");
   process.exit(0);

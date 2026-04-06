@@ -3,7 +3,7 @@ import type { Flag, UpdateFlagParams } from "./flags.js";
 import type { Override, SegmentOverride, UserOverride } from "./overrides.js";
 import type { Segment, UpdateSegmentParams } from "./segments.js";
 
-export interface LibreFlagStore {
+export interface Store {
   migrate: () => Promise<void>;
 
   getConfigVersion: () => Promise<number>;
@@ -53,9 +53,7 @@ export interface LibreFlagStore {
   deleteSegment: (key: string) => Promise<boolean>;
   getMaxSegmentPriority: () => Promise<number | null>;
   getSegmentPriorityByIndex: (index: number) => Promise<number | null>;
-  transaction: (
-    fn: (tx: Omit<LibreFlagStore, "transaction">) => Promise<void>,
-  ) => Promise<void>;
+  transaction: (fn: (tx: Transaction) => Promise<void>) => Promise<void>;
 }
 
-export type Transaction = Omit<LibreFlagStore, "transaction">;
+export type Transaction = Omit<Store, "transaction">;

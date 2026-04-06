@@ -4,7 +4,7 @@ import {
   StandardResolutionReasons,
 } from "@openfeature/core";
 import type { EvaluationResult } from "./types/ofrep.js";
-import type { LibreFlagStore } from "./types/store.js";
+import type { Store } from "./types/store.js";
 import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
 import { formatZodError, handleError } from "./utils/api.js";
 import { hashContext } from "./utils/hash.js";
@@ -28,7 +28,7 @@ import {
 } from "./schemas/flags.js";
 import { segmentSchema, updateSegmentSchema } from "./schemas/segments.js";
 
-export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
+export function LibreFlag(store: Store): LibreFlagServer {
   async function evaluate(
     flagKey: string,
     context: EvaluationContext = {},

@@ -41,13 +41,13 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { LibreFlag } from "libreflag";
 import { LibreFlagExpress } from "@libreflag/express";
-import { PostgresAdapter } from "@libreflag/postgres";
+import { PostgresStore } from "@libreflag/postgres";
 
 const app = express();
 
 const libreFlag = LibreFlag(
   // Add your database URL here
-  PostgresAdapter("postgresql://postgres:postgres@localhost/postgres"),
+  PostgresStore("postgresql://postgres:postgres@localhost/postgres"),
 );
 
 app.use(cookieParser());
