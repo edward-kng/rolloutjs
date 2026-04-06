@@ -1,0 +1,36 @@
+{
+  "name": "@libreflag/hono",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@libreflag/admin": "workspace:*"
+  },
+  "peerDependencies": {
+    "@hono/node-server": "^1.19.12",
+    "hono": "^4.12.11",
+    "libreflag": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.0",
+    "tsx": "^4.7.1"
+  }
+}
