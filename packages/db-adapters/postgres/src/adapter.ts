@@ -1,4 +1,10 @@
-import type { FlagValue, LibreFlagStore, Flag, Segment } from "libreflag";
+import type {
+  FlagValue,
+  LibreFlagStore,
+  Flag,
+  Segment,
+  Transaction,
+} from "libreflag";
 import { ConflictError } from "libreflag";
 import {
   configTable,
@@ -7,7 +13,7 @@ import {
   segmentsTable,
 } from "./db/schema.js";
 import { and, eq, isNotNull, max, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import {
   ADVISORY_LOCK_ID,
   MIGRATIONS_DIR,
@@ -23,9 +29,7 @@ import {
   toUserOverride,
 } from "./utils.js";
 
-export function PostgresAdapter(dbUrl: string): LibreFlagStore {
-  const db = drizzle(dbUrl);
-
+function createAdapter(db: NodePgDatabase): Transaction {
   return {
     getConfigVersion: async () => {
       const [row] = await db
@@ -303,6 +307,20 @@ export function PostgresAdapter(dbUrl: string): LibreFlagStore {
       } finally {
         await db.execute(sql`SELECT pg_advisory_unlock(${ADVISORY_LOCK_ID})`);
       }
+    },
+  };
+}
+
+export function PostgresAdapter(dbUrl: string): LibreFlagStore {
+  const db = drizzle(dbUrl);
+  const store = createAdapter(db);
+
+  return {
+    ...store,
+    transaction: async (fn: (transaction: Transaction) => Promise<void>) => {
+      return db.transaction(async (transaction) => {
+        await fn(createAdapter(transaction));
+      });
     },
   };
 }

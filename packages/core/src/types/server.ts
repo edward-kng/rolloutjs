@@ -102,18 +102,12 @@ export interface LibreFlagServer {
     flagKey: string,
     value: FlagValue,
   ) => Promise<void>;
-  deleteSegmentOverride: (
-    segmentKey: string,
-    flagkey: string,
-  ) => Promise<boolean>;
+  deleteSegmentOverride: (segmentKey: string, flagkey: string) => Promise<void>;
 
   listSegments: () => Promise<Segment[]>;
   createSegment: (params: CreateSegmentParams) => Promise<void>;
-  updateSegment: (
-    key: string,
-    segment: UpdateSegmentParams,
-  ) => Promise<boolean>;
-  deleteSegment: (key: string) => Promise<boolean>;
+  updateSegment: (key: string, segment: UpdateSegmentParams) => Promise<void>;
+  deleteSegment: (key: string) => Promise<void>;
 
   http: LibreFlagHttpMethods;
 }

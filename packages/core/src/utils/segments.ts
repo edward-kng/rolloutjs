@@ -1,7 +1,7 @@
 import type { EvaluationContext } from "@openfeature/core";
 import type { Condition, Segment } from "../types/segments.js";
 import { getRolloutHash } from "./hash.js";
-import type { LibreFlagStore } from "../types/store.js";
+import type { Transaction } from "../types/store.js";
 
 export function isMember(context: EvaluationContext, segment: Segment) {
   for (const rule of segment.rules) {
@@ -77,10 +77,7 @@ function evaluateCondition(
 /**
  * Calculates the priority of the created/updated segment relative to its neighbours. If there is no gap between them, priorities are rebalanced
  */
-export async function getSegmentPriority(
-  store: LibreFlagStore,
-  index?: number,
-) {
+export async function getSegmentPriority(store: Transaction, index?: number) {
   const GAP = 1000;
 
   if (index === undefined) {

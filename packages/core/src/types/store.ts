@@ -53,4 +53,9 @@ export interface LibreFlagStore {
   deleteSegment: (key: string) => Promise<boolean>;
   getMaxSegmentPriority: () => Promise<number | null>;
   getSegmentPriorityByIndex: (index: number) => Promise<number | null>;
+  transaction: (
+    fn: (tx: Omit<LibreFlagStore, "transaction">) => Promise<void>,
+  ) => Promise<void>;
 }
+
+export type Transaction = Omit<LibreFlagStore, "transaction">;
