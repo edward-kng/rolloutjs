@@ -169,8 +169,10 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       throw new ValidationError(formatZodError(result.error));
     }
 
-    await store.createFlag(result.data as Flag);
-    await store.incrementConfigVersion();
+    await store.transaction(async (tx) => {
+      await tx.createFlag(result.data);
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function updateFlag(
@@ -182,19 +184,23 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       throw new ValidationError(formatZodError(result.error));
     }
 
-    const updated = await store.updateFlag(key, result.data);
+    await store.transaction(async (tx) => {
+      const updated = await tx.updateFlag(key, result.data);
 
-    if (!updated) throw new NotFoundError();
+      if (!updated) throw new NotFoundError();
 
-    await store.incrementConfigVersion();
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function deleteFlag(key: string): Promise<void> {
-    const deleted = await store.deleteFlag(key);
+    await store.transaction(async (tx) => {
+      const deleted = await tx.deleteFlag(key);
 
-    if (!deleted) throw new NotFoundError();
+      if (!deleted) throw new NotFoundError();
 
-    await store.incrementConfigVersion();
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function listOverrides(): Promise<Override[]> {
@@ -237,22 +243,26 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     if (!result.success) {
       throw new ValidationError(formatZodError(result.error));
     }
-    await store.setUserOverride(targetingKey, flagKey, result.data);
-    await store.incrementConfigVersion();
+    await store.transaction(async (tx) => {
+      await tx.setUserOverride(targetingKey, flagKey, result.data);
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function deleteUserOverride(
     targetingKey: string,
     flagKey: string,
   ): Promise<void> {
-    const deleted = await store.deleteUserOverride(targetingKey, flagKey);
+    await store.transaction(async (tx) => {
+      const deleted = await tx.deleteUserOverride(targetingKey, flagKey);
 
-    if (!deleted)
-      throw new NotFoundError(
-        `Override not found for user '${targetingKey}' on flag '${flagKey}'`,
-      );
+      if (!deleted)
+        throw new NotFoundError(
+          `Override not found for user '${targetingKey}' on flag '${flagKey}'`,
+        );
 
-    await store.incrementConfigVersion();
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function listSegmentOverrides(): Promise<SegmentOverride[]> {
@@ -280,24 +290,26 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
     if (!result.success) {
       throw new ValidationError(formatZodError(result.error));
     }
-    await store.setSegmentOverride(segmentKey, flagKey, result.data);
-    await store.incrementConfigVersion();
+    await store.transaction(async (tx) => {
+      await tx.setSegmentOverride(segmentKey, flagKey, result.data);
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function deleteSegmentOverride(
     segmentKey: string,
     flagKey: string,
-  ): Promise<boolean> {
-    const deleted = await store.deleteSegmentOverride(segmentKey, flagKey);
+  ): Promise<void> {
+    await store.transaction(async (tx) => {
+      const deleted = await tx.deleteSegmentOverride(segmentKey, flagKey);
 
-    if (!deleted)
-      throw new NotFoundError(
-        `Override not found for segment '${segmentKey}' on flag '${flagKey}'`,
-      );
+      if (!deleted)
+        throw new NotFoundError(
+          `Override not found for segment '${segmentKey}' on flag '${flagKey}'`,
+        );
 
-    await store.incrementConfigVersion();
-
-    return deleted;
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function listSegments(): Promise<Segment[]> {
@@ -315,47 +327,49 @@ export function LibreFlag(store: LibreFlagStore): LibreFlagServer {
       throw new ValidationError(formatZodError(result.error));
     }
 
-    await store.createSegment({
-      ...result.data,
-      priority: await getSegmentPriority(store, result.data.priority),
-    });
+    await store.transaction(async (tx) => {
+      await tx.createSegment({
+        ...result.data,
+        priority: await getSegmentPriority(tx, result.data.priority),
+      });
 
-    await store.incrementConfigVersion();
+      await tx.incrementConfigVersion();
+    });
   }
 
   async function updateSegment(
     key: string,
     segment: UpdateSegmentParams,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const result = updateSegmentSchema.safeParse(segment);
     if (!result.success) {
       throw new ValidationError(formatZodError(result.error));
     }
-    const payload =
-      result.data.priority !== undefined
-        ? {
-            ...result.data,
-            priority: await getSegmentPriority(store, result.data.priority),
-          }
-        : result.data;
+    await store.transaction(async (tx) => {
+      const payload =
+        result.data.priority !== undefined
+          ? {
+              ...result.data,
+              priority: await getSegmentPriority(tx, result.data.priority),
+            }
+          : result.data;
 
-    const updated = await store.updateSegment(key, payload);
+      const updated = await tx.updateSegment(key, payload);
 
-    if (!updated) throw new NotFoundError();
+      if (!updated) throw new NotFoundError();
 
-    await store.incrementConfigVersion();
-
-    return updated;
+      await tx.incrementConfigVersion();
+    });
   }
 
-  async function deleteSegment(key: string): Promise<boolean> {
-    const deleted = await store.deleteSegment(key);
+  async function deleteSegment(key: string): Promise<void> {
+    await store.transaction(async (tx) => {
+      const deleted = await tx.deleteSegment(key);
 
-    if (!deleted) throw new NotFoundError();
+      if (!deleted) throw new NotFoundError();
 
-    await store.incrementConfigVersion();
-
-    return deleted;
+      await tx.incrementConfigVersion();
+    });
   }
 
   const http: LibreFlagHttpMethods = {
