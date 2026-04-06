@@ -1,0 +1,65 @@
+import type { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleQueryError, eq } from "drizzle-orm";
+import { flagsTable } from "../db/schema.js";
+import { toFlag } from "../utils.js";
+import { ConflictError, type Flag, type UpdateFlagParams } from "libreflag";
+
+export function createFlagStore(db: MySql2Database) {
+  return {
+    listFlags: async () => {
+      const flags = await db.select().from(flagsTable);
+
+      return flags.map(toFlag);
+    },
+    getFlag: async (key: string) => {
+      const [row] = await db
+        .select()
+        .from(flagsTable)
+        .where(eq(flagsTable.key, key));
+
+      return row ? toFlag(row) : null;
+    },
+    createFlag: async (flag: Flag) => {
+      try {
+        await db.insert(flagsTable).values({
+          name: flag.name,
+          description: flag.description,
+          key: flag.key,
+          default_value: flag.defaultValue,
+        });
+      } catch (e) {
+        if (
+          e instanceof DrizzleQueryError &&
+          e.cause &&
+          "code" in e.cause &&
+          e.cause.code === "ER_DUP_ENTRY"
+        ) {
+          throw new ConflictError(`Flag '${flag.key}' already exists`);
+        }
+
+        throw e;
+      }
+    },
+    updateFlag: async (key: string, params: UpdateFlagParams) => {
+      const result = await db
+        .update(flagsTable)
+        .set({
+          ...(params.name !== undefined && { name: params.name }),
+          ...(params.description !== undefined && {
+            description: params.description,
+          }),
+          ...(params.defaultValue !== undefined && {
+            default_value: params.defaultValue,
+          }),
+        })
+        .where(eq(flagsTable.key, key));
+
+      return result[0].affectedRows > 0;
+    },
+    deleteFlag: async (key: string) => {
+      const result = await db.delete(flagsTable).where(eq(flagsTable.key, key));
+
+      return result[0].affectedRows > 0;
+    },
+  };
+}
