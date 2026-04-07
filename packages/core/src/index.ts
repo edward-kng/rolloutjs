@@ -18,4 +18,5 @@ export type {
   UserOverride,
   SegmentOverride,
 } from "./types/overrides.js";
-export type { LibreFlagServer, LibreFlagHttpMethods } from "./types/server.js";
+export type { ApiRoute, ApiRouteHandler } from "./types/api.js";
+export type { LibreFlagServer } from "./types/server.js";

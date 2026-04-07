@@ -1,1 +1,1 @@
-export { LibreFlagExpress, type LibreFlagExpressOptions } from "./router.js";
+export { LibreFlagExpress, type LibreFlagExpressOptions } from "./adapter.js";

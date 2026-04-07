@@ -1,10 +1,4 @@
-import type {
-  ErrorCode,
-  EvaluationContext,
-  FlagValue,
-  ResolutionReason,
-} from "@openfeature/core";
-import type { ApiResponse } from "./api.js";
+import type { ErrorCode, FlagValue, ResolutionReason } from "@openfeature/core";
 
 export interface EvaluationResult {
   key: string;
@@ -12,16 +6,4 @@ export interface EvaluationResult {
   reason?: ResolutionReason;
   errorCode?: ErrorCode;
   errorDetails?: string;
-}
-
-export type EvaluationResponse = ApiResponse<EvaluationResult>;
-
-export type BulkEvaluationResponse = ApiResponse<{
-  flags: EvaluationResult[];
-  errorCode?: ErrorCode;
-  errorDetails?: string;
-}>;
-
-export interface EvaluationBody {
-  context: EvaluationContext;
 }

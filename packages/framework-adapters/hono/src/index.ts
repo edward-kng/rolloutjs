@@ -1,1 +1,1 @@
-export { LibreFlagHono } from "./app.js";
+export { LibreFlagHono } from "./adapter.js";
