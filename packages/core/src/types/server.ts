@@ -1,11 +1,5 @@
 import type { EvaluationContext, FlagValue } from "@openfeature/core";
-import type { ApiResponse } from "./api.js";
-import type {
-  BulkEvaluationResponse,
-  EvaluationBody,
-  EvaluationResponse,
-  EvaluationResult,
-} from "./ofrep.js";
+import type { EvaluationResult } from "./ofrep.js";
 import type { Flag, UpdateFlagParams } from "./flags.js";
 import type { Override, SegmentOverride, UserOverride } from "./overrides.js";
 import type {
@@ -13,56 +7,7 @@ import type {
   Segment,
   UpdateSegmentParams,
 } from "./segments.js";
-
-export interface LibreFlagHttpMethods {
-  evaluate: (
-    flagKey: string,
-    context?: EvaluationBody,
-  ) => Promise<EvaluationResponse>;
-  evaluateAll: (
-    context?: EvaluationBody,
-    ifNoneMatch?: string,
-  ) => Promise<BulkEvaluationResponse>;
-
-  listFlags(): Promise<ApiResponse<Flag[]>>;
-  getFlag(key: string): Promise<ApiResponse<Flag>>;
-  createFlag(flag: Flag): Promise<ApiResponse>;
-  updateFlag(key: string, flag: UpdateFlagParams): Promise<ApiResponse>;
-  deleteFlag(key: string): Promise<ApiResponse>;
-
-  listOverrides(): Promise<ApiResponse<Override[]>>;
-  getFlagOverrides(flagKey: string): Promise<ApiResponse<Override[]>>;
-  getUserOverrides(targetingKey: string): Promise<ApiResponse<UserOverride[]>>;
-  setUserOverride(
-    targetingKey: string,
-    flagKey: string,
-    value: FlagValue,
-  ): Promise<ApiResponse>;
-  deleteUserOverride(
-    targetingKey: string,
-    flagKey: string,
-  ): Promise<ApiResponse>;
-  getSegmentOverrides: (
-    segmentKey: string,
-  ) => Promise<ApiResponse<SegmentOverride[]>>;
-  setSegmentOverride: (
-    segmentKey: string,
-    flagKey: string,
-    value: FlagValue,
-  ) => Promise<ApiResponse>;
-  deleteSegmentOverride: (
-    segmentKey: string,
-    flagkey: string,
-  ) => Promise<ApiResponse>;
-
-  listSegments: () => Promise<ApiResponse<Segment[]>>;
-  createSegment: (params: CreateSegmentParams) => Promise<ApiResponse>;
-  updateSegment: (
-    key: string,
-    segment: UpdateSegmentParams,
-  ) => Promise<ApiResponse>;
-  deleteSegment: (key: string) => Promise<ApiResponse>;
-}
+import type { ApiRoute } from "./api.js";
 
 export interface LibreFlagServer {
   evaluate: (
@@ -109,5 +54,5 @@ export interface LibreFlagServer {
   updateSegment: (key: string, segment: UpdateSegmentParams) => Promise<void>;
   deleteSegment: (key: string) => Promise<void>;
 
-  http: LibreFlagHttpMethods;
+  routes: ApiRoute[];
 }

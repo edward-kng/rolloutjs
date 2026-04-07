@@ -5,9 +5,8 @@ import {
 } from "@openfeature/core";
 import type { EvaluationResult } from "./types/ofrep.js";
 import type { Store } from "./types/store.js";
-import type { LibreFlagHttpMethods, LibreFlagServer } from "./types/server.js";
-import { formatZodError, handleError } from "./utils/api.js";
-import { hashContext } from "./utils/hash.js";
+import type { LibreFlagServer } from "./types/server.js";
+import { createApiRoutes, formatZodError } from "./utils/api.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import { getSegmentPriority, isMember } from "./utils/segments.js";
 import { type Flag, type UpdateFlagParams } from "./types/flags.js";
@@ -372,191 +371,7 @@ export function LibreFlag(store: Store): LibreFlagServer {
     });
   }
 
-  const http: LibreFlagHttpMethods = {
-    evaluate: async (flagKey, body) => {
-      try {
-        const result = await evaluate(flagKey, body?.context);
-
-        return { status: 200, body: result };
-      } catch (e) {
-        return handleError(e, { key: flagKey });
-      }
-    },
-    evaluateAll: async (body, ifNoneMatch) => {
-      try {
-        const version = await store.getConfigVersion();
-        const etag = hashContext(body?.context, version);
-
-        if (ifNoneMatch === etag) {
-          return { status: 304, etag };
-        }
-
-        const results = await evaluateAll(body?.context);
-
-        return { status: 200, body: { flags: results }, etag };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-
-    getFlag: async (key) => {
-      try {
-        const flag = await getFlag(key);
-
-        return { status: 200, body: flag };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    listFlags: async () => {
-      try {
-        const flags = await listFlags();
-
-        return { status: 200, body: flags };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    createFlag: async (flag) => {
-      try {
-        await createFlag(flag);
-
-        return { status: 201 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    updateFlag: async (key, flag) => {
-      try {
-        await updateFlag(key, flag);
-
-        return { status: 200 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    deleteFlag: async (key) => {
-      try {
-        await deleteFlag(key);
-
-        return { status: 204 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-
-    listOverrides: async () => {
-      try {
-        const overrides = await listOverrides();
-
-        return { status: 200, body: overrides };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    getFlagOverrides: async (flagKey) => {
-      try {
-        const overrides = await getFlagOverrides(flagKey);
-
-        return { status: 200, body: overrides };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    getUserOverrides: async (targetingKey) => {
-      try {
-        const overrides = await getUserOverrides(targetingKey);
-
-        return { status: 200, body: overrides };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    setUserOverride: async (targetingKey, flagKey, value) => {
-      try {
-        await setUserOverride(targetingKey, flagKey, value);
-
-        return { status: 200 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    deleteUserOverride: async (targetingKey, flagKey) => {
-      try {
-        await deleteUserOverride(targetingKey, flagKey);
-
-        return { status: 204 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    getSegmentOverrides: async (segmentKey) => {
-      try {
-        const overrides = await getSegmentOverrides(segmentKey);
-
-        return { status: 200, body: overrides };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    setSegmentOverride: async (segmentKey, flagKey, value) => {
-      try {
-        await setSegmentOverride(segmentKey, flagKey, value);
-
-        return { status: 200 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    deleteSegmentOverride: async (segmentKey, flagKey) => {
-      try {
-        await deleteSegmentOverride(segmentKey, flagKey);
-
-        return { status: 204 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-
-    listSegments: async () => {
-      try {
-        const segments = await listSegments();
-
-        return { status: 200, body: segments };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    createSegment: async (segment) => {
-      try {
-        await createSegment(segment);
-
-        return { status: 201 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    updateSegment: async (key, segment) => {
-      try {
-        await updateSegment(key, segment);
-
-        return { status: 200 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-    deleteSegment: async (key) => {
-      try {
-        await deleteSegment(key);
-
-        return { status: 204 };
-      } catch (e) {
-        return handleError(e);
-      }
-    },
-  };
-
-  return {
+  const server = {
     evaluate,
     evaluateAll,
     getFlagValue,
@@ -579,6 +394,10 @@ export function LibreFlag(store: Store): LibreFlagServer {
     createSegment,
     updateSegment,
     deleteSegment,
-    http,
+  };
+
+  return {
+    ...server,
+    routes: createApiRoutes(server, store),
   };
 }

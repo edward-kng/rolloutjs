@@ -1,11 +1,9 @@
-import { Hono } from "hono";
+import { Hono, type Handler } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { readFileSync } from "node:fs";
-import { ROUTES } from "../constants/routes.js";
-
-export function AdminRoutes() {
+export function AdminRoutes(middleware: Handler) {
   const app = new Hono();
 
   const require = createRequire(import.meta.url);
@@ -14,11 +12,12 @@ export function AdminRoutes() {
   );
   const staticPath = path.join(adminDistPath, "dist");
 
+  app.use(middleware);
   app.use(
     "/*",
     serveStatic({
       root: staticPath,
-      rewriteRequestPath: (p) => p.replace(ROUTES.ADMIN, ""),
+      rewriteRequestPath: (p) => p.replace("/libreflag/admin", ""),
     }),
   );
 
