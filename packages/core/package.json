@@ -15,7 +15,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +25,8 @@
   "dependencies": {
     "@openfeature/core": "^1.9.2",
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.4"
   }
 }
