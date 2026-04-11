@@ -14,6 +14,8 @@ export function isMember(context: EvaluationContext, segment: Segment) {
       return true;
     }
   }
+
+  return false;
 }
 
 function evaluateCondition(
