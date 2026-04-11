@@ -1,6 +1,9 @@
 import type { FlagValue } from "@openfeature/core";
 
 export interface Flag {
+  /**
+   * Unique identifier for the flag
+   */
   key: string;
   name?: string;
   description?: string;
