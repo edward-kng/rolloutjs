@@ -1,8 +1,13 @@
 import type { MySql2Database } from "drizzle-orm/mysql2";
 import { eq, isNotNull, and } from "drizzle-orm";
 import { overridesTable } from "../db/schema.js";
-import { toOverride, toSegmentOverride, toUserOverride } from "../utils.js";
-import type { FlagValue } from "libreflag";
+import {
+  isForeignKeyViolation,
+  toOverride,
+  toSegmentOverride,
+  toUserOverride,
+} from "../utils.js";
+import { NotFoundError, type FlagValue } from "libreflag";
 
 export function createOverrideStore(db: MySql2Database) {
   return {
@@ -45,17 +50,24 @@ export function createOverrideStore(db: MySql2Database) {
       flagKey: string,
       value: FlagValue,
     ) => {
-      await db
-        .insert(overridesTable)
-        .values({
-          flag_key: flagKey,
-          targeting_key: targetingKey,
-          segment_key: null,
-          value,
-        })
-        .onDuplicateKeyUpdate({
-          set: { value },
-        });
+      try {
+        await db
+          .insert(overridesTable)
+          .values({
+            flag_key: flagKey,
+            targeting_key: targetingKey,
+            segment_key: null,
+            value,
+          })
+          .onDuplicateKeyUpdate({
+            set: { value },
+          });
+      } catch (e) {
+        if (isForeignKeyViolation(e)) {
+          throw new NotFoundError(`Flag '${flagKey}' not found`);
+        }
+        throw e;
+      }
     },
     deleteUserOverride: async (targetingKey: string, flagKey: string) => {
       const result = await db
@@ -103,17 +115,26 @@ export function createOverrideStore(db: MySql2Database) {
       flagKey: string,
       value: FlagValue,
     ) => {
-      await db
-        .insert(overridesTable)
-        .values({
-          flag_key: flagKey,
-          targeting_key: null,
-          segment_key: segmentKey,
-          value,
-        })
-        .onDuplicateKeyUpdate({
-          set: { value },
-        });
+      try {
+        await db
+          .insert(overridesTable)
+          .values({
+            flag_key: flagKey,
+            targeting_key: null,
+            segment_key: segmentKey,
+            value,
+          })
+          .onDuplicateKeyUpdate({
+            set: { value },
+          });
+      } catch (e) {
+        if (isForeignKeyViolation(e)) {
+          throw new NotFoundError(
+            `Segment '${segmentKey}' or flag '${flagKey}' not found`,
+          );
+        }
+        throw e;
+      }
     },
     deleteSegmentOverride: async (segmentKey: string, flagKey: string) => {
       const result = await db

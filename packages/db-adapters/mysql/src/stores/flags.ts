@@ -1,7 +1,7 @@
 import type { MySql2Database } from "drizzle-orm/mysql2";
-import { DrizzleQueryError, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { flagsTable } from "../db/schema.js";
-import { toFlag } from "../utils.js";
+import { isUniqueViolation, toFlag } from "../utils.js";
 import { ConflictError, type Flag, type UpdateFlagParams } from "libreflag";
 
 export function createFlagStore(db: MySql2Database) {
@@ -28,12 +28,7 @@ export function createFlagStore(db: MySql2Database) {
           default_value: flag.defaultValue,
         });
       } catch (e) {
-        if (
-          e instanceof DrizzleQueryError &&
-          e.cause &&
-          "code" in e.cause &&
-          e.cause.code === "ER_DUP_ENTRY"
-        ) {
+        if (isUniqueViolation(e)) {
           throw new ConflictError(`Flag '${flag.key}' already exists`);
         }
 

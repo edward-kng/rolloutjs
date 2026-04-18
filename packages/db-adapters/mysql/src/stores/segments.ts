@@ -1,12 +1,12 @@
 import type { MySql2Database } from "drizzle-orm/mysql2";
-import { DrizzleQueryError, eq, max } from "drizzle-orm";
+import { eq, max } from "drizzle-orm";
 import { segmentsTable } from "../db/schema.js";
 import {
   ConflictError,
   type Segment,
   type UpdateSegmentParams,
 } from "libreflag";
-import { toSegment } from "../utils.js";
+import { isUniqueViolation, toSegment } from "../utils.js";
 
 export function createSegmentStore(db: MySql2Database) {
   return {
@@ -28,12 +28,7 @@ export function createSegmentStore(db: MySql2Database) {
           priority: segment.priority,
         });
       } catch (e) {
-        if (
-          e instanceof DrizzleQueryError &&
-          e.cause &&
-          "code" in e.cause &&
-          e.cause.code === "ER_DUP_ENTRY"
-        ) {
+        if (isUniqueViolation(e)) {
           throw new ConflictError(`Segment '${segment.key}' already exists`);
         }
 
