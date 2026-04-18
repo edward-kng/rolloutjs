@@ -4,8 +4,8 @@
   "id": "d118ab21-15fc-44c2-89e6-9477ee64fbf6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "libreflag_config": {
-      "name": "libreflag_config",
+    "rolloutjs_config": {
+      "name": "rolloutjs_config",
       "columns": {
         "id": {
           "name": "id",
@@ -26,16 +26,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "libreflag_config_id": {
-          "name": "libreflag_config_id",
+        "rolloutjs_config_id": {
+          "name": "rolloutjs_config_id",
           "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "libreflag_flags": {
-      "name": "libreflag_flags",
+    "rolloutjs_flags": {
+      "name": "rolloutjs_flags",
       "columns": {
         "key": {
           "name": "key",
@@ -69,16 +69,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "libreflag_flags_key": {
-          "name": "libreflag_flags_key",
+        "rolloutjs_flags_key": {
+          "name": "rolloutjs_flags_key",
           "columns": ["key"]
         }
       },
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "libreflag_overrides": {
-      "name": "libreflag_overrides",
+    "rolloutjs_overrides": {
+      "name": "rolloutjs_overrides",
       "columns": {
         "flag_key": {
           "name": "flag_key",
@@ -111,19 +111,19 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "libreflag_overrides_flag_key_libreflag_flags_key_fk": {
-          "name": "libreflag_overrides_flag_key_libreflag_flags_key_fk",
-          "tableFrom": "libreflag_overrides",
-          "tableTo": "libreflag_flags",
+        "rolloutjs_overrides_flag_key_rolloutjs_flags_key_fk": {
+          "name": "rolloutjs_overrides_flag_key_rolloutjs_flags_key_fk",
+          "tableFrom": "rolloutjs_overrides",
+          "tableTo": "rolloutjs_flags",
           "columnsFrom": ["flag_key"],
           "columnsTo": ["key"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "libreflag_overrides_segment_key_libreflag_segments_key_fk": {
-          "name": "libreflag_overrides_segment_key_libreflag_segments_key_fk",
-          "tableFrom": "libreflag_overrides",
-          "tableTo": "libreflag_segments",
+        "rolloutjs_overrides_segment_key_rolloutjs_segments_key_fk": {
+          "name": "rolloutjs_overrides_segment_key_rolloutjs_segments_key_fk",
+          "tableFrom": "rolloutjs_overrides",
+          "tableTo": "rolloutjs_segments",
           "columnsFrom": ["segment_key"],
           "columnsTo": ["key"],
           "onDelete": "cascade",
@@ -132,12 +132,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "libreflag_overrides_targeting_key_flag_key_unique": {
-          "name": "libreflag_overrides_targeting_key_flag_key_unique",
+        "rolloutjs_overrides_targeting_key_flag_key_unique": {
+          "name": "rolloutjs_overrides_targeting_key_flag_key_unique",
           "columns": ["targeting_key", "flag_key"]
         },
-        "libreflag_overrides_segment_key_flag_key_unique": {
-          "name": "libreflag_overrides_segment_key_flag_key_unique",
+        "rolloutjs_overrides_segment_key_flag_key_unique": {
+          "name": "rolloutjs_overrides_segment_key_flag_key_unique",
           "columns": ["segment_key", "flag_key"]
         }
       },
@@ -148,8 +148,8 @@
         }
       }
     },
-    "libreflag_segments": {
-      "name": "libreflag_segments",
+    "rolloutjs_segments": {
+      "name": "rolloutjs_segments",
       "columns": {
         "key": {
           "name": "key",
@@ -190,8 +190,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "libreflag_segments_key": {
-          "name": "libreflag_segments_key",
+        "rolloutjs_segments_key": {
+          "name": "rolloutjs_segments_key",
           "columns": ["key"]
         }
       },

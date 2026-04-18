@@ -1,5 +1,5 @@
 {
-  "name": "@libreflag/express",
+  "name": "@rolloutjs/express",
   "version": "0.0.0",
   "description": "",
   "type": "module",
@@ -22,12 +22,12 @@
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@libreflag/admin": "workspace:*",
+    "@rolloutjs/admin": "workspace:*",
     "cors": "^2.8.6"
   },
   "peerDependencies": {
     "express": "^5.2.1",
-    "libreflag": "workspace:*"
+    "rolloutjs": "workspace:*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

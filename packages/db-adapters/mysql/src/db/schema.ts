@@ -8,19 +8,19 @@ import {
 } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 
-export const configTable = mysqlTable("libreflag_config", {
+export const configTable = mysqlTable("rolloutjs_config", {
   id: int().autoincrement().primaryKey(),
   version: int().notNull().default(0),
 });
 
-export const flagsTable = mysqlTable("libreflag_flags", {
+export const flagsTable = mysqlTable("rolloutjs_flags", {
   key: varchar({ length: 255 }).primaryKey(),
   name: varchar({ length: 255 }),
   description: varchar({ length: 1024 }),
   default_value: json().notNull(),
 });
 
-export const segmentsTable = mysqlTable("libreflag_segments", {
+export const segmentsTable = mysqlTable("rolloutjs_segments", {
   key: varchar({ length: 255 }).primaryKey(),
   name: varchar({ length: 255 }),
   description: varchar({ length: 1024 }),
@@ -29,7 +29,7 @@ export const segmentsTable = mysqlTable("libreflag_segments", {
 });
 
 export const overridesTable = mysqlTable(
-  "libreflag_overrides",
+  "rolloutjs_overrides",
   {
     flag_key: varchar({ length: 255 })
       .references(() => flagsTable.key, { onDelete: "cascade" })

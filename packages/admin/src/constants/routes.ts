@@ -1,5 +1,5 @@
 export const ROUTES = {
-  BASE: "libreflag/admin",
+  BASE: "rolloutjs/admin",
   ROOT: "/*",
   DASHBOARD: "/",
   FLAGS: "/flags",

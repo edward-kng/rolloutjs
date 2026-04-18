@@ -1,4 +1,4 @@
-import type { Store, Transaction } from "libreflag";
+import type { Store, Transaction } from "rolloutjs";
 
 import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";

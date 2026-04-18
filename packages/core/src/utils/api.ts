@@ -7,7 +7,7 @@ import {
   type FlagValue,
 } from "@openfeature/core";
 import type { ZodError } from "zod";
-import type { LibreFlagServer } from "../types/server.js";
+import type { RolloutService } from "../types/server.js";
 import {
   hashContext,
   type CreateSegmentParams,
@@ -61,7 +61,7 @@ export function handleError(
 }
 
 export function createApiRoutes(
-  libreFlag: Omit<LibreFlagServer, "routes">,
+  rollout: Omit<RolloutService, "routes">,
   store: Store,
 ): ApiRoute[] {
   const {
@@ -84,7 +84,7 @@ export function createApiRoutes(
     createSegment,
     updateSegment,
     deleteSegment,
-  } = libreFlag;
+  } = rollout;
 
   return [
     {
@@ -129,7 +129,7 @@ export function createApiRoutes(
 
     {
       type: "ADMIN",
-      path: "/libreflag/flags",
+      path: "/rolloutjs/api/flags",
       method: "GET",
       handler: async () => {
         try {
@@ -143,7 +143,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/flags/:flagKey",
+      path: "/rolloutjs/api/flags/:flagKey",
       method: "GET",
       handler: async (params) => {
         try {
@@ -157,7 +157,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/flags",
+      path: "/rolloutjs/api/flags",
       method: "POST",
       handler: async (_params, body) => {
         try {
@@ -171,7 +171,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/flags/:flagKey",
+      path: "/rolloutjs/api/flags/:flagKey",
       method: "PUT",
       handler: async (params, body) => {
         try {
@@ -185,7 +185,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/flags/:flagKey",
+      path: "/rolloutjs/api/flags/:flagKey",
       method: "DELETE",
       handler: async (params) => {
         try {
@@ -200,7 +200,7 @@ export function createApiRoutes(
 
     {
       type: "ADMIN",
-      path: "/libreflag/flags/:flagKey/overrides",
+      path: "/rolloutjs/api/flags/:flagKey/overrides",
       method: "GET",
       handler: async (params) => {
         try {
@@ -215,7 +215,7 @@ export function createApiRoutes(
 
     {
       type: "ADMIN",
-      path: "/libreflag/overrides",
+      path: "/rolloutjs/api/overrides",
       method: "GET",
       handler: async () => {
         try {
@@ -229,7 +229,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/overrides/:targetingKey",
+      path: "/rolloutjs/api/overrides/:targetingKey",
       method: "GET",
       handler: async (params) => {
         try {
@@ -243,7 +243,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/overrides/:targetingKey/:flagKey",
+      path: "/rolloutjs/api/overrides/:targetingKey/:flagKey",
       method: "PUT",
       handler: async (params, body) => {
         try {
@@ -258,7 +258,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/overrides/:targetingKey/:flagKey",
+      path: "/rolloutjs/api/overrides/:targetingKey/:flagKey",
       method: "DELETE",
       handler: async (params) => {
         try {
@@ -273,7 +273,7 @@ export function createApiRoutes(
 
     {
       type: "ADMIN",
-      path: "/libreflag/segments",
+      path: "/rolloutjs/api/segments",
       method: "GET",
       handler: async () => {
         try {
@@ -287,7 +287,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/segments",
+      path: "/rolloutjs/api/segments",
       method: "POST",
       handler: async (_params, body) => {
         try {
@@ -301,7 +301,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/segments/:segmentKey",
+      path: "/rolloutjs/api/segments/:segmentKey",
       method: "PUT",
       handler: async (params, body) => {
         try {
@@ -315,7 +315,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/segments/:segmentKey",
+      path: "/rolloutjs/api/segments/:segmentKey",
       method: "DELETE",
       handler: async (params) => {
         try {
@@ -330,7 +330,7 @@ export function createApiRoutes(
 
     {
       type: "ADMIN",
-      path: "/libreflag/segments/:segmentKey/overrides",
+      path: "/rolloutjs/api/segments/:segmentKey/overrides",
       method: "GET",
       handler: async (params) => {
         try {
@@ -344,7 +344,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/segments/:segmentKey/overrides/:flagKey",
+      path: "/rolloutjs/api/segments/:segmentKey/overrides/:flagKey",
       method: "PUT",
       handler: async (params, body) => {
         try {
@@ -359,7 +359,7 @@ export function createApiRoutes(
     },
     {
       type: "ADMIN",
-      path: "/libreflag/segments/:segmentKey/overrides/:flagKey",
+      path: "/rolloutjs/api/segments/:segmentKey/overrides/:flagKey",
       method: "DELETE",
       handler: async (params) => {
         try {

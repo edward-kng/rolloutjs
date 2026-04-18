@@ -1,4 +1,4 @@
-export { LibreFlag } from "./libreflag.js";
+export { Rollout } from "./rollout.js";
 export { hashContext } from "./utils/hash.js";
 export { NotFoundError, ValidationError, ConflictError } from "./errors.js";
 export type { Store, Transaction } from "./types/store.js";
@@ -19,4 +19,4 @@ export type {
   SegmentOverride,
 } from "./types/overrides.js";
 export type { ApiRoute, ApiRouteHandler } from "./types/api.js";
-export type { LibreFlagServer } from "./types/server.js";
+export type { RolloutService } from "./types/server.js";

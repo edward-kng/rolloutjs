@@ -1,12 +1,12 @@
 {
-  "name": "@libreflag/postgres",
+  "name": "@rolloutjs/postgres",
   "version": "0.0.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "libreflag-postgres": "./dist/cli.js"
+    "rolloutjs-postgres": "./dist/cli.js"
   },
   "exports": {
     ".": {
@@ -36,6 +36,6 @@
     "tsx": "^4.21.0"
   },
   "peerDependencies": {
-    "libreflag": "workspace:*"
+    "rolloutjs": "workspace:*"
   }
 }

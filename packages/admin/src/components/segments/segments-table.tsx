@@ -28,7 +28,7 @@ import { useDeleteSegment } from "@/hooks/api/useDeleteSegment";
 import { useUpdateSegment } from "@/hooks/api/useUpdateSegment";
 import { useOverrides } from "@/hooks/api/useOverrides";
 import { ROUTES } from "@/constants/routes";
-import type { Segment } from "libreflag";
+import type { Segment } from "rolloutjs";
 import { Spinner } from "@/components/ui/spinner";
 import {
   DndContext,

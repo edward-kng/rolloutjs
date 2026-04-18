@@ -1,10 +1,10 @@
 <div align="center">
-    <h1>LibreFlag.js</h1>
+    <h1>RolloutJS</h1>
     <p>Feature flags that live in your app and your database. Open source. Ready in minutes.</p>
 </div>
 <br />
 
-LibreFlag.js is a full stack feature flag framework that gives you incremental feature rollout, segmentation and feature management APIs without ever leaving your app. Plug it into your backend and bring your own database. No SaaS fees. No self-hosting headaches.
+RolloutJS is a full stack feature flag framework that gives you incremental feature rollout, segmentation and feature management APIs without ever leaving your app. Plug it into your backend and bring your own database. No SaaS fees. No self-hosting headaches.
 
 > **Note:** The project is in a very early stage of development. Expect instability and breaking changes.
 
@@ -20,16 +20,16 @@ LibreFlag.js is a full stack feature flag framework that gives you incremental f
 
 ### 1. Install on the Server
 
-Install LibreFlag.js for your framework and database
+Install RolloutJS for your framework and database
 
 ```sh
-npm install libreflag @libreflag/express @libreflag/postgres
+npm install rolloutjs @rolloutjs/express @rolloutjs/postgres
 ```
 
 ### 2. Migrate the Database
 
 ```sh
-npx @libreflag/postgres migrate --db-url \
+npx @rolloutjs/postgres migrate --db-url \
 `# Add your database URL here` \
 postgresql://postgres:postgres@localhost/postgres
 ```
@@ -39,13 +39,13 @@ postgresql://postgres:postgres@localhost/postgres
 ```typescript
 import express from "express";
 import cookieParser from "cookie-parser";
-import { LibreFlag } from "libreflag";
-import { LibreFlagExpress } from "@libreflag/express";
-import { PostgresStore } from "@libreflag/postgres";
+import { Rollout } from "rolloutjs";
+import { RolloutExpress } from "@rolloutjs/express";
+import { PostgresStore } from "@rolloutjs/postgres";
 
 const app = express();
 
-const libreFlag = LibreFlag(
+const rollout = Rollout(
   // Add your database URL here
   PostgresStore("postgresql://postgres:postgres@localhost/postgres"),
 );
@@ -53,7 +53,7 @@ const libreFlag = LibreFlag(
 app.use(cookieParser());
 
 app.use(
-  LibreFlagExpress(libreFlag, {
+  RolloutExpress(rollout, {
     adminMiddleware: (req, res, next) => {
       // Add your custom admin auth here
       if (req.cookies["secretAdminToken"] == "1234") {
@@ -67,7 +67,7 @@ app.use(
 
 app.get("/greeting", async (req, res) => {
   // Use feature flags anywhere in your backend
-  if (await libreFlag.getFlagValue("new-greeting", false)) {
+  if (await rollout.getFlagValue("new-greeting", false)) {
     res.send("Hello universe!");
   } else {
     res.send("Hello world!");
@@ -113,10 +113,10 @@ if (client.getBooleanValue("new-greeting", false)) {
 
 ### 6. Manage Features
 
-Authenticate according to your middleware, and visit `http://localhost:3000/libreflag/admin` in your browser to start managing your feature flags.
+Authenticate according to your middleware, and visit `http://localhost:3000/rolloutjs/admin` in your browser to start managing your feature flags.
 
 <img src="./screenshots/flags.png" width="50%"><img src="./screenshots/segment-editor.png" width="50%">
 
 ## License
 
-LibreFlag.js is a free and open source project licensed under the MIT License.
+RolloutJS is a free and open source project licensed under the MIT License.

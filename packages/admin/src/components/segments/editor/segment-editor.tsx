@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateSegment } from "@/hooks/api/useCreateSegment";
 import { useSegments } from "@/hooks/api/useSegments";
 import { useUpdateSegment } from "@/hooks/api/useUpdateSegment";
-import type { Segment } from "libreflag";
+import type { Segment } from "rolloutjs";
 import { useState, type SubmitEvent } from "react";
 import RulesEditor from "./rules-editor";
 

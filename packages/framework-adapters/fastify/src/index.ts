@@ -1,1 +1,1 @@
-export { LibreFlagFastify, type LibreFlagFastifyOptions } from "./adapter.js";
+export { RolloutFastify, type RolloutFastifyOptions } from "./adapter.js";

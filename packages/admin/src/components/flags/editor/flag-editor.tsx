@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useUpdateFlag } from "@/hooks/api/useUpdateFlag";
 import { useCreateFlag } from "@/hooks/api/useCreateFlag";
-import type { Flag, FlagValue } from "libreflag";
+import type { Flag, FlagValue } from "rolloutjs";
 import { coerceValue, inferType, serializeValue } from "@/utils/flags";
 import type { ValueType } from "@/types/flags";
 import { Label } from "@/components/ui/label";

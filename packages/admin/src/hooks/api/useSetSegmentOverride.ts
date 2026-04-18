@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setSegmentOverride } from "@/api/segments";
-import type { FlagValue } from "libreflag";
+import type { FlagValue } from "rolloutjs";
 
 export function useSetSegmentOverride(flagKey: string) {
   const queryClient = useQueryClient();

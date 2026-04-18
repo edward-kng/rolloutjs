@@ -1,16 +1,16 @@
 import { Hono, type MiddlewareHandler } from "hono";
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
-import type { LibreFlagServer } from "libreflag";
+import type { RolloutService } from "rolloutjs";
 import { AdminRoutes } from "./admin.js";
 import { cors } from "hono/cors";
 
-export interface LibreFlagHonoOptions {
+export interface RolloutHonoOptions {
   adminMiddleware?: MiddlewareHandler;
   evalMiddleware?: MiddlewareHandler;
 }
 
-export function LibreFlagHono(
-  libreFlag: LibreFlagServer,
+export function RolloutHono(
+  rollout: RolloutService,
   {
     adminMiddleware = async (c) => {
       return c.body(null, 403);
@@ -19,11 +19,11 @@ export function LibreFlagHono(
       origin: (origin) => origin,
       exposeHeaders: ["ETag"],
     }),
-  }: LibreFlagHonoOptions = {},
+  }: RolloutHonoOptions = {},
 ) {
   const app = new Hono();
 
-  for (const route of libreFlag.routes) {
+  for (const route of rollout.routes) {
     app[route.method.toLowerCase() as "get" | "post" | "put" | "delete"](
       route.path,
       route.type === "ADMIN" ? adminMiddleware : evalMiddleware,
@@ -57,7 +57,7 @@ export function LibreFlagHono(
     );
   }
 
-  app.route("/libreflag/admin", AdminRoutes(adminMiddleware));
+  app.route("/rolloutjs/admin", AdminRoutes(adminMiddleware));
 
   return app;
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@libreflag/hono",
+  "name": "@rolloutjs/hono",
   "version": "0.0.0",
   "description": "",
   "type": "module",
@@ -22,12 +22,12 @@
   "license": "MIT",
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@libreflag/admin": "workspace:*"
+    "@rolloutjs/admin": "workspace:*"
   },
   "peerDependencies": {
     "@hono/node-server": "^1.19.12",
     "hono": "^4.12.11",
-    "libreflag": "workspace:*"
+    "rolloutjs": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",

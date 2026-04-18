@@ -7,7 +7,7 @@ import type {
   Rule,
   UserOverride,
   SegmentOverride,
-} from "libreflag";
+} from "rolloutjs";
 import type { flagsTable, overridesTable, segmentsTable } from "./db/schema.js";
 
 function hasMysqlErrorCode(e: unknown, code: string): boolean {

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createSegment } from "@/api/segments";
-import type { CreateSegmentParams } from "libreflag";
+import type { CreateSegmentParams } from "rolloutjs";
 
 export function useCreateSegment() {
   const queryClient = useQueryClient();

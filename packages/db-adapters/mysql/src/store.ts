@@ -1,4 +1,4 @@
-import type { Store, Transaction } from "libreflag";
+import type { Store, Transaction } from "rolloutjs";
 
 import { sql } from "drizzle-orm";
 import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";

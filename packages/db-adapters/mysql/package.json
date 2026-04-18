@@ -1,12 +1,12 @@
 {
-  "name": "@libreflag/mysql",
+  "name": "@rolloutjs/mysql",
   "version": "0.0.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "libreflag-mysql": "./dist/cli.js"
+    "rolloutjs-mysql": "./dist/cli.js"
   },
   "exports": {
     ".": {
@@ -36,6 +36,6 @@
     "tsx": "^4.21.0"
   },
   "peerDependencies": {
-    "libreflag": "workspace:*"
+    "rolloutjs": "workspace:*"
   }
 }

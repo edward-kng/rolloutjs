@@ -1,1 +1,1 @@
-export { LibreFlagExpress, type LibreFlagExpressOptions } from "./adapter.js";
+export { RolloutExpress, type RolloutExpressOptions } from "./adapter.js";
