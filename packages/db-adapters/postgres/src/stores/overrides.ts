@@ -7,7 +7,7 @@ import {
   toSegmentOverride,
   toUserOverride,
 } from "../utils.js";
-import { NotFoundError, type FlagValue } from "libreflag";
+import { NotFoundError, type FlagValue } from "rolloutjs";
 
 export function createOverrideStore(db: NodePgDatabase) {
   return {

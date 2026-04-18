@@ -42,7 +42,7 @@ export default function DashboardPage() {
 
   return (
     <PageLayout
-      title="LibreFlag.js Admin"
+      title="RolloutJS Admin"
       description="Manage your feature flags, segments and overrides"
     >
       <div className="space-y-6">

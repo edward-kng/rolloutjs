@@ -4,9 +4,9 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "libreflag.config": {
+    "rolloutjs.config": {
       "name": "config",
-      "schema": "libreflag",
+      "schema": "rolloutjs",
       "columns": {
         "id": {
           "name": "id",
@@ -16,7 +16,7 @@
           "identity": {
             "type": "always",
             "name": "config_id_seq",
-            "schema": "libreflag",
+            "schema": "rolloutjs",
             "increment": "1",
             "startWith": "1",
             "minValue": "1",
@@ -41,9 +41,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "libreflag.flags": {
+    "rolloutjs.flags": {
       "name": "flags",
-      "schema": "libreflag",
+      "schema": "rolloutjs",
       "columns": {
         "key": {
           "name": "key",
@@ -78,9 +78,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "libreflag.overrides": {
+    "rolloutjs.overrides": {
       "name": "overrides",
-      "schema": "libreflag",
+      "schema": "rolloutjs",
       "columns": {
         "flag_key": {
           "name": "flag_key",
@@ -113,7 +113,7 @@
           "name": "overrides_flag_key_flags_key_fk",
           "tableFrom": "overrides",
           "tableTo": "flags",
-          "schemaTo": "libreflag",
+          "schemaTo": "rolloutjs",
           "columnsFrom": ["flag_key"],
           "columnsTo": ["key"],
           "onDelete": "no action",
@@ -123,7 +123,7 @@
           "name": "overrides_segment_key_segments_key_fk",
           "tableFrom": "overrides",
           "tableTo": "segments",
-          "schemaTo": "libreflag",
+          "schemaTo": "rolloutjs",
           "columnsFrom": ["segment_key"],
           "columnsTo": ["key"],
           "onDelete": "no action",
@@ -152,9 +152,9 @@
       },
       "isRLSEnabled": false
     },
-    "libreflag.segments": {
+    "rolloutjs.segments": {
       "name": "segments",
-      "schema": "libreflag",
+      "schema": "rolloutjs",
       "columns": {
         "key": {
           "name": "key",
@@ -192,7 +192,7 @@
   },
   "enums": {},
   "schemas": {
-    "libreflag": "libreflag"
+    "rolloutjs": "rolloutjs"
   },
   "sequences": {},
   "roles": {},

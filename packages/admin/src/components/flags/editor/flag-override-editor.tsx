@@ -20,7 +20,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { useSetUserOverride } from "@/hooks/api/useSetUserOverride";
 import { useSetSegmentOverride } from "@/hooks/api/useSetSegmentOverride";
-import type { Flag, FlagValue, Override } from "libreflag";
+import type { Flag, FlagValue, Override } from "rolloutjs";
 import type { ValueType } from "@/types/flags";
 import { coerceValue, inferType, serializeValue } from "@/utils/flags";
 import { useState, type ReactNode } from "react";

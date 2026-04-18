@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useFlagOverrides } from "@/hooks/api/useFlagOverrides";
-import { type Flag } from "libreflag";
+import { type Flag } from "rolloutjs";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import FlagOverrideEditor from "./flag-override-editor";

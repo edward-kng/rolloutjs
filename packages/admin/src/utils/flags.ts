@@ -1,4 +1,4 @@
-import type { FlagValue } from "libreflag";
+import type { FlagValue } from "rolloutjs";
 import type { ValueType } from "@/types/flags";
 
 export function formatValue(value: FlagValue): string {

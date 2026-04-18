@@ -7,19 +7,19 @@ import {
   type Provider,
   type ResolutionDetails,
 } from "@openfeature/server-sdk";
-import type { LibreFlagServer } from "libreflag";
+import type { RolloutService } from "rolloutjs";
 
-const PROVIDER_NAME = "libreflag-provider";
+const PROVIDER_NAME = "rolloutjs-provider";
 
-export class LibreFlagProvider implements Provider {
+export class RolloutJsProvider implements Provider {
   metadata = {
     name: PROVIDER_NAME,
   };
 
-  private libreflag: LibreFlagServer;
+  private rolloutjs: RolloutService;
 
-  constructor(libreflag: LibreFlagServer) {
-    this.libreflag = libreflag;
+  constructor(rolloutjs: RolloutService) {
+    this.rolloutjs = rolloutjs;
   }
 
   private async resolveTypedEvaluation<T extends FlagValue>(
@@ -28,7 +28,7 @@ export class LibreFlagProvider implements Provider {
     context: EvaluationContext,
     typeGuard?: (v: unknown) => v is T,
   ) {
-    const { value, reason } = await this.libreflag.evaluate(
+    const { value, reason } = await this.rolloutjs.evaluate(
       flagKey,
       context.targetingKey
         ? {

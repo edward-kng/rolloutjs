@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: `${window.location.origin}/libreflag`,
+  baseURL: `${window.location.origin}/rolloutjs/api`,
   headers: { "Content-Type": "application/json" },
 });
 

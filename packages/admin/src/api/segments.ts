@@ -4,7 +4,7 @@ import type {
   FlagValue,
   Override,
   Segment,
-} from "libreflag";
+} from "rolloutjs";
 
 export async function listSegments() {
   return apiClient.get<Segment[]>("/segments");

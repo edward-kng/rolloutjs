@@ -1,28 +1,28 @@
-import type { LibreFlagServer } from "libreflag";
+import type { RolloutService } from "rolloutjs";
 import { Router } from "express";
 import type { RequestHandler } from "express";
 import express from "express";
 import cors from "cors";
 import { AdminRouter } from "./admin.js";
 
-export interface LibreFlagExpressOptions {
+export interface RolloutExpressOptions {
   adminMiddleware?: RequestHandler;
   evalMiddleware?: RequestHandler;
 }
 
-export function LibreFlagExpress(
-  libreFlag: LibreFlagServer,
+export function RolloutExpress(
+  rollout: RolloutService,
   {
     adminMiddleware = (_req, res) => {
       res.status(403).send();
     },
     evalMiddleware = cors({ origin: true, exposedHeaders: ["ETag"] }),
-  }: LibreFlagExpressOptions = {},
+  }: RolloutExpressOptions = {},
 ): Router {
   const router = Router();
   router.use(express.json());
 
-  for (const route of libreFlag.routes) {
+  for (const route of rollout.routes) {
     router[route.method.toLowerCase() as "get" | "post" | "put" | "delete"](
       route.path,
       route.type === "ADMIN" ? adminMiddleware : evalMiddleware,
@@ -45,7 +45,7 @@ export function LibreFlagExpress(
     );
   }
 
-  router.use("/libreflag/admin", adminMiddleware, AdminRouter());
+  router.use("/rolloutjs/admin", adminMiddleware, AdminRouter());
 
   return router;
 }

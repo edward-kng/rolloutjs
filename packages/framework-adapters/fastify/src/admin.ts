@@ -16,7 +16,7 @@ export function adminPlugin(
 
     const require = createRequire(import.meta.url);
     const adminDistPath = path.dirname(
-      require.resolve("@libreflag/admin/package.json"),
+      require.resolve("@rolloutjs/admin/package.json"),
     );
     const staticPath = path.join(adminDistPath, "dist");
 

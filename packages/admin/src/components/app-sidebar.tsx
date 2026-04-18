@@ -34,7 +34,7 @@ export function AppSidebar() {
             <SidebarTrigger />
             {state === "expanded" && (
               <span className="px-2 text-lg font-semibold tracking-tight">
-                LibreFlag.js
+                RolloutJS
               </span>
             )}
           </SidebarMenuItem>

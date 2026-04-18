@@ -1,5 +1,5 @@
 import apiClient from "./client";
-import type { Flag, Override } from "libreflag";
+import type { Flag, Override } from "rolloutjs";
 
 export async function listFlags() {
   return apiClient.get<Flag[]>("/flags");

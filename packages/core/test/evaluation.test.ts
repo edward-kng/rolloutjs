@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { createMockStore } from "./utils/store";
-import { LibreFlag } from "../src/libreflag";
+import { Rollout } from "../src/rollout";
 import {
   FlagNotFoundError,
   StandardResolutionReasons,
@@ -14,9 +14,9 @@ vi.mock(import("../src/utils/segments"), () => ({
 
 describe("evaluate", () => {
   test("throws NotFoundError if flag doesn't exist", () => {
-    const libreFlag = LibreFlag(createMockStore());
+    const rollout = Rollout(createMockStore());
 
-    expect(libreFlag.evaluate(mockFlags[0].key)).rejects.toThrow(
+    expect(rollout.evaluate(mockFlags[0].key)).rejects.toThrow(
       FlagNotFoundError,
     );
   });
@@ -27,12 +27,12 @@ describe("evaluate", () => {
       const flagKey = mockFlags[0].key;
 
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.getFlag = vi.fn().mockResolvedValue({
         key: flagKey,
         defaultValue,
       });
-      const result = await libreFlag.evaluate(flagKey);
+      const result = await rollout.evaluate(flagKey);
 
       expect(result.key).toEqual(flagKey);
       expect(result.reason).toEqual(StandardResolutionReasons.STATIC);
@@ -53,7 +53,7 @@ describe("evaluate", () => {
       const segmentKey = mockSegments[0].key;
       const targetingKey = mockContext.targetingKey;
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.getFlag = vi.fn().mockResolvedValue({
         key: flagKey,
         defaultValue,
@@ -63,7 +63,7 @@ describe("evaluate", () => {
         .fn()
         .mockResolvedValue([{ segmentKey, value: segmentValue }]);
       vi.mocked(isMember).mockReturnValue(true);
-      const result = await libreFlag.evaluate(flagKey, {
+      const result = await rollout.evaluate(flagKey, {
         targetingKey,
       });
 
@@ -90,7 +90,7 @@ describe("evaluate", () => {
       const targetingKey = mockContext.targetingKey;
       const segmentKey = mockSegments[0].key;
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.getFlag = vi.fn().mockResolvedValue({
         key: flagKey,
         defaultValue,
@@ -103,7 +103,7 @@ describe("evaluate", () => {
       store.getUserOverride = vi.fn().mockResolvedValue({
         value: userValue,
       });
-      const result = await libreFlag.evaluate(flagKey, {
+      const result = await rollout.evaluate(flagKey, {
         targetingKey,
       });
 
@@ -126,7 +126,7 @@ describe("evaluate", () => {
       const targetingKey = mockContext.targetingKey;
       const segmentKey = mockSegments[0].key;
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.getFlag = vi.fn().mockResolvedValue({
         key: flagKey,
         defaultValue,
@@ -136,7 +136,7 @@ describe("evaluate", () => {
         .fn()
         .mockResolvedValue([{ segmentKey, value: segmentValue }]);
       vi.mocked(isMember).mockReturnValue(false);
-      const result = await libreFlag.evaluate(flagKey, {
+      const result = await rollout.evaluate(flagKey, {
         targetingKey,
       });
 
@@ -163,7 +163,7 @@ describe("evaluate", () => {
       const targetingKey = mockContext.targetingKey;
 
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.getFlag = vi.fn().mockResolvedValue({
         key: flagKey,
         defaultValue,
@@ -179,7 +179,7 @@ describe("evaluate", () => {
         { segmentKey: mockSegments[1].key, value: secondSegmentValue },
       ]);
       vi.mocked(isMember).mockReturnValue(true);
-      const result = await libreFlag.evaluate(flagKey, {
+      const result = await rollout.evaluate(flagKey, {
         targetingKey,
       });
 
@@ -223,7 +223,7 @@ describe("evaluateAll", () => {
       const targetingKey = mockContext.targetingKey;
       const segmentKey = mockSegments[0].key;
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.listFlags = vi.fn().mockResolvedValue(mockFlags);
       store.getUserOverrides = vi.fn().mockResolvedValue(
         userOverrides
@@ -246,7 +246,7 @@ describe("evaluateAll", () => {
       );
       vi.mocked(isMember).mockReturnValue(true);
 
-      const results = await libreFlag.evaluateAll(mockContext);
+      const results = await rollout.evaluateAll(mockContext);
 
       expect(results.length).toEqual(mockFlags.length);
 
@@ -294,7 +294,7 @@ describe("evaluateAll", () => {
     "returns overrides for multiple segments if present",
     async (firstSegmentOverrides, secondSegmentOverrides) => {
       const store = createMockStore();
-      const libreFlag = LibreFlag(store);
+      const rollout = Rollout(store);
       store.listFlags = vi.fn().mockResolvedValue(mockFlags);
       store.listSegments = vi.fn().mockResolvedValue(mockSegments);
       store.listSegmentOverrides = vi.fn().mockResolvedValue(
@@ -311,7 +311,7 @@ describe("evaluateAll", () => {
       );
       vi.mocked(isMember).mockReturnValue(true);
 
-      const results = await libreFlag.evaluateAll(mockContext);
+      const results = await rollout.evaluateAll(mockContext);
 
       expect(results.length).toEqual(mockFlags.length);
 

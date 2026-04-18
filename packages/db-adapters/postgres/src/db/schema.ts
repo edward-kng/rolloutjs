@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const schema = pgSchema("libreflag");
+export const schema = pgSchema("rolloutjs");
 
 export const configTable = schema.table("config", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

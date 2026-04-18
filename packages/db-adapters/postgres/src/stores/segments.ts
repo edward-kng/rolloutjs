@@ -5,7 +5,7 @@ import {
   ConflictError,
   type Segment,
   type UpdateSegmentParams,
-} from "libreflag";
+} from "rolloutjs";
 import { isUniqueViolation, toSegment } from "../utils.js";
 
 export function createSegmentStore(db: NodePgDatabase) {

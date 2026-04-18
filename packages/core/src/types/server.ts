@@ -9,7 +9,7 @@ import type {
 } from "./segments.js";
 import type { ApiRoute } from "./api.js";
 
-export interface LibreFlagServer {
+export interface RolloutService {
   /**
    * Evaluates a flag for a given user context
    * @param {string} flagKey

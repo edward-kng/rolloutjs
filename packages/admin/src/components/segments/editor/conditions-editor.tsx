@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { serializeValue } from "@/utils/flags";
-import type { Condition, Operator } from "libreflag";
+import type { Condition, Operator } from "rolloutjs";
 import { Trash2 } from "lucide-react";
 
 interface ConditionsEditorProps {

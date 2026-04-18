@@ -1,1 +1,1 @@
-export { LibreFlagProvider } from "./provider.js";
+export { RolloutJsProvider } from "./provider.js";

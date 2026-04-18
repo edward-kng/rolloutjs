@@ -23,7 +23,7 @@ export interface ApiRoute {
    */
   method: "GET" | "POST" | "PUT" | "DELETE";
   /**
-   * Wraps some a LibreFlag function and represents it as an API route.
+   * Wraps some a Rollout function and represents it as an API route.
    * Takes request body, params and headers and returns a response-like object that can be parsed to the appropriate response object for the chosen framework.
    */
   handler: ApiRouteHandler;

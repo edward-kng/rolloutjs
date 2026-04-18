@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateFlag } from "@/api/flags";
-import type { Flag } from "libreflag";
+import type { Flag } from "rolloutjs";
 
 export function useUpdateFlag() {
   const queryClient = useQueryClient();

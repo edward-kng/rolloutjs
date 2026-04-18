@@ -2,7 +2,7 @@ import type { MySql2Database } from "drizzle-orm/mysql2";
 import { eq } from "drizzle-orm";
 import { flagsTable } from "../db/schema.js";
 import { isUniqueViolation, toFlag } from "../utils.js";
-import { ConflictError, type Flag, type UpdateFlagParams } from "libreflag";
+import { ConflictError, type Flag, type UpdateFlagParams } from "rolloutjs";
 
 export function createFlagStore(db: MySql2Database) {
   return {

@@ -1,4 +1,4 @@
-import type { FlagValue, Override, UserOverride } from "libreflag";
+import type { FlagValue, Override, UserOverride } from "rolloutjs";
 import apiClient from "./client";
 
 export async function listOverrides() {

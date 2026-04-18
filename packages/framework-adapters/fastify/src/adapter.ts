@@ -4,18 +4,18 @@ import type {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
-import type { LibreFlagServer } from "libreflag";
+import type { RolloutService } from "rolloutjs";
 import cors, { type FastifyCorsOptions } from "@fastify/cors";
 import { adminPlugin } from "./admin.js";
 
-export interface LibreFlagFastifyOptions {
+export interface RolloutFastifyOptions {
   adminHook?: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   evalHook?: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   corsOptions?: FastifyCorsOptions;
 }
 
-export function LibreFlagFastify(
-  libreFlag: LibreFlagServer,
+export function RolloutFastify(
+  rollout: RolloutService,
   {
     adminHook = async (_request, reply) => {
       reply.status(403).send();
@@ -25,12 +25,12 @@ export function LibreFlagFastify(
       origin: true,
       exposedHeaders: ["ETag"],
     },
-  }: LibreFlagFastifyOptions = {},
+  }: RolloutFastifyOptions = {},
 ): FastifyPluginAsync {
   return async (fastify: FastifyInstance) => {
     await fastify.register(async (scope) => {
       await scope.register(cors, corsOptions);
-      for (const route of libreFlag.routes.filter((r) => r.type === "EVAL")) {
+      for (const route of rollout.routes.filter((r) => r.type === "EVAL")) {
         scope[route.method.toLowerCase() as "get" | "post" | "put" | "delete"](
           route.path,
           { preHandler: evalHook },
@@ -49,7 +49,7 @@ export function LibreFlagFastify(
       }
     });
 
-    for (const route of libreFlag.routes.filter((r) => r.type === "ADMIN")) {
+    for (const route of rollout.routes.filter((r) => r.type === "ADMIN")) {
       fastify[route.method.toLowerCase() as "get" | "post" | "put" | "delete"](
         route.path,
         { preHandler: adminHook },
@@ -68,7 +68,7 @@ export function LibreFlagFastify(
     }
 
     await fastify.register(adminPlugin(adminHook), {
-      prefix: "/libreflag/admin",
+      prefix: "/rolloutjs/admin",
     });
   };
 }

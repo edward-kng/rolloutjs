@@ -6,7 +6,7 @@ const commands = ["migrate"] as const;
 type Command = (typeof commands)[number];
 
 function usage(): never {
-  console.error("Usage: libreflag-postgres <command> [options]");
+  console.error("Usage: rolloutjs-postgres <command> [options]");
   console.error("");
   console.error("Commands:");
   console.error("  migrate  Run database migrations");
@@ -29,11 +29,11 @@ const { values } = parseArgs({
   },
 });
 
-const dbUrl = values["db-url"] ?? process.env.LIBREFLAG_DB_URL;
+const dbUrl = values["db-url"] ?? process.env.ROLLOUTJS_DB_URL;
 
 if (!dbUrl) {
   console.error(
-    "Error: --db-url or LIBREFLAG_DB_URL environment variable required",
+    "Error: --db-url or ROLLOUTJS_DB_URL environment variable required",
   );
   process.exit(1);
 }
