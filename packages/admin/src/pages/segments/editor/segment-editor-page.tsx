@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { ROUTES } from "@/constants/routes";
 import { useSegments } from "@/hooks/api/useSegments";
-import SegmentEditor from "./segment-editor";
+import SegmentEditor from "@/components/segments/editor/segment-editor";
 
-export default function FlagEditorPage() {
+export default function SegmentEditorPage() {
   const { segmentKey } = useParams();
   const navigate = useNavigate();
 

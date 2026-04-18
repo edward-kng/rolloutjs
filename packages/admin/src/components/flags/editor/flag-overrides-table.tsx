@@ -14,7 +14,7 @@ import { type Flag } from "libreflag";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import FlagOverrideEditor from "./flag-override-editor";
-import { FlagValueCell } from "@/components/flag-value-cell";
+import { FlagValueCell } from "@/components/flags/flag-value-cell";
 import { useSetUserOverride } from "@/hooks/api/useSetUserOverride";
 import { useSetSegmentOverride } from "@/hooks/api/useSetSegmentOverride";
 import {

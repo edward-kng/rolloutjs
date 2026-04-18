@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useFlags } from "@/hooks/api/useFlags";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
-import { FlagValueEditor } from "@/components/flag-value-editor";
+import { FlagValueEditor } from "@/components/flags/flag-value-editor";
 import { Separator } from "@/components/ui/separator";
 import FlagOverridesTable from "./flag-overrides-table";
 
