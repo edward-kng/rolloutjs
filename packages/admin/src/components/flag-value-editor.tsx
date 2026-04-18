@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { KeyValueEditor } from "./KeyValueEditor";
+import { KeyValueEditor } from "./key-value-editor";
 import type { ValueType } from "@/types/flags";
 import { type Dispatch, type SetStateAction } from "react";
 

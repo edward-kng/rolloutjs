@@ -1,7 +1,7 @@
 import { useState } from "react";
-import SegmentsTable from "./SegmentsTable";
-import PageLayout from "@/components/PageLayout";
-import SegmentEditor from "./editor/SegmentEditor";
+import SegmentsTable from "./segments-table";
+import PageLayout from "@/components/page-layout";
+import SegmentEditor from "./editor/segment-editor";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

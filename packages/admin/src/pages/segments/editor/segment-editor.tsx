@@ -8,7 +8,7 @@ import { useSegments } from "@/hooks/api/useSegments";
 import { useUpdateSegment } from "@/hooks/api/useUpdateSegment";
 import type { Segment } from "libreflag";
 import { useState, type SubmitEvent } from "react";
-import RulesEditor from "./RulesEditor";
+import RulesEditor from "./rules-editor";
 
 interface SegmentEditorProps {
   segment?: Segment;

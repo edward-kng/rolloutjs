@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import { ROUTES } from "@/constants/routes";
-import FlagsPage from "./flags/FlagsPage";
-import FlagEditorPage from "./flags/editor/FlagEditorPage";
-import DashboardPage from "./dashboard/DashboardPage";
-import SegmentsPage from "./segments/SegmentsPage";
-import SegmentEditorPage from "./segments/editor/SegmentEditorPage";
+import FlagsPage from "./flags/flags-page";
+import FlagEditorPage from "./flags/editor/flag-editor-page";
+import DashboardPage from "./dashboard/dashboard-page";
+import SegmentsPage from "./segments/segments-page";
+import SegmentEditorPage from "./segments/editor/segment-editor-page";
 
 export default function Root() {
   return (
