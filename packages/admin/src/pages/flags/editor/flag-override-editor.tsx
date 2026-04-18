@@ -1,4 +1,4 @@
-import { FlagValueEditor } from "@/components/FlagValueEditor";
+import { FlagValueEditor } from "@/components/flag-value-editor";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -1,9 +1,9 @@
-import PageLayout from "@/components/PageLayout";
+import PageLayout from "@/components/page-layout";
 import { useNavigate, useParams } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { ROUTES } from "@/constants/routes";
 import { useSegments } from "@/hooks/api/useSegments";
-import SegmentEditor from "./SegmentEditor";
+import SegmentEditor from "./segment-editor";
 
 export default function FlagEditorPage() {
   const { segmentKey } = useParams();

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import type { Condition, Rule } from "libreflag";
 import { Plus, Trash2 } from "lucide-react";
 import { type Dispatch, type SetStateAction } from "react";
-import ConditionsEditor from "./ConditionsEditor";
+import ConditionsEditor from "./conditions-editor";
 
 interface RulesEditorProps {
   rules: Rule[];

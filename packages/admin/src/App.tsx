@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ROUTES } from "./constants/routes";
 import { ThemeProvider } from "./components/theme-provider";
-import Root from "./pages/Root";
+import Root from "./pages/root";
 
 const queryClient = new QueryClient();
 

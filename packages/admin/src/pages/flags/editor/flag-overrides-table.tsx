@@ -1,4 +1,4 @@
-import { SearchInput } from "@/components/SearchInput";
+import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -13,8 +13,8 @@ import { useFlagOverrides } from "@/hooks/api/useFlagOverrides";
 import { type Flag } from "libreflag";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import FlagOverrideEditor from "./FlagOverrideEditor";
-import { FlagValueCell } from "@/components/FlagValueCell";
+import FlagOverrideEditor from "./flag-override-editor";
+import { FlagValueCell } from "@/components/flag-value-cell";
 import { useSetUserOverride } from "@/hooks/api/useSetUserOverride";
 import { useSetSegmentOverride } from "@/hooks/api/useSetSegmentOverride";
 import {
