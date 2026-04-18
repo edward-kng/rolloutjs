@@ -1,0 +1,90 @@
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+
+  - type: input
+    id: library-version
+    attributes:
+      label: Library version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime and version
+      placeholder: e.g. Node 22.22.2
+    validations:
+      required: true
+
+  - type: input
+    id: framework
+    attributes:
+      label: Framework and version
+      placeholder: e.g. Express 5.2.1
+    validations:
+      required: false
+
+  - type: input
+    id: database
+    attributes:
+      label: Database and version
+      placeholder: e.g. PostgreSQL 18.3
+    validations:
+      required: false
+
+  - type: input
+    id: openfeature-sdk
+    attributes:
+      label: OpenFeature SDK(s) and version
+      description: If applicable.
+      placeholder: e.g. Web SDK 1.7.3
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
