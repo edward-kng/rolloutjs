@@ -1,9 +1,9 @@
 import { useState } from "react";
-import SegmentsTable from "./segments-table";
+import SegmentsTable from "../../components/segments/segments-table";
 import PageLayout from "@/components/page-layout";
-import SegmentEditor from "./editor/segment-editor";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SegmentEditor from "@/components/segments/editor/segment-editor";
 
 export default function SegmentsPage() {
   const queryParams = new URLSearchParams(window.location.search);

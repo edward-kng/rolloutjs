@@ -1,5 +1,5 @@
 import PageLayout from "@/components/page-layout";
-import FlagEditor from "./flag-editor";
+import FlagEditor from "../../../components/flags/editor/flag-editor";
 import { useFlags } from "@/hooks/api/useFlags";
 import { useNavigate, useParams } from "react-router";
 import { Spinner } from "@/components/ui/spinner";

@@ -57,10 +57,7 @@ export function handleError(
     };
   }
 
-  return {
-    status: 500,
-    body: "Internal server error",
-  };
+  throw error;
 }
 
 export function createApiRoutes(

@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { inferType } from "@/utils/flags";
 import { useNavigate } from "react-router";
-import { FlagValueCell } from "@/components/flag-value-cell";
+import { FlagValueCell } from "@/components/flags/flag-value-cell";
 import { Badge } from "@/components/ui/badge";
 import { useFlags } from "@/hooks/api/useFlags";
 import { useDeleteFlag } from "@/hooks/api/useDeleteFlag";

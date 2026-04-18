@@ -1,8 +1,8 @@
-import FlagsTable from "./flags-table";
+import FlagsTable from "../../components/flags/flags-table";
 import PageLayout from "@/components/page-layout";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import FlagEditor from "./editor/flag-editor";
+import FlagEditor from "../../components/flags/editor/flag-editor";
 import { useState } from "react";
 
 export default function FlagsPage() {

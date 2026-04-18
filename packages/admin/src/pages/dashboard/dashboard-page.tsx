@@ -1,3 +1,4 @@
+import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import PageLayout from "@/components/page-layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,43 +47,29 @@ export default function DashboardPage() {
     >
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Flags</CardTitle>
-              <Flag className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{flags.length}</div>
-              <p className="text-xs text-muted-foreground">
+          <DashboardCard
+            title="Flags"
+            icon={Flag}
+            value={flags.length}
+            description={
+              <>
                 {enabledBooleanFlags?.length} of {booleanFlags?.length} boolean
                 flags enabled
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Segments</CardTitle>
-              <PieChart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{segments?.length}</div>
-              <p className="text-xs text-muted-foreground">
-                User segments defined
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Overrides</CardTitle>
-              <ChevronsRight className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{overrides?.length}</div>
-              <p className="text-xs text-muted-foreground">
-                Active flag overrides
-              </p>
-            </CardContent>
-          </Card>
+              </>
+            }
+          />
+          <DashboardCard
+            title="Segments"
+            icon={PieChart}
+            value={segments.length}
+            description="User segments defined"
+          />
+          <DashboardCard
+            title="Overrides"
+            icon={ChevronsRight}
+            value={overrides.length}
+            description="Active flag overrides"
+          />
         </div>
 
         <Card>
