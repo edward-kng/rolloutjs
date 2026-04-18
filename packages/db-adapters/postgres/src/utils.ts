@@ -1,3 +1,4 @@
+import { DrizzleQueryError } from "drizzle-orm";
 import type {
   FlagValue,
   Flag,
@@ -8,6 +9,23 @@ import type {
   SegmentOverride,
 } from "libreflag";
 import type { flagsTable, overridesTable, segmentsTable } from "./db/schema.js";
+
+function hasPgErrorCode(e: unknown, code: string): boolean {
+  return (
+    e instanceof DrizzleQueryError &&
+    !!e.cause &&
+    "code" in e.cause &&
+    e.cause.code === code
+  );
+}
+
+export function isUniqueViolation(e: unknown): boolean {
+  return hasPgErrorCode(e, "23505");
+}
+
+export function isForeignKeyViolation(e: unknown): boolean {
+  return hasPgErrorCode(e, "23503");
+}
 
 export function toFlag(row: typeof flagsTable.$inferSelect): Flag {
   return {

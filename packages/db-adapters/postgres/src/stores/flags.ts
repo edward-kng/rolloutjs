@@ -1,7 +1,7 @@
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import { flagsTable } from "../db/schema.js";
-import { toFlag } from "../utils.js";
+import { isUniqueViolation, toFlag } from "../utils.js";
 import { ConflictError, type Flag, type UpdateFlagParams } from "libreflag";
 
 export function createFlagStore(db: NodePgDatabase) {
@@ -28,7 +28,7 @@ export function createFlagStore(db: NodePgDatabase) {
           default_value: flag.defaultValue,
         });
       } catch (e) {
-        if (e instanceof Error && "code" in e && e.code === "23505") {
+        if (isUniqueViolation(e)) {
           throw new ConflictError(`Flag '${flag.key}' already exists`);
         }
         throw e;

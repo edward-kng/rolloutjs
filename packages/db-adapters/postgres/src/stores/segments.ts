@@ -6,7 +6,7 @@ import {
   type Segment,
   type UpdateSegmentParams,
 } from "libreflag";
-import { toSegment } from "../utils.js";
+import { isUniqueViolation, toSegment } from "../utils.js";
 
 export function createSegmentStore(db: NodePgDatabase) {
   return {
@@ -28,7 +28,7 @@ export function createSegmentStore(db: NodePgDatabase) {
           priority: segment.priority,
         });
       } catch (e) {
-        if (e instanceof Error && "code" in e && e.code === "23505") {
+        if (isUniqueViolation(e)) {
           throw new ConflictError(`Segment '${segment.key}' already exists`);
         }
         throw e;
