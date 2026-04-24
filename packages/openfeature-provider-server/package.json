@@ -1,7 +1,7 @@
 {
   "name": "@rolloutjs/openfeature-provider-server",
   "version": "0.0.0",
-  "description": "",
+  "description": "OpenFeature provider for RolloutJS, an open-source feature management library",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

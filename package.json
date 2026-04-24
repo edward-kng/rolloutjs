@@ -1,7 +1,7 @@
 {
   "name": "@rolloutjs/root",
   "version": "0.0.0",
-  "description": "",
+  "description": "Admin dashboard for RolloutJS, an open-source feature management library",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint ."
