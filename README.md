@@ -1,20 +1,22 @@
 <div align="center">
     <h1>RolloutJS</h1>
-    <p>Feature flags that live in your app and your database. Open source. Ready in minutes.</p>
+    <p>Feature flags and gradual rollout, powered by your app. Open-source, full-stack and framework-agnostic.</p>
 </div>
 <br />
 
-RolloutJS is a full stack feature flag framework that gives you incremental feature rollout, segmentation and feature management APIs without ever leaving your app. Plug it into your backend and bring your own database. No SaaS fees. No self-hosting headaches.
-
 > **Note:** The project is in a very early stage of development. Expect instability and breaking changes.
+
+RolloutJS is a feature management library that lives in your app and uses your database. Release features without pushing code, and roll out gradually or to specific user groups. Turn your backend into its own feature management platform with a built-in admin dashboard and REST API. Use feature flags everywhere with web and mobile clients supported out of the box.
 
 ## Features
 
-- **Full control:** Evaluation runs in your backend. Flags, segments and rules are stored in your database.
-- **Framework- and database-agnostic:** Plugs right into your existing Node backend and SQL database. If your stack isn't supported already, you can easily build a simple adapter yourself.
-- **Feature management:** Use the built-in dashboard to manage features and rollout or build your own backoffice with the included admin REST API and SDK.
-- **Free and open:** Built on the OpenFeature standard and OpenFeature Remote Evaluation Protocol (OFREP) API specification. Automatically compatible with clients in several languages. No vendor lock-in.
-- **Security:** Resolve user context server-side, keeping your evaluation and segmentation rules safe. Plug in your own authentication middleware for management features.
+- **Feature flags:** Control releases by hiding new features behind flags. Toggle on and off and change variables without pushing code.
+- **Segmentation:** Roll out gradually and target specific user groups with your own rules.
+- **Full control:** Flags and rules live in your database. Evaluation runs in your backend, protected by your auth.
+- **Free and open:** Built on the OpenFeature standard and OpenFeature Remote Evaluation Protocol (OFREP). No vendor lock-in.
+- **Full-stack:** Web and mobile clients with proper caching work out of the box via OFREP. All the endpoints are set up for you, just point the OpenFeature SDK to your backend.
+- **Framework- and database-agnostic:** Plugs right into your existing JavaScript backend and SQL database.
+- **Feature management:** Use the built-in dashboard to manage features or build your own backoffice with the REST API and admin SDK.
 
 ## Getting Started - Express.js + PostgreSQL Example
 
@@ -81,7 +83,7 @@ app.listen(3000, () => {
 
 ### 4. Install on the Client
 
-Install the appropriate [OpenFeature Client SDK](https://openfeature.dev/docs/reference/sdks/) and plug in your new [OFREP API](https://openfeature.dev/docs/reference/other-technologies/ofrep/openapi).
+Install the appropriate [OpenFeature Client SDK](https://openfeature.dev/docs/reference/sdks/) and plug in your backend.
 
 ```sh
 npm install @openfeature/web-sdk @openfeature/ofrep-web-provider
@@ -115,8 +117,8 @@ if (client.getBooleanValue("new-greeting", false)) {
 
 Authenticate according to your middleware, and visit `http://localhost:3000/rolloutjs/admin` in your browser to start managing your feature flags.
 
-<img src="./screenshots/flags.png" width="50%"><img src="./screenshots/segment-editor.png" width="50%">
+<img src="./screenshots/flags.png" width="50%"><img src="./screenshots/segments.png" width="50%">
 
 ## License
 
-RolloutJS is a free and open source project licensed under the MIT License.
+RolloutJS is a free and open-source project licensed under the MIT License.
