@@ -7,8 +7,18 @@
     "lint": "eslint ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
     "@eslint/js": "^10.0.1",

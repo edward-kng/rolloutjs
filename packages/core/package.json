@@ -19,8 +19,15 @@
     "test": "vitest run"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
     "@openfeature/core": "^1.9.2",
