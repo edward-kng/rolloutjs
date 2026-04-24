@@ -6,6 +6,7 @@
     "prepare": "husky",
     "lint": "eslint ."
   },
+  "private": true,
   "keywords": [],
   "author": "Edward Kang",
   "license": "MIT",
@@ -15,9 +16,6 @@
   },
   "bugs": {
     "url": "https://github.com/edward-kng/rolloutjs/issues"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {

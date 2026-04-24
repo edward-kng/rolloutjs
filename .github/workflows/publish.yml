@@ -27,38 +27,6 @@ jobs:
       - run: pnpm -r build
 
       - name: Publish packages with version changes
-        run: |
-          publish_package() {
-            local dir=$1
-            local pkg_name
-            local local_version
-            local published_version
-
-            pkg_name=$(node -p "require('./$dir/package.json').name")
-            local_version=$(node -p "require('./$dir/package.json').version")
-            is_private=$(node -p "require('./$dir/package.json').private || false")
-
-            if [ "$is_private" = "true" ]; then
-              echo "Skipping $pkg_name (private)"
-              return
-            fi
-
-            published_version=$(pnpm view "$pkg_name" version 2>/dev/null || echo "")
-
-            if [ "$local_version" = "$published_version" ]; then
-              echo "Skipping $pkg_name@$local_version (already published)"
-            else
-              echo "Publishing $pkg_name@$local_version (registry has ${published_version:-nothing})"
-              pnpm publish "$dir" --provenance --access public
-            fi
-          }
-
-          publish_package packages/core
-          publish_package packages/db-adapters/postgres
-          publish_package packages/db-adapters/mysql
-          publish_package packages/framework-adapters/express
-          publish_package packages/framework-adapters/fastify
-          publish_package packages/framework-adapters/hono
-          publish_package packages/openfeature-provider-server
+        run: pnpm -r publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
