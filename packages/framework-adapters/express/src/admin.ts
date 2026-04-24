@@ -15,7 +15,10 @@ export function AdminRouter(): Router {
   router.use(express.static(staticPath));
 
   router.get("/*path", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
+    res.sendFile("index.html", {
+      root: staticPath,
+      dotfiles: "allow",
+    });
   });
 
   return router;

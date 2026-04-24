@@ -1,6 +1,6 @@
 {
   "name": "@rolloutjs/express",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Express.js adapter for RolloutJS, an open-source feature management library",
   "type": "module",
   "main": "./dist/index.js",
