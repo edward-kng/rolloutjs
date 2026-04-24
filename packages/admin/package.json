@@ -1,6 +1,7 @@
 {
   "name": "@rolloutjs/admin",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "description": "Admin dashboard for RolloutJS, an open-source feature management library",
   "type": "module",
   "author": "Edward Kang",
   "license": "MIT",
