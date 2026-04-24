@@ -12,11 +12,14 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "node ./scripts/sync-readme.mjs prepare",
+    "postpack": "node ./scripts/sync-readme.mjs clean"
   },
   "keywords": [],
   "author": "Edward Kang",
