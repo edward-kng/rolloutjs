@@ -22,8 +22,18 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
     "dotenv": "^17.3.1",
@@ -36,6 +46,6 @@
     "tsx": "^4.21.0"
   },
   "peerDependencies": {
-    "rolloutjs": "workspace:*"
+    "rolloutjs": "workspace:^0.0.0"
   }
 }

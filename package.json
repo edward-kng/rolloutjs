@@ -1,14 +1,24 @@
 {
   "name": "@rolloutjs/root",
   "version": "0.0.0",
-  "description": "",
+  "description": "Admin dashboard for RolloutJS, an open-source feature management library",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
     "@eslint/js": "^10.0.1",

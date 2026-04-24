@@ -1,7 +1,7 @@
 {
   "name": "@rolloutjs/express",
   "version": "0.0.0",
-  "description": "",
+  "description": "Express.js adapter for RolloutJS, an open-source feature management library",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,16 +18,26 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@rolloutjs/admin": "workspace:*",
+    "@rolloutjs/admin": "workspace:^0.0.0",
     "cors": "^2.8.6"
   },
   "peerDependencies": {
     "express": "^5.2.1",
-    "rolloutjs": "workspace:*"
+    "rolloutjs": "workspace:^0.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

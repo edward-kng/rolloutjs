@@ -1,7 +1,7 @@
 {
   "name": "rolloutjs",
   "version": "0.0.0",
-  "description": "",
+  "description": "Feature flags and gradual rollout, powered by your app. Open-source, full-stack and framework-agnostic.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,15 +12,25 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "node ./scripts/sync-readme.mjs prepare",
+    "postpack": "node ./scripts/sync-readme.mjs clean"
   },
   "keywords": [],
-  "author": "",
+  "author": "Edward Kang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-kng/rolloutjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward-kng/rolloutjs/issues"
+  },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
     "@openfeature/core": "^1.9.2",
