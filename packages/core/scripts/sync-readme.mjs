@@ -1,4 +1,10 @@
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,6 +14,8 @@ const packageDir = path.resolve(__dirname, "..");
 const rootDir = path.resolve(packageDir, "..", "..");
 const sourceReadmePath = path.join(rootDir, "README.md");
 const packageReadmePath = path.join(packageDir, "README.md");
+const sourceScreenshotsPath = path.join(rootDir, "screenshots");
+const packageScreenshotsPath = path.join(packageDir, "screenshots");
 const markerPath = path.join(packageDir, ".readme-generated");
 const command = process.argv[2];
 
@@ -15,10 +23,12 @@ if (command === "prepare") {
   const readme = readFileSync(sourceReadmePath, "utf8");
   mkdirSync(path.dirname(packageReadmePath), { recursive: true });
   writeFileSync(packageReadmePath, readme);
+  cpSync(sourceScreenshotsPath, packageScreenshotsPath, { recursive: true });
   writeFileSync(markerPath, "");
 } else if (command === "clean") {
   rmSync(markerPath, { force: true });
   rmSync(packageReadmePath, { force: true });
+  rmSync(packageScreenshotsPath, { force: true, recursive: true });
 } else {
   throw new Error(`Unknown command: ${command}`);
 }
