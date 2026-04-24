@@ -1,6 +1,6 @@
 {
   "name": "@rolloutjs/mysql",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -46,6 +46,6 @@
     "tsx": "^4.21.0"
   },
   "peerDependencies": {
-    "rolloutjs": "workspace:^0.0.0"
+    "rolloutjs": "workspace:^0.1.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "rolloutjs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Feature flags and gradual rollout, powered by your app. Open-source, full-stack and framework-agnostic.",
   "type": "module",
   "main": "./dist/index.js",

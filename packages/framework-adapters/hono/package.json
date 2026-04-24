@@ -1,6 +1,6 @@
 {
   "name": "@rolloutjs/hono",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Hono adapter for RolloutJS, an open-source feature management library",
   "type": "module",
   "main": "./dist/index.js",
@@ -32,12 +32,12 @@
   },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "@rolloutjs/admin": "workspace:^0.0.0"
+    "@rolloutjs/admin": "workspace:^0.1.0"
   },
   "peerDependencies": {
     "@hono/node-server": "^1.19.12",
     "hono": "^4.12.11",
-    "rolloutjs": "workspace:^0.0.0"
+    "rolloutjs": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",

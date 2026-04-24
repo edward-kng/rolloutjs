@@ -92,7 +92,7 @@ importers:
         specifier: ^7.13.2
         version: 7.13.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../core
       shadcn:
         specifier: ^4.1.0
@@ -151,7 +151,7 @@ importers:
         specifier: ^3.11.0
         version: 3.20.0(@types/node@24.12.0)
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../core
     devDependencies:
       "@types/node":
@@ -176,7 +176,7 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../core
     devDependencies:
       "@types/pg":
@@ -192,7 +192,7 @@ importers:
   packages/framework-adapters/express:
     dependencies:
       "@rolloutjs/admin":
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../admin
       cors:
         specifier: ^2.8.6
@@ -201,7 +201,7 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../core
     devDependencies:
       "@types/cors":
@@ -220,13 +220,13 @@ importers:
         specifier: ^8.1.0
         version: 8.3.0
       "@rolloutjs/admin":
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../admin
       fastify:
         specifier: ^5.3.3
         version: 5.8.4
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../core
     devDependencies:
       "@types/node":
@@ -239,13 +239,13 @@ importers:
         specifier: ^1.19.12
         version: 1.19.12(hono@4.12.11)
       "@rolloutjs/admin":
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../admin
       hono:
         specifier: ^4.12.11
         version: 4.12.11
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../../core
     devDependencies:
       "@types/node":
@@ -261,7 +261,7 @@ importers:
         specifier: ^1.20.2
         version: 1.20.2(@openfeature/core@1.9.2)
       rolloutjs:
-        specifier: workspace:^0.0.0
+        specifier: workspace:^0.1.0
         version: link:../core
 
 packages:
